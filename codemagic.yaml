@@ -18,6 +18,9 @@ workflows:
       - name: Get Flutter packages
         script: | 
           flutter packages pub get
+      - name: Build APK
+        script: |
+          flutter build apk --release
       #   script: | 
       #     BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))      
       #     flutter build appbundle --release \
