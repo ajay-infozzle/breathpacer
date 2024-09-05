@@ -1,0 +1,71 @@
+workflows:
+  android-workflow:
+    name: Android Workflow
+    max_build_duration: 120
+    environment:
+      # android_signing:
+      #   - notescribeAndroidKeystore
+      # groups:
+      #   - google_play
+      # vars:
+      #   PACKAGE_NAME: "com.example.breathpacer"
+      #   GOOGLE_PLAY_TRACK: production
+      flutter: stable
+    scripts:
+      - name: Set up local.properties
+        script: | 
+          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
+      - name: Get Flutter packages
+        script: | 
+          flutter packages pub get
+      #   script: | 
+      #     BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))      
+      #     flutter build appbundle --release \
+      #       --build-name=1.0.$BUILD_NUMBER \
+      #       --build-number=$BUILD_NUMBER
+    artifacts:
+      - build/**/outputs/**/*.apk
+      - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
+
+  # ios-workflow:
+  #   name: iOS Workflow
+  #   max_build_duration: 120
+  #   environment:
+  #     groups:
+  #       - apple_credentials
+  #     xcode: latest
+  #     flutter: stable
+  #   scripts:
+  #     - name: Set up local.properties
+  #       script: |
+  #         echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/ios/local.properties"
+  #     - name: Get Flutter packages
+  #       script: |
+  #         flutter packages pub get
+  #     # - name: Flutter analyze
+  #     #   script: |
+  #     #     flutter analyze
+  #     # - name: Flutter unit tests
+  #     #   script: |
+  #     #     flutter test
+  #     #   ignore_failure: true
+  #     - name: Build iOS app for TestFlight
+  #       script: |
+  #         flutter build ipa --release --no-codesign
+  #   artifacts:
+  #     - build/ios/ipa/*.ipa
+  #     - flutter_drive.log
+  #   publishing:
+  #     email:
+  #       recipients:
+  #         - ajay.m@infozzle.com
+  #       notify:
+  #         success: true
+  #         failure: false
+  #     app_store_connect:
+  #       apple_id: $APPLE_ID
+  #       api_key: $APP_STORE_API_KEY
+  #       api_issuer_id: $APP_STORE_ISSUER_ID
+  #       app_identifier: com.example.breathpacer
+  #       submit_to_testflight: true
