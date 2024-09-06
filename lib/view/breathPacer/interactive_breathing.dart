@@ -1,3 +1,4 @@
+import 'package:breathpacer/bloc/firebreathing/firebreathing_cubit.dart';
 import 'package:breathpacer/bloc/pyramid/pyramid_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
@@ -21,6 +22,7 @@ class _InteractiveBreathingScreenState extends State<InteractiveBreathingScreen>
     super.initState();
 
     context.read<PyramidCubit>().getAllSavedPyramidBreathwork();
+    context.read<FirebreathingCubit>().getAllSavedPyramidBreathwork();
   }
 
   @override

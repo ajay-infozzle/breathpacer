@@ -73,20 +73,7 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
           child: GestureDetector(
             onTap: () {
               storeScreenTime();
-
-              // if(context.read<FirebreathingCubit>().currentRound.toString() == context.read<FirebreathingCubit>().step){
-              //   context.read<FirebreathingCubit>().stopMusic();
-              //   // context.read<PyramidCubit>().resetMusic();
-              //   context.read<FirebreathingCubit>().playChime();
-              //   context.read<FirebreathingCubit>().stopJerry();
-
-              //   if (kDebugMode) {
-              //     print("fire breathing sets finished");
-              //   }
-              // }else{
-              //   context.read<PyramidCubit>().resetJerryVoiceAndPLayAgain();
-              // }
-
+              
               navigate(context.read<FirebreathingCubit>());
             },
             child: Column(
@@ -200,8 +187,14 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
 
   void navigate(FirebreathingCubit cubit) {
     if (cubit.currentSet == cubit.noOfSets) {
+      context.read<FirebreathingCubit>().stopJerry();
+      context.read<FirebreathingCubit>().stopRecovery();
+      context.read<FirebreathingCubit>().stopMusic();
+      context.read<FirebreathingCubit>().playChime();
+      context.read<FirebreathingCubit>().playRelax();
       context.goNamed(RoutesName.fireBreathingSuccessScreen);
     }else {
+      context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
       cubit.currentSet = cubit.currentSet+1;
       context.goNamed(RoutesName.fireBreathingScreen);
     }

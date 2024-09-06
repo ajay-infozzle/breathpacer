@@ -267,7 +267,7 @@ class FirebreathingSettingScreen extends StatelessWidget {
                         spacing: .7,
                         radius: 10,
                         onPress: (){
-                          // context.read<PyramidCubit>().playMusic();
+                          context.read<FirebreathingCubit>().playMusic();
                           
                           context.pushNamed(
                             RoutesName.fireBreathingWaitingScreen,

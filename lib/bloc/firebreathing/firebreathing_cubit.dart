@@ -33,6 +33,25 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   TextEditingController saveInputCont = TextEditingController();
 
 
+  void initialSettings(String stepp, String speedd){
+    noOfSets = 1;
+    currentSet = 0;
+    durationOfSets = 120;
+    jerryVoice = false;
+    music = false;
+    chimes = false;
+    pineal = false;
+    recoveryBreath = false;
+    holdingPeriod = false;
+    isReatartEnable = true ;
+    jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn);
+    breathHoldIndex = 0;
+    isSaveDialogOn = false;
+    saveInputCont.clear();
+  
+    emit(FirebreathingInitial());
+  }
+
   void updateSetsDuration(int sec){
     durationOfSets = sec ;
     emit(FirebreathingUpdateSetDuration());
@@ -133,6 +152,177 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     }
     
     emit(FirebreathingInitial());
+  }
+
+
+  void playMusic() async {
+    try {
+      if(music){
+        await musicPlayer.play(AssetSource('audio/music.mp3'), );
+      
+        //~ Listen for when the music is completed
+        musicPlayer.onPlayerComplete.listen((event) {
+          musicPlayer.play(AssetSource('audio/music.mp3'));
+        });
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playMusic>> ${e.toString()}");
+      }
+    }
+  }
+
+  void stopMusic() async {
+    if(music){
+      await musicPlayer.stop();
+    }
+  }
+
+  void resetMusic() async {
+    try {
+      if(music){
+        musicPlayer.stop();
+      }
+    } on Exception catch (e) {
+     if (kDebugMode) {
+        print("resetMusic>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playChime() async {
+    try {
+      if(chimes){
+        await chimePlayer.play(AssetSource('audio/bell.mp3'));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playChime>> ${e.toString()}");
+      }
+    }
+  }
+
+  void resetChime() async {
+    try {
+      if(chimes){
+        await chimePlayer.stop();
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("resetChime>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playJerry() async {
+    try {
+      if(jerryVoice){
+        //~ for pineal purpose if selected
+        jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.breatheIn) : jerryVoiceOver(JerryVoiceEnum.breatheIn) ;
+      
+        await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
+
+        jerryVoicePlayer.onPlayerComplete.listen((event) {
+          jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
+        });
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playJerry>> ${e.toString()}");
+      }
+    }
+  }
+
+  void stopJerry() async {
+    try {
+      if(jerryVoice){
+        await jerryVoicePlayer.stop();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("stopJerry>> ${e.toString()}");
+      }
+    }
+  }
+
+  void resetJerryVoiceAndPLayAgain() async {
+    try {
+      if(jerryVoice){
+        //~ for pineal purpose if enable
+        jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.breatheIn) : jerryVoiceOver(JerryVoiceEnum.breatheIn) ;
+  
+        jerryVoicePlayer.stop();
+        await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("resetJerryVoiceAndPLayAgain>> ${e.toString()}");
+      }
+    }
+  }
+
+  void updateJerryAudio(String jerryVoice) async {
+    jerryVoiceAssetFile = jerryVoice ;
+  }
+
+  void playHold() async {
+    try {
+      if(jerryVoice){
+        if(breathHoldIndex == 0){
+          await breathHoldPlayer.play(AssetSource('audio/hold_in_breath.mp3'));
+        }
+        if(breathHoldIndex == 1){
+          await breathHoldPlayer.play(AssetSource('audio/hold_out_breath.mp3'));
+        }
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playHold>> ${e.toString()}");
+      }
+    }
+  }
+
+  void stopHold() async {
+    try {
+      if(jerryVoice){
+        await breathHoldPlayer.stop();
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("stopHold>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playRecovery() async {
+    try {
+      if(jerryVoice){
+        // if(breathHoldIndex == 0){
+        //   await breathHoldPlayer.play(AssetSource('audio/hold_in_breath.mp3'));
+        // }
+        // if(breathHoldIndex == 1){
+        //   await breathHoldPlayer.play(AssetSource('audio/hold_out_breath.mp3'));
+        // }
+        //todo: have to add recover sound
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playRecovery>> ${e.toString()}");
+      }
+    }
+  }
+
+  void stopRecovery() async {
+    try {
+      // if(jerryVoice){
+      //   await recoveryPlayer.stop();
+      // }
+      //todo: have to add recover sound
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("stopRecovery>> ${e.toString()}");
+      }
+    }
   }
 
   void playRelax() async {

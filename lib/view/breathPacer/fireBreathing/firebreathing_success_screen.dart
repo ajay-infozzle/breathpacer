@@ -25,7 +25,7 @@ class _FirebreathingSuccessScreenState extends State<FirebreathingSuccessScreen>
   void initState() {
     super.initState();
 
-    // context.read<FirebreathingCubit>().playRelax();
+    context.read<FirebreathingCubit>().playRelax();
   }
 
   @override
@@ -176,7 +176,7 @@ class _FirebreathingSuccessScreenState extends State<FirebreathingSuccessScreen>
                           child: RestartBreathingWidget(
                             onTap: () {
                               context.read<FirebreathingCubit>().isReatartEnable = true ;
-                              // context.read<FirebreathingCubit>().resetSettings();
+                              context.read<FirebreathingCubit>().resetSettings();
                     
                               context.goNamed(
                                 RoutesName.fireSettingScreen,

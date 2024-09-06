@@ -74,25 +74,6 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
             onTap: () {
               storeScreenTime();
 
-              // if(context.read<PyramidCubit>().currentRound.toString() == context.read<PyramidCubit>().step){
-              //   storeScreenTime();
-              //   context.read<PyramidCubit>().stopMusic();
-              //   // context.read<PyramidCubit>().resetMusic();
-              //   context.read<PyramidCubit>().playChime();
-              //   context.read<PyramidCubit>().stopJerry();
-
-              //   if (kDebugMode) {
-              //     print("pyramid rounds finished");
-              //   }
-              //   context.goNamed(RoutesName.pyramidSuccessScreen);
-              // }else{
-              //   storeScreenTime();
-              //   context.read<PyramidCubit>().currentRound = context.read<PyramidCubit>().currentRound+1;
-              //   context.read<PyramidCubit>().resetJerryVoiceAndPLayAgain();
-                
-              //   context.goNamed(RoutesName.pyramidBreathingScreen);
-              // }
-
               navigate(context.read<FirebreathingCubit>());
             },
             child: Column(
@@ -216,14 +197,22 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
   void navigate(FirebreathingCubit cubit) {
     if (cubit.currentSet == cubit.noOfSets) {
       if (cubit.recoveryBreath){
+        context.read<FirebreathingCubit>().stopJerry();
+        context.read<FirebreathingCubit>().playRecovery();
         context.goNamed(RoutesName.fireBreathingRecoveryScreen);
       }
       else{
+        context.read<FirebreathingCubit>().stopJerry();
+        context.read<FirebreathingCubit>().stopMusic();
+        context.read<FirebreathingCubit>().playChime();
+        context.read<FirebreathingCubit>().playRelax();
         context.goNamed(RoutesName.fireBreathingSuccessScreen);
       }
     }else if (cubit.recoveryBreath) {
+      context.read<FirebreathingCubit>().playRecovery();
       context.goNamed(RoutesName.fireBreathingRecoveryScreen);
     } else {
+      context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
       cubit.currentSet = cubit.currentSet+1;
       context.goNamed(RoutesName.fireBreathingScreen);
     }

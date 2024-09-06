@@ -33,6 +33,7 @@ class PyramidCubit extends Cubit<PyramidState> {
     music = false;
     chimes = false;
     isReatartEnable = true ;
+    saveInputCont.clear();
   
     emit(PyramidInitial());
   }

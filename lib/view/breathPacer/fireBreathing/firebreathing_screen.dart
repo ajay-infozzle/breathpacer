@@ -105,8 +105,6 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
   void storeScreenTime() {
     context.read<FirebreathingCubit>().breathingTimeList.add(_startTime);
 
-    // context.read<PyramidCubit>().playHold();
-
     if (kDebugMode) {
       print("Stored breathing Screen Time: $getScreenTiming");
     }
@@ -136,11 +134,11 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
           child: GestureDetector(
             onTap: () {
               countdownController.pause();
+              context.read<FirebreathingCubit>().stopJerry();
+
               storeScreenTime();
 
-              // context.read<PyramidCubit>().stopJerry();
-
-              naviagate(context.read<FirebreathingCubit>());
+              navigate(context.read<FirebreathingCubit>());
             },
             child: Column(
               children: [
@@ -205,8 +203,9 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
                               interval: const Duration(seconds: 1),
                               onFinished: (){
                                 storeScreenTime();
-                                // context.read<PyramidCubit>().stopJerry();
-                                naviagate(context.read<FirebreathingCubit>());
+                                context.read<FirebreathingCubit>().stopJerry();
+
+                                navigate(context.read<FirebreathingCubit>());
                               },
                             ),
                           ),
@@ -299,22 +298,29 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
     }
   }
 
-  void naviagate(FirebreathingCubit cubit) {
+  void navigate(FirebreathingCubit cubit) {
     if (cubit.currentSet == cubit.noOfSets) {
       if(cubit.holdingPeriod){
+        context.read<FirebreathingCubit>().playHold();
         context.goNamed(RoutesName.fireBreathingHoldScreen);
       }
       else if (cubit.recoveryBreath){
+        context.read<FirebreathingCubit>().playRecovery();
         context.goNamed(RoutesName.fireBreathingRecoveryScreen);
       }
       else{
+        context.read<FirebreathingCubit>().playChime();
+        context.read<FirebreathingCubit>().playRelax();
         context.goNamed(RoutesName.fireBreathingSuccessScreen);
       }
     } else if (cubit.holdingPeriod) {
+      context.read<FirebreathingCubit>().playHold();
       context.goNamed(RoutesName.fireBreathingHoldScreen);
     } else if (cubit.recoveryBreath) {
+      context.read<FirebreathingCubit>().playRecovery();
       context.goNamed(RoutesName.fireBreathingRecoveryScreen);
     } else {
+      context.read<FirebreathingCubit>().playJerry();
       cubit.currentSet = cubit.currentSet+1;
       context.pushReplacementNamed(RoutesName.fireBreathingScreen);
     }
