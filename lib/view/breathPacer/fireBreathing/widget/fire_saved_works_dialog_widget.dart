@@ -1,4 +1,4 @@
-import 'package:breathpacer/bloc/pyramid/pyramid_cubit.dart';
+import 'package:breathpacer/bloc/firebreathing/firebreathing_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/utils/constant/interaction_breathing_constant.dart';
 import 'package:breathpacer/utils/custom_button.dart';
@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class PyramidSavedWorksDialogWidget extends StatefulWidget {
-  const PyramidSavedWorksDialogWidget({super.key});
+class FirebreathingSavedWorksDialogWidget extends StatefulWidget {
+  const FirebreathingSavedWorksDialogWidget({super.key});
 
   @override
-  State<PyramidSavedWorksDialogWidget> createState() => _PyramidSavedWorksDialogWidgetState();
+  State<FirebreathingSavedWorksDialogWidget> createState() => _FirebreathingSavedWorksDialogWidgetState();
 }
 
-class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogWidget> {
+class _FirebreathingSavedWorksDialogWidgetState extends State<FirebreathingSavedWorksDialogWidget> {
 
   late double size;
   late double height;
@@ -29,7 +29,7 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PyramidCubit, PyramidState>(
+    return BlocBuilder<FirebreathingCubit, FirebreathingState>(
       builder: (context, state) {
         return Container(
           margin: EdgeInsets.symmetric(horizontal: size*0.03),
@@ -72,11 +72,11 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                         margin: EdgeInsets.only(right: size*0.02),
                         child: CircleAvatar(
                           radius: size*0.042,
-                          child: Image.asset("assets/images/pyramid_icon.png"),
+                          child: Image.asset("assets/images/fire_icon.png"),
                         ),
                       ),
                       Text(
-                        "Pyramid Breathing",
+                        "Fire Breathing",
                         style: TextStyle(
                           color: Colors.black.withOpacity(.6),
                           fontWeight: FontWeight.bold,
@@ -88,7 +88,7 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
               
                   SizedBox(height: size*0.03,),
               
-                  for(int i=0; i<context.read<PyramidCubit>().savedBreathwork.length ; i++) ...[
+                  for(int i=0; i<context.read<FirebreathingCubit>().savedBreathwork.length ; i++) ...[
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -99,7 +99,7 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              context.read<PyramidCubit>().savedBreathwork[i].title!,
+                              context.read<FirebreathingCubit>().savedBreathwork[i].title!,
                               style: TextStyle(
                                 color: Colors.black.withOpacity(.7),
                                 fontWeight: FontWeight.bold,
@@ -127,8 +127,21 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
               
                       if (expandIndex == i) ...[
                         ResultContainerSectionWidget(
-                          title: 'Speed:',
-                          content: context.read<PyramidCubit>().savedBreathwork[i].speed,
+                          title: 'No. of sets:',
+                          content: context.read<FirebreathingCubit>().savedBreathwork[i].numberOfSets,
+                          iconPath: "assets/images/time.png",
+                          iconSize: 25.0,
+                          showIcon: true,
+                          showContent: true,
+                          containerColor: Colors.white,
+                          textColor: Colors.black.withOpacity(.7),
+                          iconColor: const Color(0xffFE60D4),
+                        ),
+
+
+                        ResultContainerSectionWidget(
+                          title: 'Duration of sets:',
+                          content: getFormattedTime(context.read<FirebreathingCubit>().savedBreathwork[i].durationOfEachSet!),
                           iconPath: "assets/images/time.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -140,7 +153,7 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
               
                         ResultContainerSectionWidget(
                           title: "Jerry's voice:",
-                          content: context.read<PyramidCubit>().savedBreathwork[i].jerryVoice! ?"Yes" : "No",
+                          content: context.read<FirebreathingCubit>().savedBreathwork[i].jerryVoice! ?"Yes" : "No",
                           iconPath: "assets/images/voice.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -152,7 +165,7 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
               
                         ResultContainerSectionWidget(
                           title: "Music:",
-                          content: context.read<PyramidCubit>().savedBreathwork[i].music! ?"Yes" : "No",
+                          content: context.read<FirebreathingCubit>().savedBreathwork[i].music! ?"Yes" : "No",
                           iconPath: "assets/images/music.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -164,7 +177,7 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
               
                         ResultContainerSectionWidget(
                           title: "Chimes at start/stop points:",
-                          content: context.read<PyramidCubit>().savedBreathwork[i].chimes! ?"Yes" : "No",
+                          content: context.read<FirebreathingCubit>().savedBreathwork[i].chimes! ?"Yes" : "No",
                           iconPath: "assets/images/chime.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -173,10 +186,11 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                           textColor: Colors.black.withOpacity(.7),
                           iconColor: const Color(0xffFE60D4),
                         ),
-              
+                        
+                        if(context.read<FirebreathingCubit>().savedBreathwork[i].holdPeriodEnabled!)
                         ResultContainerSectionWidget(
                           title: "Choice of breath hold:",
-                          content: context.read<PyramidCubit>().savedBreathwork[i].choiceOfBreathHold,
+                          content: context.read<FirebreathingCubit>().savedBreathwork[i].choiceOfBreathHold,
                           iconPath: "assets/images/breath_hold.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -186,9 +200,10 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                           iconColor: const Color(0xffFE60D4),
                         ),
               
+
                         ResultContainerSectionWidget(
                           title: 'Total breathing time:',
-                          content: getTotalTimeString(context.read<PyramidCubit>().savedBreathwork[i].breathingTimeList!),
+                          content: getTotalTimeString(context.read<FirebreathingCubit>().savedBreathwork[i].breathingTimeList!),
                           iconPath: "assets/images/time.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -198,9 +213,23 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                           iconColor: const Color(0xffFE60D4),
                         ),
               
+                        if(context.read<FirebreathingCubit>().savedBreathwork[i].holdPeriodEnabled!)
                         ResultContainerSectionWidget(
                           title: 'Total Holding time:',
-                          content: getTotalTimeString(context.read<PyramidCubit>().savedBreathwork[i].holdTimeList!),
+                          content: getTotalTimeString(context.read<FirebreathingCubit>().savedBreathwork[i].holdTimeList!),
+                          iconPath: "assets/images/time.png",
+                          iconSize: 25.0,
+                          showIcon: true,
+                          showContent: true,
+                          containerColor: Colors.white,
+                          textColor: Colors.black.withOpacity(.7),
+                          iconColor: const Color(0xffFE60D4),
+                        ),
+
+                        if(context.read<FirebreathingCubit>().savedBreathwork[i].recoveryEnabled!)
+                        ResultContainerSectionWidget(
+                          title: 'Recovery breath time:',
+                          content: getTotalTimeString(context.read<FirebreathingCubit>().savedBreathwork[i].recoveryTimeList!),
                           iconPath: "assets/images/time.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -222,7 +251,7 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                                 buttonColor: Colors.transparent,
                                 textColor: const Color(0xffFE60D4),
                                 onPress: (){
-                                  context.read<PyramidCubit>().deleteSavedPyramidBreathwork(i);
+                                  context.read<FirebreathingCubit>().deleteSavedPyramidBreathwork(i);
                                 }
                               ),
                             ),
@@ -234,19 +263,22 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                                 spacing: .7,
                                 radius: 8,
                                 onPress: (){
-                                  context.read<PyramidCubit>().holdTimeList.clear();
-                                  context.read<PyramidCubit>().breathingTimeList.clear();
+                                  context.read<FirebreathingCubit>().holdTimeList.clear();
+                                  context.read<FirebreathingCubit>().breathingTimeList.clear();
+                                  context.read<FirebreathingCubit>().recoveryTimeList.clear();
 
-                                  final savedWork = context.read<PyramidCubit>().savedBreathwork[i] ;
-                                  context.read<PyramidCubit>().step = savedWork.step ;
-                                  context.read<PyramidCubit>().speed = savedWork.speed ;
-                                  context.read<PyramidCubit>().jerryVoice = savedWork.jerryVoice! ;
-                                  context.read<PyramidCubit>().music = savedWork.music! ;
-                                  context.read<PyramidCubit>().chimes = savedWork.chimes! ;
-                                  context.read<PyramidCubit>().choiceOfBreathHold = savedWork.choiceOfBreathHold! ;
+                                  final savedWork = context.read<FirebreathingCubit>().savedBreathwork[i] ;
+                                  context.read<FirebreathingCubit>().noOfSets = int.parse(savedWork.numberOfSets!) ;
+                                  context.read<FirebreathingCubit>().durationOfSets = savedWork.durationOfEachSet! ;
+                                  context.read<FirebreathingCubit>().holdingPeriod = savedWork.holdPeriodEnabled! ;
+                                  context.read<FirebreathingCubit>().pineal = savedWork.pineal! ;
+                                  context.read<FirebreathingCubit>().jerryVoice = savedWork.jerryVoice! ;
+                                  context.read<FirebreathingCubit>().music = savedWork.music! ;
+                                  context.read<FirebreathingCubit>().chimes = savedWork.chimes! ;
+                                  context.read<FirebreathingCubit>().choiceOfBreathHold = savedWork.choiceOfBreathHold! ;
                                   
                                   context.pop();
-                                  context.pushNamed(RoutesName.pyramidWaitingScreen);
+                                  context.pushNamed(RoutesName.fireBreathingWaitingScreen);
                                 }
                               ),
                             ),                    
@@ -256,7 +288,7 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                         SizedBox(height: size*0.03,),
                       ],
               
-                      if(!(i+1 == context.read<PyramidCubit>().savedBreathwork.length))
+                      if(!(i+1 == context.read<FirebreathingCubit>().savedBreathwork.length))
                       Container(
                         height: 1,
                         color: Colors.grey.withOpacity(.3),

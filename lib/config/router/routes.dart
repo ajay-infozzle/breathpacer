@@ -1,8 +1,13 @@
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_instruction_screen.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_setting_screen.dart';
+import 'package:breathpacer/view/breathPacer/fireBreathing/firebreathing_hold_screen.dart';
 import 'package:breathpacer/view/breathPacer/fireBreathing/firebreathing_instruction_screen.dart';
+import 'package:breathpacer/view/breathPacer/fireBreathing/firebreathing_recovery_screen.dart';
+import 'package:breathpacer/view/breathPacer/fireBreathing/firebreathing_screen.dart';
 import 'package:breathpacer/view/breathPacer/fireBreathing/firebreathing_setting_screen.dart';
+import 'package:breathpacer/view/breathPacer/fireBreathing/firebreathing_success_screen.dart';
+import 'package:breathpacer/view/breathPacer/fireBreathing/firebreathing_waiting_screen.dart';
 import 'package:breathpacer/view/breathPacer/interactive_breathing.dart';
 import 'package:breathpacer/view/breathPacer/pinealGlandActivation/pineal_instruction_screen.dart';
 import 'package:breathpacer/view/breathPacer/pinealGlandActivation/pineal_setting_screen.dart';
@@ -165,6 +170,66 @@ class AppRoutes {
                 FirebreathingSettingScreen(
                   subTitle: parameters["subTitle"]!,
                 ), 
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.fireBreathingWaitingScreen,
+            name: RoutesName.fireBreathingWaitingScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const FirebreathingWaitingScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.fireBreathingScreen,
+            name: RoutesName.fireBreathingScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const FirebreathingScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.fireBreathingHoldScreen,
+            name: RoutesName.fireBreathingHoldScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const FirebreathingHoldScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.fireBreathingRecoveryScreen,
+            name: RoutesName.fireBreathingRecoveryScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const FirebreathingRecoveryScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.fireBreathingSuccessScreen,
+            name: RoutesName.fireBreathingSuccessScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const FirebreathingSuccessScreen(),
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );

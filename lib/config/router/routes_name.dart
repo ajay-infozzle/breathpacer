@@ -15,6 +15,11 @@ class RoutesName {
   //~ firebreathing
   static const String fireInstructionScreen = "fire-instruction";
   static const String fireSettingScreen = "fire-setting";
+  static const String fireBreathingWaitingScreen = "fire-waiting";
+  static const String fireBreathingScreen = "fire-breathing";
+  static const String fireBreathingHoldScreen = "fire-hold";
+  static const String fireBreathingRecoveryScreen = "fire-recovery";
+  static const String fireBreathingSuccessScreen = "fire-success";
 
   //~ DNA breathing
   static const String dnaInstructionScreen = "dna-instruction";
