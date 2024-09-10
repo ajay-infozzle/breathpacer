@@ -62,7 +62,7 @@ class DnaBreathWorkPreferenceWidget extends StatelessWidget {
 
         if(context.read<DnaCubit>().isTimeBreathingApproch)
         ResultContainerSectionWidget(
-          title: 'Duration of sets:',
+          title: 'Duration of each set:',
           content: getFormattedTime(context.read<DnaCubit>().durationOfSet),
           iconPath: "assets/images/time.png",
           iconSize: 25.0,
