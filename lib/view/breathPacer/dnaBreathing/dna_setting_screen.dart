@@ -258,6 +258,24 @@ class _DnaSettingScreenState extends State<DnaSettingScreen> with SingleTickerPr
                           }, 
                         ),
                         
+                        Container(
+                          width: size,
+                          margin: EdgeInsets.only(left: size*0.05, right: size*0.07, top: size*0.05),
+                          child: BlocBuilder<DnaCubit, DnaState>(
+                            buildWhen: (previous, current) => current is DnaInitial || current is DnaHoldDurationUpdate,
+                            builder: (context, state) {
+                              return SettingsDropdownButton(
+                                onSelected: (int selected) {
+                                  context.read<DnaCubit>().updateHold(selected);
+                                },
+                                title: "Hold time:",
+                                selected: context.read<DnaCubit>().holdDuration, 
+                                options: context.read<DnaCubit>().holdDurationList, 
+                                isTime: true,
+                              );
+                            }, 
+                          ),
+                        ),
                     
                         SizedBox(height: size*0.03,),
                         Container(
@@ -275,6 +293,28 @@ class _DnaSettingScreenState extends State<DnaSettingScreen> with SingleTickerPr
                               );
                             }, 
                           ),
+                        ),
+
+                        
+                        BlocBuilder<DnaCubit, DnaState>(
+                          builder: (context, state) {
+                            if(context.read<DnaCubit>().recoveryBreath){
+                              return Container(
+                                width: size,
+                                margin: EdgeInsets.only(left: size*0.05, right: size*0.07, top: size*0.05),
+                                child: SettingsDropdownButton(
+                                  onSelected: (int selected) {
+                                    context.read<DnaCubit>().updateRecoveryDuration(selected);
+                                  },
+                                  title: "Recovery breath duration:",
+                                  selected: context.read<DnaCubit>().recoveryBreathDuration, 
+                                  options: context.read<DnaCubit>().recoveryDurationList, 
+                                  isTime: true,
+                                ),
+                              );
+                            }
+                            return const SizedBox();
+                          }, 
                         ),
                     
                         SizedBox(height: size*0.03,),
@@ -406,9 +446,9 @@ class _DnaSettingScreenState extends State<DnaSettingScreen> with SingleTickerPr
                           onPress: (){
                             // context.read<DnaCubit>().playMusic();
                             
-                            // context.pushNamed(
-                            //   RoutesName.PinealWaitingScreen,
-                            // );
+                            context.pushNamed(
+                              RoutesName.dnaWaitingScreen,
+                            );
                           }
                         )
                       ),

@@ -24,8 +24,17 @@ class RoutesName {
   //~ DNA breathing
   static const String dnaInstructionScreen = "dna-instruction";
   static const String dnaSettingScreen = "dna-setting";
+  static const String dnaWaitingScreen = "dna-waiting";
+  static const String dnaBreathingScreen = "dna-breathing";
+  static const String dnaHoldScreen = "dna-hold";
+  static const String dnaRecoveryScreen = "dna-recovery";
+  static const String dnaSuccessScreen = "dna-success";
 
   //~ pineal gland activation
   static const String pinealInstructionScreen = "pineal-instruction";
   static const String pinealSettingScreen = "pineal-setting";
+  static const String pinealWaitingScreen = "pineal-waiting";
+  static const String pinealScreen = "pineal-breathing";
+  static const String pinealRecoveryScreen = "pineal-recovery";
+  static const String pinealSuccessScreen = "pineal-success";
 }

@@ -1,6 +1,11 @@
 import 'package:breathpacer/config/router/routes_name.dart';
+import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_breathing_screen.dart';
+import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_hold_screen.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_instruction_screen.dart';
+import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_recovery_screen.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_setting_screen.dart';
+import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_success_screen.dart';
+import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_waiting_screen.dart';
 import 'package:breathpacer/view/breathPacer/fireBreathing/firebreathing_hold_screen.dart';
 import 'package:breathpacer/view/breathPacer/fireBreathing/firebreathing_instruction_screen.dart';
 import 'package:breathpacer/view/breathPacer/fireBreathing/firebreathing_recovery_screen.dart';
@@ -259,6 +264,67 @@ class AppRoutes {
                 DnaSettingScreen(
                   subTitle: parameters["subTitle"]!,
                 ), 
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+
+          GoRoute(
+            path: RoutesName.dnaWaitingScreen,
+            name: RoutesName.dnaWaitingScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const DnaWaitingScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.dnaBreathingScreen,
+            name: RoutesName.dnaBreathingScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const DnaBreathingScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.dnaHoldScreen,
+            name: RoutesName.dnaHoldScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const DnaHoldScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.dnaRecoveryScreen,
+            name: RoutesName.dnaRecoveryScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const DnaRecoveryScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.dnaSuccessScreen,
+            name: RoutesName.dnaSuccessScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const DnaSuccessScreen(),
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );

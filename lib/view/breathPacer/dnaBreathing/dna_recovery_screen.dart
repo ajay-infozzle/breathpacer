@@ -1,29 +1,34 @@
 import 'dart:async';
 
-import 'package:breathpacer/bloc/firebreathing/firebreathing_cubit.dart';
+import 'package:breathpacer/bloc/dna/dna_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:timer_count_down/timer_controller.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
-class FirebreathingRecoveryScreen extends StatefulWidget {
-  const FirebreathingRecoveryScreen({super.key});
+class DnaRecoveryScreen extends StatefulWidget {
+  const DnaRecoveryScreen({super.key});
 
   @override
-  State<FirebreathingRecoveryScreen> createState() => _FirebreathingRecoveryScreenState();
+  State<DnaRecoveryScreen> createState() => _DnaRecoveryScreenState();
 }
 
-class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScreen> {
-
+class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
+  
+  late CountdownController countdownController;
   late Timer _timer;
   int _startTime = 0;
 
   @override
   void initState() {
     super.initState();
+
     startTimer();
+    countdownController = CountdownController(autoStart: true);
   }
 
   void startTimer() {
@@ -43,10 +48,10 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
   }
 
   void storeScreenTime() {
-    context.read<FirebreathingCubit>().recoveryTimeList.add(_startTime);
+    context.read<DnaCubit>().recoveryTimeList.add(_startTime);
 
     if (kDebugMode) {
-      print("breath recovery Time: $getScreenTiming");
+      print("Dna breath recovery Time: $getScreenTiming");
     }
   }
 
@@ -74,7 +79,8 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
             onTap: () {
               storeScreenTime();
               
-              navigate(context.read<FirebreathingCubit>());
+              countdownController.pause();
+              navigate(context.read<DnaCubit>());
             },
             child: Column(
               children: [
@@ -84,7 +90,7 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
                   centerTitle: true,
                   automaticallyImplyLeading: false,
                   title: Text(
-                    "Set ${context.read<FirebreathingCubit>().currentSet}",
+                    "Set ${context.read<DnaCubit>().currentSet}",
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -130,12 +136,23 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
                         width: size,
                         alignment: Alignment.center,
                         child: Center(
-                          child: Text(
-                            getScreenTiming,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: size*0.2
+                          child: Countdown(
+                            controller: countdownController,
+                            seconds: context.read<DnaCubit>().holdDuration,
+                            build: (BuildContext context, double time) => Text(
+                              formatTimer(time),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: size*0.2
+                              ),
                             ),
+                            interval: const Duration(seconds: 1),
+                            onFinished: (){
+                              storeScreenTime();
+                              // context.read<DnaCubit>().stopJerry();
+
+                              navigate(context.read<DnaCubit>());
+                            },
                           ),
                         ),
                       ),
@@ -149,7 +166,7 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              generateTapText(context.read<FirebreathingCubit>()),
+                              generateTapText(context.read<DnaCubit>()),
                               style: TextStyle(color: Colors.white, fontSize: size*0.045),
                             ),
                             const SizedBox(width: 10),
@@ -169,7 +186,8 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
     );
   }
 
-  String generateTapText(FirebreathingCubit cubit) {
+  
+  String generateTapText(DnaCubit cubit) {
     if (cubit.currentSet == cubit.noOfSets) {
       return "Tap to finish";
     } else {
@@ -177,19 +195,29 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
     }
   }
 
-  void navigate(FirebreathingCubit cubit) {
-    if (cubit.currentSet == cubit.noOfSets) {
-      context.read<FirebreathingCubit>().stopJerry();
-      context.read<FirebreathingCubit>().stopRecovery();
-      context.read<FirebreathingCubit>().stopMusic();
-      context.read<FirebreathingCubit>().playChime();
-      context.read<FirebreathingCubit>().playRelax();
-      context.goNamed(RoutesName.fireBreathingSuccessScreen);
-    }else {
-      context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
-      cubit.currentSet = cubit.currentSet+1;
-      context.goNamed(RoutesName.fireBreathingScreen);
-    }
+  String formatTimer(double time) {
+    int minutes = (time / 60).floor(); 
+    int seconds = (time % 60).floor(); 
+    
+    String minutesStr = minutes.toString().padLeft(2, '0'); 
+    String secondsStr = seconds.toString().padLeft(2, '0'); 
+    
+    return "$minutesStr:$secondsStr";
   }
 
+  void navigate(DnaCubit cubit) {
+    if (cubit.currentSet == cubit.noOfSets) {
+      // context.read<DnaCubit>().stopJerry();
+      // context.read<DnaCubit>().stopRecovery();
+      // context.read<DnaCubit>().stopMusic();
+      // context.read<DnaCubit>().playChime();
+      // context.read<DnaCubit>().playRelax();
+
+      context.goNamed(RoutesName.dnaSuccessScreen);
+    }else {
+      // context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
+      cubit.currentSet = cubit.currentSet+1;
+      context.goNamed(RoutesName.dnaBreathingScreen);
+    }
+  }
 }

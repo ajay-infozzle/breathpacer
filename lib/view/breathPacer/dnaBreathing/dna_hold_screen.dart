@@ -1,29 +1,35 @@
 import 'dart:async';
-
-import 'package:breathpacer/bloc/firebreathing/firebreathing_cubit.dart';
+import 'package:breathpacer/bloc/dna/dna_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:timer_count_down/timer_controller.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
-class FirebreathingRecoveryScreen extends StatefulWidget {
-  const FirebreathingRecoveryScreen({super.key});
+class DnaHoldScreen extends StatefulWidget {
+  const DnaHoldScreen({super.key});
 
   @override
-  State<FirebreathingRecoveryScreen> createState() => _FirebreathingRecoveryScreenState();
+  State<DnaHoldScreen> createState() => _DnaHoldScreenState();
 }
 
-class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScreen> {
-
+class _DnaHoldScreenState extends State<DnaHoldScreen> {
+  
   late Timer _timer;
+  late CountdownController countdownController;
   int _startTime = 0;
 
   @override
   void initState() {
     super.initState();
     startTimer();
+
+    if(context.read<DnaCubit>().holdDuration != -1){
+      countdownController = CountdownController(autoStart: true);
+    }
   }
 
   void startTimer() {
@@ -43,10 +49,15 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
   }
 
   void storeScreenTime() {
-    context.read<FirebreathingCubit>().recoveryTimeList.add(_startTime);
+    if(context.read<DnaCubit>().breathHoldIndex == 0 || context.read<DnaCubit>().breathHoldIndex == 2){
+      context.read<DnaCubit>().holdInbreathTimeList.add(_startTime);
+    }
+    else{
+      context.read<DnaCubit>().holdBreathoutTimeList.add(_startTime);
+    }
 
     if (kDebugMode) {
-      print("breath recovery Time: $getScreenTiming");
+      print("Dna breath hold Time: $getScreenTiming");
     }
   }
 
@@ -73,8 +84,11 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
           child: GestureDetector(
             onTap: () {
               storeScreenTime();
-              
-              navigate(context.read<FirebreathingCubit>());
+
+              if(context.read<DnaCubit>().holdDuration != -1){
+                countdownController.pause();
+              }
+              navigate(context.read<DnaCubit>());
             },
             child: Column(
               children: [
@@ -84,7 +98,7 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
                   centerTitle: true,
                   automaticallyImplyLeading: false,
                   title: Text(
-                    "Set ${context.read<FirebreathingCubit>().currentSet}",
+                    "Set ${context.read<DnaCubit>().currentSet}",
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -104,7 +118,7 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
                         margin: EdgeInsets.symmetric(horizontal: size*0.05),
                         alignment: Alignment.center,
                         child: Text(
-                          "Recovery breath",
+                          "${context.read<DnaCubit>().pineal?"Squeeze & ":""}Hold on ${checkBreathChoice(context)}",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: size*0.05,
@@ -120,13 +134,16 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
                         child: CircleAvatar(
                           radius: size*0.3,
                           child: Image.asset(
-                            "assets/images/recovery_breath.png",
+                            checkBreathChoice(context) == 'in-breath' 
+                            ?"assets/images/breath_in.png"
+                            :"assets/images/breath_out.png",
                           ),
                         ),
                       ),
-            
-                      SizedBox(height: height*0.04,),
+
+                      if(context.read<DnaCubit>().holdDuration == -1)
                       Container(
+                        margin: EdgeInsets.only(top: height*0.04,bottom: height*0.04),
                         width: size,
                         alignment: Alignment.center,
                         child: Center(
@@ -139,7 +156,35 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
                           ),
                         ),
                       ),
-                      SizedBox(height: height*0.04,),
+
+
+                      if(context.read<DnaCubit>().holdDuration != -1)
+                      Container(
+                        margin: EdgeInsets.only(top: height*0.04,bottom: height*0.04),
+                        width: size,
+                        alignment: Alignment.center,
+                        child: Center(
+                          child: Countdown(
+                            controller: countdownController,
+                            seconds: context.read<DnaCubit>().holdDuration,
+                            build: (BuildContext context, double time) => Text(
+                              formatTimer(time),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: size*0.2
+                              ),
+                            ),
+                            interval: const Duration(seconds: 1),
+                            onFinished: (){
+                              storeScreenTime();
+                              // context.read<DnaCubit>().stopJerry();
+
+                              navigate(context.read<DnaCubit>());
+                            },
+                          ),
+                        ),
+                      ),
+     
 
                       const Spacer(),
                       Container(
@@ -149,7 +194,7 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              generateTapText(context.read<FirebreathingCubit>()),
+                              generateTapText(context.read<DnaCubit>()),
                               style: TextStyle(color: Colors.white, fontSize: size*0.045),
                             ),
                             const SizedBox(width: 10),
@@ -169,27 +214,57 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
     );
   }
 
-  String generateTapText(FirebreathingCubit cubit) {
-    if (cubit.currentSet == cubit.noOfSets) {
-      return "Tap to finish";
-    } else {
-      return "Tap to go to next set";
+  String checkBreathChoice(BuildContext context) {
+    if(context.read<DnaCubit>().breathHoldIndex == 0){
+      return 'in-breath';
+    }else{
+      return 'out-breath';
+    }
+  }
+  
+  String formatTimer(double time) {
+    int minutes = (time / 60).floor(); 
+    int seconds = (time % 60).floor(); 
+    
+    String minutesStr = minutes.toString().padLeft(2, '0'); 
+    String secondsStr = seconds.toString().padLeft(2, '0'); 
+    
+    return "$minutesStr:$secondsStr";
+  }
+  
+  String generateTapText(DnaCubit cubit) {
+    if(cubit.choiceOfBreathHold == "Both" && cubit.breathHoldIndex == 0){
+      return "Tap to hold ${cubit.breathHoldList[1]}";
+    } 
+    else{
+      if(cubit.recoveryBreath){
+        return "Tap to go to recovery breath";
+      }else{
+        if(cubit.noOfSets == cubit.currentSet ){
+          return "Tap to finish";
+        }else{
+          return "Tap to go to next set";
+        }
+      }
     }
   }
 
-  void navigate(FirebreathingCubit cubit) {
-    if (cubit.currentSet == cubit.noOfSets) {
-      context.read<FirebreathingCubit>().stopJerry();
-      context.read<FirebreathingCubit>().stopRecovery();
-      context.read<FirebreathingCubit>().stopMusic();
-      context.read<FirebreathingCubit>().playChime();
-      context.read<FirebreathingCubit>().playRelax();
-      context.goNamed(RoutesName.fireBreathingSuccessScreen);
-    }else {
-      context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
-      cubit.currentSet = cubit.currentSet+1;
-      context.goNamed(RoutesName.fireBreathingScreen);
+  void navigate(DnaCubit cubit) {
+    if(cubit.choiceOfBreathHold == "Both" && cubit.breathHoldIndex == 0){
+      cubit.breathHoldIndex = 1;
+      context.pushReplacementNamed(RoutesName.dnaHoldScreen);
+    } 
+    else{
+      if(cubit.recoveryBreath){
+        context.goNamed(RoutesName.dnaRecoveryScreen);
+      }else{
+        if(cubit.noOfSets == cubit.currentSet ){
+          context.goNamed(RoutesName.dnaSuccessScreen);
+        }else{
+          cubit.currentSet = cubit.currentSet+1 ;
+          context.goNamed(RoutesName.dnaBreathingScreen);
+        }
+      }
     }
   }
-
 }

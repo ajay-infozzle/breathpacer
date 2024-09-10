@@ -186,30 +186,30 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
                         alignment: Alignment.center,
                         child: ClipPath(
                           clipper: OctagonalClipper(),
-                          child: Container(
-                          height: size-2*(size*0.12),
-                          color: AppTheme.colors.blueNotChosen.withOpacity(.3),
-                          child: Center(
-                            child: Countdown(
-                              controller: countdownController,
-                              seconds: context.read<FirebreathingCubit>().durationOfSets,
-                              build: (BuildContext context, double time) => Text(
-                                formatTimer(time),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: size*0.2
+                            child: Container(
+                            height: size-2*(size*0.12),
+                            color: AppTheme.colors.blueNotChosen.withOpacity(.3),
+                            child: Center(
+                              child: Countdown(
+                                controller: countdownController,
+                                seconds: context.read<FirebreathingCubit>().durationOfSets,
+                                build: (BuildContext context, double time) => Text(
+                                  formatTimer(time),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: size*0.2
+                                  ),
                                 ),
-                              ),
-                              interval: const Duration(seconds: 1),
-                              onFinished: (){
-                                storeScreenTime();
-                                context.read<FirebreathingCubit>().stopJerry();
+                                interval: const Duration(seconds: 1),
+                                onFinished: (){
+                                  storeScreenTime();
+                                  context.read<FirebreathingCubit>().stopJerry();
 
-                                navigate(context.read<FirebreathingCubit>());
-                              },
+                                  navigate(context.read<FirebreathingCubit>());
+                                },
+                              ),
                             ),
                           ),
-                        ),
                         ),
                       ),
                       // AnimatedBuilder(
