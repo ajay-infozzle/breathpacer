@@ -26,9 +26,9 @@ class FirebreathingSettingScreen extends StatelessWidget {
         if(context.read<FirebreathingCubit>().isReatartEnable){
           context.goNamed(RoutesName.homeScreen);
         }
-        else{
-          context.pop();
-        } 
+        // else{
+        //   context.pop();
+        // } 
       },
       child: Scaffold(
         body: Container(

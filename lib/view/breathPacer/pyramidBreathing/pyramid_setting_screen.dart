@@ -61,9 +61,9 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen> with Single
         if(context.read<PyramidCubit>().isReatartEnable){
           context.goNamed(RoutesName.homeScreen);
         }
-        else{
-          context.pop();
-        }
+        // else{
+        //   context.pop();
+        // }
       },
       child: Scaffold(
         body: Container(
@@ -77,17 +77,17 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen> with Single
                 iconTheme: const IconThemeData(color: Colors.white),
                 backgroundColor: Colors.transparent,
                 centerTitle: true,
-                  leading: GestureDetector(
-                    onTap: (){
-                      if(context.read<PyramidCubit>().isReatartEnable){
-                        context.goNamed(RoutesName.homeScreen);
-                      }
-                      else{
-                        context.pop();
-                      }
-                    },
-                    child: const Icon(Icons.arrow_back_ios),
-                  ),
+                leading: GestureDetector(
+                  onTap: (){
+                    if(context.read<PyramidCubit>().isReatartEnable){
+                      context.goNamed(RoutesName.homeScreen);
+                    }
+                    else{
+                      context.pop();
+                    }
+                  },
+                  child: const Icon(Icons.arrow_back_ios),
+                ),
                 title: const Text(
                   "Pyramid Breathing",
                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

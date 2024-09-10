@@ -8,10 +8,12 @@ class SettingsDropdownButton extends StatelessWidget {
     required this.title,
     required this.selected,
     required this.options,
-    this.isTime = false
+    this.isTime = false,
+    this.isnumber = false
   });
 
   final bool? isTime ;
+  final bool? isnumber ;
   final String title;
   final int selected;
   final List<int> options;
@@ -50,7 +52,7 @@ class SettingsDropdownButton extends StatelessWidget {
             selectedItemBuilder: (BuildContext context) {
               return options.map<Widget>((int value) {
                 return Text(
-                  isTime! ? getFormattedTime(value) :'$value set',
+                  isTime! ? (value==-1 ? "Infinite" :getFormattedTime(value)) :(isnumber!? '$value' : '$value set'),
                   style: const TextStyle(color: Colors.white),
                 );
               }).toList();
@@ -59,7 +61,7 @@ class SettingsDropdownButton extends StatelessWidget {
               return DropdownMenuItem<int>(
                 value: value,
                 child: Text(
-                  isTime! ? getFormattedTime(value).trim() :'$value set',
+                  isTime! ? (value==-1 ? "Infinite" :getFormattedTime(value)) : (isnumber!? '$value' : '$value set'),
                   style: const TextStyle(
                     color: Colors.black, 
                   ),
