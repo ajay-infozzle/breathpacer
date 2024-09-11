@@ -263,7 +263,7 @@ class _PinealSavedWorkDialogWidgetState extends State<PinealSavedWorkDialogWidge
                                   
                                   
                                   context.pop();
-                                  context.pushNamed(RoutesName.dnaWaitingScreen);
+                                  context.pushNamed(RoutesName.pinealWaitingScreen);
                                 }
                               ),
                             ),                    
