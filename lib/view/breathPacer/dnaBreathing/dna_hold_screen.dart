@@ -252,6 +252,9 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
   void navigate(DnaCubit cubit) {
     if(cubit.choiceOfBreathHold == "Both" && cubit.breathHoldIndex == 0){
       cubit.breathHoldIndex = 1;
+      context.read<DnaCubit>().stopHold();
+      context.read<DnaCubit>().playHold();
+      
       context.pushReplacementNamed(RoutesName.dnaHoldScreen);
     } 
     else{

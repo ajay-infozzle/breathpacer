@@ -19,3 +19,4 @@ final class DnaToggleMusic extends DnaState {}
 final class DnaToggleChimes extends DnaState {}
 final class DnaToggleBreathHoldChoice extends DnaState {}
 final class DnaToggleSave extends DnaState {}
+final class DnaBreathworkFetched extends DnaState {}

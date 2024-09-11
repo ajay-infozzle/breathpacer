@@ -37,6 +37,7 @@ class _FirebreathingSuccessScreenState extends State<FirebreathingSuccessScreen>
       canPop: false,
       onPopInvoked: (didPop) {
         if(!context.read<FirebreathingCubit>().isSaveDialogOn){
+          context.read<FirebreathingCubit>().resetSettings();
           context.goNamed(RoutesName.homeScreen);
         }
       },
@@ -59,6 +60,7 @@ class _FirebreathingSuccessScreenState extends State<FirebreathingSuccessScreen>
                     centerTitle: true,
                     leading: GestureDetector(
                       onTap: (){
+                        context.read<FirebreathingCubit>().resetSettings();
                         context.goNamed(RoutesName.homeScreen);
                       },
                       child: const Icon(Icons.arrow_back_ios),

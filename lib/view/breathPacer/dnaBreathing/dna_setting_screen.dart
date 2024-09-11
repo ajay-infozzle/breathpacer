@@ -444,7 +444,7 @@ class _DnaSettingScreenState extends State<DnaSettingScreen> with SingleTickerPr
                           spacing: .7,
                           radius: 0,
                           onPress: (){
-                            // context.read<DnaCubit>().playMusic();
+                            context.read<DnaCubit>().playMusic();
                             
                             context.pushNamed(
                               RoutesName.dnaWaitingScreen,

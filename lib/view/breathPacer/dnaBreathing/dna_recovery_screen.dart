@@ -207,15 +207,15 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
 
   void navigate(DnaCubit cubit) {
     if (cubit.currentSet == cubit.noOfSets) {
-      // context.read<DnaCubit>().stopJerry();
-      // context.read<DnaCubit>().stopRecovery();
-      // context.read<DnaCubit>().stopMusic();
-      // context.read<DnaCubit>().playChime();
-      // context.read<DnaCubit>().playRelax();
+      context.read<DnaCubit>().stopJerry();
+      context.read<DnaCubit>().stopRecovery();
+      context.read<DnaCubit>().stopMusic();
+      context.read<DnaCubit>().playChime();
+      context.read<DnaCubit>().playRelax();
 
       context.goNamed(RoutesName.dnaSuccessScreen);
     }else {
-      // context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
+      context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
       cubit.currentSet = cubit.currentSet+1;
       context.goNamed(RoutesName.dnaBreathingScreen);
     }

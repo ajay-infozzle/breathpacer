@@ -148,7 +148,7 @@ class DnaBreathWorkPreferenceWidget extends StatelessWidget {
         ResultContainerSectionWidget(
           title: "Pineal Gland:",
           content: context.read<DnaCubit>().pineal ?"Yes" : "No",
-          iconPath: "assets/images/pineal_icon.png",
+          iconPath: "assets/images/pineal_1.png",
           iconSize: 25.0,
           showIcon: true,
           showContent: true,

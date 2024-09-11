@@ -3,6 +3,7 @@ import 'package:breathpacer/bloc/firebreathing/firebreathing_cubit.dart';
 import 'package:breathpacer/bloc/pineal/pineal_cubit.dart';
 import 'package:breathpacer/bloc/pyramid/pyramid_cubit.dart';
 import 'package:breathpacer/utils/custom_button.dart';
+import 'package:breathpacer/view/breathPacer/dnaBreathing/widget/dna_saved_work_dialog_widget.dart';
 import 'package:breathpacer/view/breathPacer/fireBreathing/widget/fire_saved_works_dialog_widget.dart';
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/widget/pyramid_saved_works_dialog_widget.dart';
 import 'package:flutter/material.dart';
@@ -121,10 +122,10 @@ class _InteractiveContainerWidgetState extends State<InteractiveContainerWidget>
         total = context.read<FirebreathingCubit>().savedBreathwork.length; 
         break;
       case 2:
-        // total = context.read<PyramidCubit>().getBreathworkCountForIndex(2);
+        total = context.read<DnaCubit>().savedBreathwork.length; 
         break;
       case 3:
-        // total = context.read<PyramidCubit>().getBreathworkCountForIndex(3);
+        // total = context.read<DnaCubit>().savedBreathwork.length;
         break;
     }
 
@@ -170,7 +171,7 @@ class _InteractiveContainerWidgetState extends State<InteractiveContainerWidget>
       case 1:
         return const FirebreathingSavedWorksDialogWidget();
       case 2:
-        return const SizedBox();
+        return const DnaSavedWorkDialogWidget();
       case 3:
         return const SizedBox();
     }

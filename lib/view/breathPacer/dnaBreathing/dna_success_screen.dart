@@ -2,7 +2,10 @@ import 'package:breathpacer/bloc/dna/dna_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
 import 'package:breathpacer/utils/custom_button.dart';
+import 'package:breathpacer/view/breathPacer/dnaBreathing/widget/dna_breathing_time_widget.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/widget/dna_breathwork_preference_widget.dart';
+import 'package:breathpacer/view/breathPacer/dnaBreathing/widget/dna_inbreath_time_widget.dart';
+import 'package:breathpacer/view/breathPacer/dnaBreathing/widget/dna_outbreath_time_widget.dart';
 import 'package:breathpacer/view/breathPacer/widget/restart_breathing_widget.dart';
 import 'package:breathpacer/view/breathPacer/widget/save_custom_dialog_box_widget.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +37,7 @@ class _DnaSuccessScreenState extends State<DnaSuccessScreen> {
       canPop: false,
       onPopInvoked: (didPop) {
         if(!context.read<DnaCubit>().isSaveDialogOn){
+          context.read<DnaCubit>().resetSettings();
           context.goNamed(RoutesName.homeScreen);
         }
       },
@@ -56,6 +60,7 @@ class _DnaSuccessScreenState extends State<DnaSuccessScreen> {
                     centerTitle: true,
                     leading: GestureDetector(
                       onTap: (){
+                        context.read<DnaCubit>().resetSettings();
                         context.goNamed(RoutesName.homeScreen);
                       },
                       child: const Icon(Icons.arrow_back_ios),
@@ -139,31 +144,31 @@ class _DnaSuccessScreenState extends State<DnaSuccessScreen> {
                     
                         SizedBox(height: height*0.03,),
                         //~ total breathing time
-                        // Container(
-                        //   margin: EdgeInsets.symmetric(horizontal: size*0.05),
-                        //   color: Colors.white,
-                        //   child: const  DnaTimeWidget(),
-                        // ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: size*0.05),
+                          color: Colors.white,
+                          child: const  DnaBreathingTimeWidget(),
+                        ),
 
-                        // if(context.read<DnaCubit>().holdingPeriod)
-                        // SizedBox(height: height*0.03,),
-                        // //~ total holding time
-                        // if(context.read<DnaCubit>().holdingPeriod)
-                        // Container(
-                        //   margin: EdgeInsets.symmetric(horizontal: size*0.05),
-                        //   color: Colors.white,
-                        //   child: const  DnaHoldTimeWidget(),
-                        // ),
+                        if(context.read<DnaCubit>().holdInbreathTimeList.isNotEmpty)
+                        SizedBox(height: height*0.03,),
+                        //~ total holding time
+                        if(context.read<DnaCubit>().holdInbreathTimeList.isNotEmpty)
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: size*0.05),
+                          color: Colors.white,
+                          child: const  DnaInbreathTimeWidget(),
+                        ),
 
-                        // if(context.read<DnaCubit>().recoveryBreath)
-                        // SizedBox(height: height*0.03,),
-                        // //~ total recovery time
-                        // if(context.read<DnaCubit>().recoveryBreath)
-                        // Container(
-                        //   margin: EdgeInsets.symmetric(horizontal: size*0.05),
-                        //   color: Colors.white,
-                        //   child: const  DnaRecoveryTimeWidget(),
-                        // ),
+                        if(context.read<DnaCubit>().holdBreathoutTimeList.isNotEmpty)
+                        SizedBox(height: height*0.03,),
+                        //~ total recovery time
+                        if(context.read<DnaCubit>().holdBreathoutTimeList.isNotEmpty)
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: size*0.05),
+                          color: Colors.white,
+                          child: const  DnaOutbreathTimeWidget(),
+                        ),
                     
                     
                         SizedBox(height: height*0.03,),
@@ -197,7 +202,7 @@ class _DnaSuccessScreenState extends State<DnaSuccessScreen> {
                             spacing: .7,
                             radius: 10,
                             onPress: (){
-                              // context.read<DnaCubit>().setToogleSaveDialog();
+                              context.read<DnaCubit>().setToogleSaveDialog();
                             }
                           )
                         ),
@@ -225,10 +230,10 @@ class _DnaSuccessScreenState extends State<DnaSuccessScreen> {
                         child: SaveCustomDialogBoxWidget(
                           controller: context.read<DnaCubit>().saveInputCont,
                           onClose: (){
-                            // context.read<DnaCubit>().onCloseDialogClick();
+                            context.read<DnaCubit>().onCloseDialogClick();
                           },
                           onSave: () {
-                            // context.read<DnaCubit>().onSaveClick();
+                            context.read<DnaCubit>().onSaveClick();
                           },
                         ),
                       ) 

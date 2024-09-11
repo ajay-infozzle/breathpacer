@@ -136,7 +136,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
   void storeScreenTime() {
     context.read<DnaCubit>().breathingTimeList.add(_startTime);
 
-    // context.read<PyramidCubit>().playHold();
+    context.read<DnaCubit>().playHold();
 
     if (kDebugMode) {
       print("dna breathing Stored Screen Time: $getScreenTiming");
@@ -171,7 +171,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
                 countdownController.pause();
               }
 
-              // context.read<DnaCubit>().stopJerry();
+              context.read<DnaCubit>().stopJerry();
               navigate(context.read<DnaCubit>());
             },
             child: Column(
@@ -290,9 +290,9 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
                                   interval: const Duration(seconds: 1),
                                   onFinished: (){
                                     storeScreenTime();
-                                    // context.read<DnaCubit>().stopJerry();
+                                    context.read<DnaCubit>().stopJerry();
 
-                                    // navigate(context.read<DnaCubit>());
+                                    navigate(context.read<DnaCubit>());
                                   },
                                 ),
                               ),
@@ -352,10 +352,10 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
   void navigate(DnaCubit cubit) {
     if(cubit.choiceOfBreathHold == "Both"){
       cubit.breathHoldIndex = 0;
-      // context.read<DnaCubit>().playHold(..);
+      context.read<DnaCubit>().playHold();
     } 
     else{
-      // context.read<DnaCubit>().playHold(..);
+      context.read<DnaCubit>().playHold();
     }
     context.goNamed(RoutesName.dnaHoldScreen);
 

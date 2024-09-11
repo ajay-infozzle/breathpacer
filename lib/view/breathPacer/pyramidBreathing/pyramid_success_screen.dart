@@ -36,6 +36,10 @@ class _PyramidSuccessScreenState extends State<PyramidSuccessScreen> {
       canPop: false,
       onPopInvoked: (didPop) {
         if(!context.read<PyramidCubit>().isSaveDialogOn){
+          context.read<PyramidCubit>().resetSettings(
+            context.read<PyramidCubit>().step!, 
+            context.read<PyramidCubit>().speed!
+          );
           context.goNamed(RoutesName.homeScreen);
         }
       },
@@ -58,6 +62,10 @@ class _PyramidSuccessScreenState extends State<PyramidSuccessScreen> {
                     centerTitle: true,
                     leading: GestureDetector(
                       onTap: (){
+                        context.read<PyramidCubit>().resetSettings(
+                          context.read<PyramidCubit>().step!, 
+                          context.read<PyramidCubit>().speed!
+                        );
                         context.goNamed(RoutesName.homeScreen);
                       },
                       child: const Icon(Icons.arrow_back_ios),

@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
+import 'package:breathpacer/config/model/dna_breathwork_model.dart';
 import 'package:breathpacer/utils/constant/jerry_voice.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -350,9 +351,9 @@ class DnaCubit extends Cubit<DnaState> {
 
   void stopRecovery() async {
     try {
-      // if(jerryVoice){
-      //   await recoveryPlayer.stop();
-      // }
+      if(jerryVoice){
+        await recoveryPlayer.stop();
+      }
       //todo: have to add recover sound
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -378,76 +379,78 @@ class DnaCubit extends Cubit<DnaState> {
     }
   }
 
-  // void setToogleSaveDialog(){
-  //   isSaveDialogOn = !isSaveDialogOn;
-  //   emit(DnabreathingToggleSave());
-  // }
+  void setToogleSaveDialog(){
+    isSaveDialogOn = !isSaveDialogOn;
+    emit(DnaToggleSave());
+  }
 
-  // void onCloseDialogClick(){
-  //   isSaveDialogOn = false;
-  //   emit(DnabreathingToggleSave());
-  // }
+  void onCloseDialogClick(){
+    isSaveDialogOn = false;
+    emit(DnaToggleSave());
+  }
 
-  // List<DnaBreathworkModel> savedBreathwork = [];
+  List<DnaBreathworkModel> savedBreathwork = [];
 
-  // void onSaveClick() async{
-  //   var box = await Hive.openBox('DnaBreathworkBox');
+  void onSaveClick() async{
+    var box = await Hive.openBox('DnaBreathworkBox');
 
-  //   DnaBreathworkModel breathwork = DnaBreathworkModel(
-  //     title: saveInputCont.text,
-  //     numberOfSets: noOfSets.toString(),
-  //     durationOfEachSet: durationOfSet,
-  //     recoveryEnabled: recoveryBreath,
-  //     jerryVoice: jerryVoice,
-  //     music: music,
-  //     chimes: chimes,
-  //     pineal: pineal,
-  //     choiceOfBreathHold: breathHoldList[breathHoldIndex],
-  //     breathingTimeList: breathingTimeList,
-  //     breathInholdTimeList: holdInbreathTimeList,
-  //     breathOutholdTimeList: holdBreathoutTimeList,
-  //     recoveryTimeList: recoveryTimeList
-  //   );
+    DnaBreathworkModel breathwork = DnaBreathworkModel(
+      title: saveInputCont.text,
+      numberOfSets: noOfSets.toString(),
+      breathingApproach: breathingApproachGroupValue,
+      durationOfEachSet: durationOfSet,
+      recoveryEnabled: recoveryBreath,
+      jerryVoice: jerryVoice,
+      music: music,
+      chimes: chimes,
+      pineal: pineal,
+      choiceOfBreathHold: breathHoldList[breathHoldIndex],
+      breathingTimeList: breathingTimeList,
+      breathInholdTimeList: holdInbreathTimeList,
+      breathOutholdTimeList: holdBreathoutTimeList,
+      recoveryTimeList: recoveryTimeList
+    );
 
-  //   await box.add(breathwork.toJson());
+    await box.add(breathwork.toJson());
    
-  //   savedBreathwork.add(breathwork);
-  //   isSaveDialogOn = false;
+    savedBreathwork.add(breathwork);
+    isSaveDialogOn = false;
+    saveInputCont.clear();
 
-  //   emit(DnabreathingToggleSave());
-  // }
+    emit(DnaToggleSave());
+  }
 
-  // void getAllSavedPyramidBreathwork() async{
-  //   var box = await Hive.openBox('dnaBreathworkBox');
+  void getAllSavedPyramidBreathwork() async{
+    var box = await Hive.openBox('dnaBreathworkBox');
 
-  //   savedBreathwork.clear();
+    savedBreathwork.clear();
 
-  //   if(box.values.isEmpty){
-  //     emit(DnaBreathworkFetched());
-  //     return ;
-  //   }
+    if(box.values.isEmpty){
+      emit(DnaBreathworkFetched());
+      return ;
+    }
 
-  //   for (var item in box.values) {
-  //     DnaBreathworkModel breathworks = DnaBreathworkModel.fromJson(Map<String, dynamic>.from(item));
+    for (var item in box.values) {
+      DnaBreathworkModel breathworks = DnaBreathworkModel.fromJson(Map<String, dynamic>.from(item));
       
-  //     savedBreathwork.add(breathworks);
-  //     emit(DnaBreathworkFetched());
-  //   }
-  // }
+      savedBreathwork.add(breathworks);
+      emit(DnaBreathworkFetched());
+    }
+  }
 
-  // void deleteSavedPyramidBreathwork(int index) async{
-  //   var box = await Hive.openBox('dnaBreathworkBox');
+  void deleteSavedPyramidBreathwork(int index) async{
+    var box = await Hive.openBox('dnaBreathworkBox');
 
-  //   if(box.values.isEmpty){
-  //     emit(DnaBreathworkFetched());
-  //     return ;
-  //   }
+    if(box.values.isEmpty){
+      emit(DnaBreathworkFetched());
+      return ;
+    }
     
-  //   var key = box.keyAt(index);
-  //   await box.delete(key);
-  //   savedBreathwork.removeAt(index);
+    var key = box.keyAt(index);
+    await box.delete(key);
+    savedBreathwork.removeAt(index);
 
-  //   emit(DnaBreathworkFetched());
-  // }
+    emit(DnaBreathworkFetched());
+  }
 
 }
