@@ -11,3 +11,5 @@ final class PinealRecoveryUpdate extends PinealState {}
 final class PinealToggleJerryVoice extends PinealState {}
 final class PinealToggleMusic extends PinealState {}
 final class PinealToggleChimes extends PinealState {}
+final class PinealToggleSave extends PinealState {}
+final class PinealBreathworkFetched extends PinealState {}

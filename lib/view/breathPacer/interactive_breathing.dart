@@ -1,4 +1,6 @@
+import 'package:breathpacer/bloc/dna/dna_cubit.dart';
 import 'package:breathpacer/bloc/firebreathing/firebreathing_cubit.dart';
+import 'package:breathpacer/bloc/pineal/pineal_cubit.dart';
 import 'package:breathpacer/bloc/pyramid/pyramid_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
@@ -23,6 +25,8 @@ class _InteractiveBreathingScreenState extends State<InteractiveBreathingScreen>
 
     context.read<PyramidCubit>().getAllSavedPyramidBreathwork();
     context.read<FirebreathingCubit>().getAllSavedPyramidBreathwork();
+    context.read<DnaCubit>().getAllSavedPyramidBreathwork();
+    // context.read<PinealCubit>().getAllSavedPyramidBreathwork();
   }
 
   @override

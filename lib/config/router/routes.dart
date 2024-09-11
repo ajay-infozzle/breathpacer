@@ -15,7 +15,11 @@ import 'package:breathpacer/view/breathPacer/fireBreathing/firebreathing_success
 import 'package:breathpacer/view/breathPacer/fireBreathing/firebreathing_waiting_screen.dart';
 import 'package:breathpacer/view/breathPacer/interactive_breathing.dart';
 import 'package:breathpacer/view/breathPacer/pinealGlandActivation/pineal_instruction_screen.dart';
+import 'package:breathpacer/view/breathPacer/pinealGlandActivation/pineal_recovery_screen.dart';
+import 'package:breathpacer/view/breathPacer/pinealGlandActivation/pineal_screen.dart';
 import 'package:breathpacer/view/breathPacer/pinealGlandActivation/pineal_setting_screen.dart';
+import 'package:breathpacer/view/breathPacer/pinealGlandActivation/pineal_success_screen.dart';
+import 'package:breathpacer/view/breathPacer/pinealGlandActivation/pineal_waiting_screen.dart';
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/breathing_step_guide_screen.dart';
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/pyramid_breath_hold_screen.dart';
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/pyramid_breathing_screen.dart';
@@ -354,6 +358,55 @@ class AppRoutes {
                 PinealSettingScreen(
                   subTitle: parameters["subTitle"]!,
                 ), 
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+
+          GoRoute(
+            path: RoutesName.pinealWaitingScreen,
+            name: RoutesName.pinealWaitingScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const PinealWaitingScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.pinealScreen,
+            name: RoutesName.pinealScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const PinealScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.pinealRecoveryScreen,
+            name: RoutesName.pinealRecoveryScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const PinealRecoveryScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.pinealSuccessScreen,
+            name: RoutesName.pinealSuccessScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const PinealSuccessScreen(),
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );

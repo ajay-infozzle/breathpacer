@@ -224,11 +224,11 @@ class PinealSettingScreen extends StatelessWidget {
                           spacing: .7,
                           radius: 0,
                           onPress: (){
-                            // context.read<PinealCubit>().playMusic();
+                            context.read<PinealCubit>().playMusic();
                             
-                            // context.pushNamed(
-                            //   RoutesName.PinealWaitingScreen,
-                            // );
+                            context.pushNamed(
+                              RoutesName.pinealWaitingScreen,
+                            );
                           }
                         )
                       ),

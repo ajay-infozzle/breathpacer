@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:breathpacer/bloc/dna/dna_cubit.dart';
+
+import 'package:breathpacer/bloc/pineal/pineal_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
 import 'package:flutter/foundation.dart';
@@ -9,17 +10,18 @@ import 'package:go_router/go_router.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
-class DnaHoldScreen extends StatefulWidget {
-  const DnaHoldScreen({super.key});
+class PinealRecoveryScreen extends StatefulWidget {
+  const PinealRecoveryScreen({super.key});
 
   @override
-  State<DnaHoldScreen> createState() => _DnaHoldScreenState();
+  State<PinealRecoveryScreen> createState() => _PinealRecoveryScreenState();
 }
 
-class _DnaHoldScreenState extends State<DnaHoldScreen> {
-  
+class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
+
+  late CountdownController recoverCountdownController;  
+    
   late Timer _timer;
-  late CountdownController countdownController;
   int _startTime = 0;
 
   @override
@@ -27,17 +29,15 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
     super.initState();
     startTimer();
 
-    if(context.read<DnaCubit>().holdDuration != -1){
-      countdownController = CountdownController(autoStart: true);
-    }
+    recoverCountdownController = CountdownController(autoStart: true);
   }
 
   void startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      setState(() {
-        _startTime++;
-      });
-    });
+    // _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {    
+    //   setState(() {
+    //     _startTime++;
+    //   });
+    // });
   }
 
   String get getScreenTiming {
@@ -49,15 +49,8 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
   }
 
   void storeScreenTime() {
-    if(context.read<DnaCubit>().breathHoldIndex == 0 || context.read<DnaCubit>().breathHoldIndex == 2){
-      context.read<DnaCubit>().holdInbreathTimeList.add(_startTime);
-    }
-    else{
-      context.read<DnaCubit>().holdBreathoutTimeList.add(_startTime);
-    }
-
     if (kDebugMode) {
-      print("Dna breath hold Time: $getScreenTiming");
+      print("pineal breathing & hold Time: $getScreenTiming");
     }
   }
 
@@ -69,6 +62,7 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
   
   @override
   Widget build(BuildContext context) {
+
     double size = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -85,20 +79,24 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
             onTap: () {
               storeScreenTime();
 
-              if(context.read<DnaCubit>().holdDuration != -1){
-                countdownController.pause();
-              }
-              navigate(context.read<DnaCubit>());
+              // if(context.read<PinealCubit>().holdDuration == -1){
+              //   if(!remainingCountdownController.isCompleted!){
+              //     remainingCountdownController.pause();
+              //   }
+              //   navigate(context.read<PinealCubit>());
+              // }
+              
             },
             child: Column(
               children: [
                 AppBar(
+                  scrolledUnderElevation: 0,
                   iconTheme: const IconThemeData(color: Colors.white),
                   backgroundColor: Colors.transparent,
                   centerTitle: true,
                   automaticallyImplyLeading: false,
                   title: Text(
-                    "Set ${context.read<DnaCubit>().currentSet}",
+                    "Set ${context.read<PinealCubit>().currentSet}",
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -111,14 +109,15 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
             
                 //~
                 Expanded(
-                  child: Column(
+                  child: ListView(
+                    padding: const EdgeInsets.all(0),
                     children: [
-                      SizedBox(height: height*0.1,),
+                      SizedBox(height: height*0.03,),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: size*0.05),
                         alignment: Alignment.center,
                         child: Text(
-                          "${context.read<DnaCubit>().pineal?"Squeeze & ":""}Hold on ${checkBreathChoice(context)}",
+                          "Recovery breath",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: size*0.05,
@@ -127,46 +126,43 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
                         ),
                       ),
             
-                      SizedBox(height: height*0.05,),
+                      SizedBox(height: height*0.03,),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: size*0.12),
                         alignment: Alignment.center,
                         child: CircleAvatar(
-                          radius: size*0.3,
+                          radius: size*0.25,
                           child: Image.asset(
-                            checkBreathChoice(context) == 'in-breath' 
-                            ?"assets/images/breath_in.png"
-                            :"assets/images/breath_out.png",
+                            "assets/images/recovery_breath.png",
                           ),
                         ),
                       ),
 
-                      if(context.read<DnaCubit>().holdDuration == -1)
+                      if(context.read<PinealCubit>().holdDuration != -1)
                       Container(
-                        margin: EdgeInsets.only(top: height*0.04,bottom: height*0.04),
+                        margin: EdgeInsets.only(top: height*0.04),
                         width: size,
                         alignment: Alignment.center,
                         child: Center(
                           child: Text(
-                            getScreenTiming,
+                            "Recover for:",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: size*0.2
+                              fontSize: size*0.045
                             ),
                           ),
                         ),
                       ),
 
-
-                      if(context.read<DnaCubit>().holdDuration != -1)
+                      if(context.read<PinealCubit>().holdDuration != -1)
                       Container(
-                        margin: EdgeInsets.only(top: height*0.04,bottom: height*0.04),
+                        margin: EdgeInsets.only(top: height*0.001),
                         width: size,
                         alignment: Alignment.center,
                         child: Center(
                           child: Countdown(
-                            controller: countdownController,
-                            seconds: context.read<DnaCubit>().holdDuration,
+                            controller: recoverCountdownController,
+                            seconds: context.read<PinealCubit>().holdDuration,
                             build: (BuildContext context, double time) => Text(
                               formatTimer(time),
                               style: TextStyle(
@@ -177,16 +173,47 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
                             interval: const Duration(seconds: 1),
                             onFinished: (){
                               storeScreenTime();
-                              context.read<DnaCubit>().stopJerry();
-
-                              navigate(context.read<DnaCubit>());
+                              // context.read<PinealCubit>().stopJerry();
+                              
+                              navigate(context.read<PinealCubit>());
                             },
+                          ),
+                        ),
+                      ),
+
+
+                      Container(
+                        margin: EdgeInsets.only(top: context.read<PinealCubit>().holdDuration == -1?height*0.04:height*0.01,),
+                        width: size,
+                        alignment: Alignment.center,
+                        child: Center(
+                          child: Text(
+                            "Breathwork time remaining:",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: size*0.045
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      Container(
+                        margin: EdgeInsets.only(top: height*0.001,bottom: height*0.04),
+                        width: size,
+                        alignment: Alignment.center,
+                        child: Center(
+                          child: Text(
+                            formatTimer(double.parse(context.read<PinealCubit>().remainingBreathTime.toString())),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: size*0.2
+                            ),
                           ),
                         ),
                       ),
      
 
-                      const Spacer(),
+                      if(context.read<PinealCubit>().holdDuration == -1)
                       Container(
                         alignment: Alignment.center,
                         color: Colors.transparent,
@@ -194,7 +221,7 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              generateTapText(context.read<DnaCubit>()),
+                              generateTapText(context.read<PinealCubit>()),
                               style: TextStyle(color: Colors.white, fontSize: size*0.045),
                             ),
                             const SizedBox(width: 10),
@@ -214,14 +241,6 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
     );
   }
 
-  String checkBreathChoice(BuildContext context) {
-    if(context.read<DnaCubit>().breathHoldIndex == 0){
-      return 'in-breath';
-    }else{
-      return 'out-breath';
-    }
-  }
-  
   String formatTimer(double time) {
     int minutes = (time / 60).floor(); 
     int seconds = (time % 60).floor(); 
@@ -232,42 +251,22 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
     return "$minutesStr:$secondsStr";
   }
   
-  String generateTapText(DnaCubit cubit) {
-    if(cubit.choiceOfBreathHold == "Both" && cubit.breathHoldIndex == 0){
-      return "Tap to hold ${cubit.breathHoldList[1]}";
-    } 
-    else{
-      if(cubit.recoveryBreath){
-        return "Tap to go to recovery breath";
-      }else{
-        if(cubit.noOfSets == cubit.currentSet ){
-          return "Tap to finish";
-        }else{
-          return "Tap to go to next set";
-        }
-      }
-    }
-  }
 
-  void navigate(DnaCubit cubit) {
-    if(cubit.choiceOfBreathHold == "Both" && cubit.breathHoldIndex == 0){
-      cubit.breathHoldIndex = 1;
-      context.read<DnaCubit>().stopHold();
-      context.read<DnaCubit>().playHold();
-      
-      context.pushReplacementNamed(RoutesName.dnaHoldScreen);
-    } 
-    else{
-      if(cubit.recoveryBreath){
-        context.goNamed(RoutesName.dnaRecoveryScreen);
-      }else{
-        if(cubit.noOfSets == cubit.currentSet ){
-          context.goNamed(RoutesName.dnaSuccessScreen);
-        }else{
-          cubit.currentSet = cubit.currentSet+1 ;
-          context.goNamed(RoutesName.dnaBreathingScreen);
-        }
-      }
+  String generateTapText(PinealCubit cubit) {
+    if(cubit.remainingBreathTime > 0){
+      return "Tap to go to next set";
+    }else{
+      return "Tap to finish";
     }
   }
+  
+  void navigate(PinealCubit cubit) {
+    if(cubit.remainingBreathTime > 0){
+      cubit.currentSet = cubit.currentSet+1;
+      context.goNamed(RoutesName.pinealScreen);
+    }else{
+      context.goNamed(RoutesName.pinealSuccessScreen);
+    }
+  }
+  
 }

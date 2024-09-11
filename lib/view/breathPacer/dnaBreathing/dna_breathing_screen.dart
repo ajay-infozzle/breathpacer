@@ -35,7 +35,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
   @override
   void initState() {
     super.initState();
-
+    
     isTimeBreathingApproch = context.read<DnaCubit>().isTimeBreathingApproch ;
     if(!isTimeBreathingApproch){
       breathCount = context.read<DnaCubit>().noOfBreath ;
