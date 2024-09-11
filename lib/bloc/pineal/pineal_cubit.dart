@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
+import 'package:breathpacer/config/model/pineal_breathwork_model.dart';
 import 'package:breathpacer/utils/constant/jerry_voice.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -327,68 +328,64 @@ class PinealCubit extends Cubit<PinealState> {
     emit(PinealToggleSave());
   }
 
-  // List<PinealBreathworkModel> savedBreathwork = [];
+  List<PinealBreathworkModel> savedBreathwork = [];
 
-  // void onSaveClick() async{
-  //   var box = await Hive.openBox('pinealBreathworkBox');
+  void onSaveClick() async{
+    var box = await Hive.openBox('pinealBreathworkBox');
 
-  //   PinealBreathworkModel breathwork = PinealBreathworkModel(
-  //     title: saveInputCont.text,
-  //     numberOfSets: noOfSets.toString(),
-  //     breathingApproach: breathingApproachGroupValue,
-  //     durationOfEachSet: durationOfSet,
-  //     recoveryEnabled: recoveryBreath,
-  //     jerryVoice: jerryVoice,
-  //     music: music,
-  //     chimes: chimes,
-  //     pineal: pineal,
-  //     choiceOfBreathHold: breathHoldList[breathHoldIndex],
-  //     breathingTimeList: breathingTimeList,
-  //     breathInholdTimeList: holdInbreathTimeList,
-  //     breathOutholdTimeList: holdBreathoutTimeList,
-  //     recoveryTimeList: recoveryTimeList
-  //   );
+    PinealBreathworkModel breathwork = PinealBreathworkModel(
+      title: saveInputCont.text,
+      numberOfSets: noOfSets.toString(),
+      jerryVoice: jerryVoice,
+      music: music,
+      chimes: chimes,
+      breathingPeriod: breathingPeriod,
+      holdTimePerSet: holdDuration,
+      recoveryTimePerSet: recoveryBreathDuration,
+      breathingTimeList: breathingTimeList,
+      recoveryTimeList: recoveryTimeList
+    );
 
-  //   await box.add(breathwork.toJson());
+    await box.add(breathwork.toJson());
    
-  //   savedBreathwork.add(breathwork);
-  //   isSaveDialogOn = false;
-  //   saveInputCont.clear();
+    savedBreathwork.add(breathwork);
+    isSaveDialogOn = false;
+    saveInputCont.clear();
 
-  //   emit(PinealToggleSave());
-  // }
+    emit(PinealToggleSave());
+  }
 
-  // void getAllSavedPyramidBreathwork() async{
-  //   var box = await Hive.openBox('pinealBreathworkBox');
+  void getAllSavedPyramidBreathwork() async{
+    var box = await Hive.openBox('pinealBreathworkBox');
 
-  //   savedBreathwork.clear();
+    savedBreathwork.clear();
 
-  //   if(box.values.isEmpty){
-  //     emit(PinealBreathworkFetched());
-  //     return ;
-  //   }
+    if(box.values.isEmpty){
+      emit(PinealBreathworkFetched());
+      return ;
+    }
 
-  //   for (var item in box.values) {
-  //     PinealBreathworkModel breathworks = PinealBreathworkModel.fromJson(Map<String, dynamic>.from(item));
+    for (var item in box.values) {
+      PinealBreathworkModel breathworks = PinealBreathworkModel.fromJson(Map<String, dynamic>.from(item));
       
-  //     savedBreathwork.add(breathworks);
-  //     emit(PinealBreathworkFetched());
-  //   }
-  // }
+      savedBreathwork.add(breathworks);
+      emit(PinealBreathworkFetched());
+    }
+  }
 
-  // void deleteSavedPyramidBreathwork(int index) async{
-  //   var box = await Hive.openBox('pinealBreathworkBox');
+  void deleteSavedPyramidBreathwork(int index) async{
+    var box = await Hive.openBox('pinealBreathworkBox');
 
-  //   if(box.values.isEmpty){
-  //     emit(PinealBreathworkFetched());
-  //     return ;
-  //   }
+    if(box.values.isEmpty){
+      emit(PinealBreathworkFetched());
+      return ;
+    }
     
-  //   var key = box.keyAt(index);
-  //   await box.delete(key);
-  //   savedBreathwork.removeAt(index);
+    var key = box.keyAt(index);
+    await box.delete(key);
+    savedBreathwork.removeAt(index);
 
-  //   emit(PinealBreathworkFetched());
-  // }
+    emit(PinealBreathworkFetched());
+  }
   
 }

@@ -49,7 +49,7 @@ class PinealWorkPreferenceWidget extends StatelessWidget {
 
         ResultContainerSectionWidget(
           title: 'Hold time per set:',
-          content: getFormattedTime(context.read<PinealCubit>().holdDuration),
+          content: context.read<PinealCubit>().holdDuration == -1 ? "Infinite" :getFormattedTime(context.read<PinealCubit>().holdDuration),
           iconPath: "assets/images/time.png",
           iconSize: 25.0,
           showIcon: true,

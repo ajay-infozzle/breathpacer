@@ -211,7 +211,7 @@ class _PinealSuccessScreenState extends State<PinealSuccessScreen> {
                             context.read<PinealCubit>().onCloseDialogClick();
                           },
                           onSave: () {
-                            // context.read<PinealCubit>().onSaveClick();
+                            context.read<PinealCubit>().onSaveClick();
                           },
                         ),
                       ) 

@@ -21,7 +21,7 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
 
   late CountdownController recoverCountdownController;  
     
-  late Timer _timer;
+  // late Timer _timer;
   int _startTime = 0;
 
   @override
@@ -56,7 +56,7 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    // _timer.cancel();
     super.dispose();
   }
   
@@ -138,7 +138,6 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
                         ),
                       ),
 
-                      if(context.read<PinealCubit>().holdDuration != -1)
                       Container(
                         margin: EdgeInsets.only(top: height*0.04),
                         width: size,
@@ -154,7 +153,6 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
                         ),
                       ),
 
-                      if(context.read<PinealCubit>().holdDuration != -1)
                       Container(
                         margin: EdgeInsets.only(top: height*0.001),
                         width: size,
@@ -162,7 +160,7 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
                         child: Center(
                           child: Countdown(
                             controller: recoverCountdownController,
-                            seconds: context.read<PinealCubit>().holdDuration,
+                            seconds: context.read<PinealCubit>().recoveryBreathDuration,
                             build: (BuildContext context, double time) => Text(
                               formatTimer(time),
                               style: TextStyle(
@@ -213,22 +211,22 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
                       ),
      
 
-                      if(context.read<PinealCubit>().holdDuration == -1)
-                      Container(
-                        alignment: Alignment.center,
-                        color: Colors.transparent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              generateTapText(context.read<PinealCubit>()),
-                              style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                            ),
-                            const SizedBox(width: 10),
-                            const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                          ],
-                        ),
-                      ),
+                      // if(context.read<PinealCubit>().holdDuration == -1)
+                      // Container(
+                      //   alignment: Alignment.center,
+                      //   color: Colors.transparent,
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: [
+                      //       Text(
+                      //         generateTapText(context.read<PinealCubit>()),
+                      //         style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                      //       ),
+                      //       const SizedBox(width: 10),
+                      //       const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                      //     ],
+                      //   ),
+                      // ),
                       SizedBox(height: height*0.08,),
                     ],
                   ) 

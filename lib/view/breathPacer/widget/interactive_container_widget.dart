@@ -5,6 +5,7 @@ import 'package:breathpacer/bloc/pyramid/pyramid_cubit.dart';
 import 'package:breathpacer/utils/custom_button.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/widget/dna_saved_work_dialog_widget.dart';
 import 'package:breathpacer/view/breathPacer/fireBreathing/widget/fire_saved_works_dialog_widget.dart';
+import 'package:breathpacer/view/breathPacer/pinealGlandActivation/widget/pineal_saved_work_dialog_widget.dart';
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/widget/pyramid_saved_works_dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -125,7 +126,7 @@ class _InteractiveContainerWidgetState extends State<InteractiveContainerWidget>
         total = context.read<DnaCubit>().savedBreathwork.length; 
         break;
       case 3:
-        // total = context.read<DnaCubit>().savedBreathwork.length;
+        total = context.read<PinealCubit>().savedBreathwork.length;
         break;
     }
 
@@ -173,7 +174,7 @@ class _InteractiveContainerWidgetState extends State<InteractiveContainerWidget>
       case 2:
         return const DnaSavedWorkDialogWidget();
       case 3:
-        return const SizedBox();
+        return const PinealSavedWorkDialogWidget();
     }
   }
 

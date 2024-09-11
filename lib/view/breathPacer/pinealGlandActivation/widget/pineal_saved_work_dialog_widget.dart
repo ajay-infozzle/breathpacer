@@ -1,4 +1,4 @@
-import 'package:breathpacer/bloc/dna/dna_cubit.dart';
+import 'package:breathpacer/bloc/pineal/pineal_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/utils/constant/interaction_breathing_constant.dart';
 import 'package:breathpacer/utils/custom_button.dart';
@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class DnaSavedWorkDialogWidget extends StatefulWidget {
-  const DnaSavedWorkDialogWidget({super.key});
+class PinealSavedWorkDialogWidget extends StatefulWidget {
+  const PinealSavedWorkDialogWidget({super.key});
 
   @override
-  State<DnaSavedWorkDialogWidget> createState() => _DnaSavedWorkDialogWidgetState();
+  State<PinealSavedWorkDialogWidget> createState() => _PinealSavedWorkDialogWidgetState();
 }
 
-class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
+class _PinealSavedWorkDialogWidgetState extends State<PinealSavedWorkDialogWidget> {
   late double size;
   late double height;
   int expandIndex = -1;
@@ -29,7 +29,7 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
   @override
   Widget build(BuildContext context) {
 
-    return BlocBuilder<DnaCubit, DnaState>(
+    return BlocBuilder<PinealCubit, PinealState>(
       builder: (context, state) {
         return Container(
           margin: EdgeInsets.symmetric(horizontal: size*0.03),
@@ -72,11 +72,11 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
                         margin: EdgeInsets.only(right: size*0.02),
                         child: CircleAvatar(
                           radius: size*0.042,
-                          child: Image.asset("assets/images/dna_icon.png"),
+                          child: Image.asset("assets/images/pineal_icon.png"),
                         ),
                       ),
                       Text(
-                        "DNA Breathing",
+                        "Pineal Gland Activation",
                         style: TextStyle(
                           color: Colors.black.withOpacity(.6),
                           fontWeight: FontWeight.bold,
@@ -88,7 +88,7 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
               
                   SizedBox(height: size*0.03,),
               
-                  for(int i=0; i<context.read<DnaCubit>().savedBreathwork.length ; i++) ...[
+                  for(int i=0; i<context.read<PinealCubit>().savedBreathwork.length ; i++) ...[
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -99,7 +99,7 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              context.read<DnaCubit>().savedBreathwork[i].title!,
+                              context.read<PinealCubit>().savedBreathwork[i].title!,
                               style: TextStyle(
                                 color: Colors.black.withOpacity(.7),
                                 fontWeight: FontWeight.bold,
@@ -128,7 +128,7 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
                       if (expandIndex == i) ...[
                         ResultContainerSectionWidget(
                           title: 'No. of sets:',
-                          content: context.read<DnaCubit>().savedBreathwork[i].numberOfSets,
+                          content: context.read<PinealCubit>().savedBreathwork[i].numberOfSets,
                           iconPath: "assets/images/time.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -140,8 +140,8 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
 
 
                         ResultContainerSectionWidget(
-                          title: 'Duration of sets:',
-                          content: getFormattedTime(context.read<DnaCubit>().savedBreathwork[i].durationOfEachSet!),
+                          title: 'Breathing period:',
+                          content: getFormattedTime(context.read<PinealCubit>().savedBreathwork[i].breathingPeriod!),
                           iconPath: "assets/images/time.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -153,7 +153,7 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
               
                         ResultContainerSectionWidget(
                           title: "Jerry's voice:",
-                          content: context.read<DnaCubit>().savedBreathwork[i].jerryVoice! ?"Yes" : "No",
+                          content: context.read<PinealCubit>().savedBreathwork[i].jerryVoice! ?"Yes" : "No",
                           iconPath: "assets/images/voice.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -165,7 +165,7 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
               
                         ResultContainerSectionWidget(
                           title: "Music:",
-                          content: context.read<DnaCubit>().savedBreathwork[i].music! ?"Yes" : "No",
+                          content: context.read<PinealCubit>().savedBreathwork[i].music! ?"Yes" : "No",
                           iconPath: "assets/images/music.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -177,7 +177,7 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
               
                         ResultContainerSectionWidget(
                           title: "Chimes at start/stop points:",
-                          content: context.read<DnaCubit>().savedBreathwork[i].chimes! ?"Yes" : "No",
+                          content: context.read<PinealCubit>().savedBreathwork[i].chimes! ?"Yes" : "No",
                           iconPath: "assets/images/chime.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -188,22 +188,22 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
                         ),
                         
                       
-                        ResultContainerSectionWidget(
-                          title: "Choice of breath hold:",
-                          content: context.read<DnaCubit>().savedBreathwork[i].choiceOfBreathHold,
-                          iconPath: "assets/images/breath_hold.png",
-                          iconSize: 25.0,
-                          showIcon: true,
-                          showContent: true,
-                          containerColor: Colors.white,
-                          textColor: Colors.black.withOpacity(.7),
-                          iconColor: const Color(0xffFE60D4),
-                        ),
-              
+                        // ResultContainerSectionWidget(
+                        //   title: 'Total breathing time:',
+                        //   content: getTotalTimeString(context.read<PinealCubit>().savedBreathwork[i].breathingTimeList!),
+                        //   iconPath: "assets/images/time.png",
+                        //   iconSize: 25.0,
+                        //   showIcon: true,
+                        //   showContent: true,
+                        //   containerColor: Colors.white,
+                        //   textColor: Colors.black.withOpacity(.7),
+                        //   iconColor: const Color(0xffFE60D4),
+                        // ),
 
+                        
                         ResultContainerSectionWidget(
-                          title: 'Total breathing time:',
-                          content: getTotalTimeString(context.read<DnaCubit>().savedBreathwork[i].breathingTimeList!),
+                          title: 'Hold time per set:',
+                          content: context.read<PinealCubit>().savedBreathwork[i].holdTimePerSet ==-1 ?"Infineite" : context.read<PinealCubit>().savedBreathwork[i].holdTimePerSet.toString(),
                           iconPath: "assets/images/time.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -214,47 +214,8 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
                         ),
 
                         ResultContainerSectionWidget(
-                          title: 'Breathing approach:',
-                          content: context.read<DnaCubit>().savedBreathwork[i].breathingApproach!,
-                          iconPath: "assets/images/time.png",
-                          iconSize: 25.0,
-                          showIcon: true,
-                          showContent: true,
-                          containerColor: Colors.white,
-                          textColor: Colors.black.withOpacity(.7),
-                          iconColor: const Color(0xffFE60D4),
-                        ),
-              
-                        if(context.read<DnaCubit>().savedBreathwork[i].breathInholdTimeList!.isNotEmpty)
-                        ResultContainerSectionWidget(
-                          title: 'In-Breath hold time:',
-                          content: getTotalTimeString(context.read<DnaCubit>().savedBreathwork[i].breathInholdTimeList!),
-                          iconPath: "assets/images/time.png",
-                          iconSize: 25.0,
-                          showIcon: true,
-                          showContent: true,
-                          containerColor: Colors.white,
-                          textColor: Colors.black.withOpacity(.7),
-                          iconColor: const Color(0xffFE60D4),
-                        ),
-
-                        if(context.read<DnaCubit>().savedBreathwork[i].breathOutholdTimeList!.isNotEmpty)
-                        ResultContainerSectionWidget(
-                          title: 'Out-Breath hold time:',
-                          content: getTotalTimeString(context.read<DnaCubit>().savedBreathwork[i].breathOutholdTimeList!),
-                          iconPath: "assets/images/time.png",
-                          iconSize: 25.0,
-                          showIcon: true,
-                          showContent: true,
-                          containerColor: Colors.white,
-                          textColor: Colors.black.withOpacity(.7),
-                          iconColor: const Color(0xffFE60D4),
-                        ),
-
-                        if(context.read<DnaCubit>().savedBreathwork[i].recoveryEnabled!)
-                        ResultContainerSectionWidget(
-                          title: 'Recovery breath time:',
-                          content: getTotalTimeString(context.read<DnaCubit>().savedBreathwork[i].recoveryTimeList!),
+                          title: 'Recovery breath per set:',
+                          content: context.read<PinealCubit>().savedBreathwork[i].recoveryTimePerSet.toString(),
                           iconPath: "assets/images/time.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -276,7 +237,7 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
                                 buttonColor: Colors.transparent,
                                 textColor: const Color(0xffFE60D4),
                                 onPress: (){
-                                  context.read<DnaCubit>().deleteSavedPyramidBreathwork(i);
+                                  context.read<PinealCubit>().deleteSavedPyramidBreathwork(i);
                                 }
                               ),
                             ),
@@ -288,20 +249,18 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
                                 spacing: .7,
                                 radius: 8,
                                 onPress: (){
-                                  context.read<DnaCubit>().holdBreathoutTimeList.clear();
-                                  context.read<DnaCubit>().holdInbreathTimeList.clear();
-                                  context.read<DnaCubit>().breathingTimeList.clear();
-                                  context.read<DnaCubit>().recoveryTimeList.clear();
+                                  context.read<PinealCubit>().breathingTimeList.clear();
+                                  context.read<PinealCubit>().recoveryTimeList.clear();
 
-                                  final savedWork = context.read<DnaCubit>().savedBreathwork[i] ;
-                                  context.read<DnaCubit>().noOfSets = int.parse(savedWork.numberOfSets!) ;
-                                  context.read<DnaCubit>().durationOfSet = savedWork.durationOfEachSet! ;
-                                  // context.read<DnaCubit>().holdDuration = savedWork.! ; //todo: also in model
-                                  context.read<DnaCubit>().pineal = savedWork.pineal! ;
-                                  context.read<DnaCubit>().jerryVoice = savedWork.jerryVoice! ;
-                                  context.read<DnaCubit>().music = savedWork.music! ;
-                                  context.read<DnaCubit>().chimes = savedWork.chimes! ;
-                                  context.read<DnaCubit>().choiceOfBreathHold = savedWork.choiceOfBreathHold! ;
+                                  final savedWork = context.read<PinealCubit>().savedBreathwork[i] ;
+                                  context.read<PinealCubit>().noOfSets = int.parse(savedWork.numberOfSets!) ;
+                                  context.read<PinealCubit>().currentSet = 0 ;
+                                  context.read<PinealCubit>().breathingPeriod = savedWork.breathingPeriod! ;
+                                  // context.read<PinealCubit>().holdDuration = savedWork.! ; //todo: also in model
+                                  context.read<PinealCubit>().jerryVoice = savedWork.jerryVoice! ;
+                                  context.read<PinealCubit>().music = savedWork.music! ;
+                                  context.read<PinealCubit>().chimes = savedWork.chimes! ;
+                                  
                                   
                                   context.pop();
                                   context.pushNamed(RoutesName.dnaWaitingScreen);
@@ -314,7 +273,7 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
                         SizedBox(height: size*0.03,),
                       ],
               
-                      if(!(i+1 == context.read<DnaCubit>().savedBreathwork.length))
+                      if(!(i+1 == context.read<PinealCubit>().savedBreathwork.length))
                       Container(
                         height: 1,
                         color: Colors.grey.withOpacity(.3),
