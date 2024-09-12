@@ -21,10 +21,10 @@ class PinealCubit extends Cubit<PinealState> {
   bool chimes = false;
   int recoveryBreathDuration = 20;
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.pinealSqeez);
-  int holdDuration = 20;
-  int breathingPeriod = 120;
+  int holdDuration = 10;
+  int breathingPeriod = 60;
   List<int> breathingDurationList = [30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600] ;
-  List<int> holdDurationList = [10, 20, 30, 40, 50, 60, 120, -1] ;
+  List<int> holdDurationList = [10, -1] ;
   List<int> recoveryDurationList = [10, 20, 30, 60, 120] ;
   
   int remainingBreathTime = 0;
@@ -217,8 +217,10 @@ class PinealCubit extends Cubit<PinealState> {
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
 
         jerryVoicePlayer.onPlayerComplete.listen((event) {
-          jerryVoicePlayer.play(AssetSource("audio/10_countdown.mp3"));
-          
+          if(holdDuration != -1){
+            jerryVoicePlayer.play(AssetSource("audio/10_countdown.mp3"));
+          }
+                    
           //todo: now hold for ....seconds counting start
           emit(ResumeHoldCounter());
         });

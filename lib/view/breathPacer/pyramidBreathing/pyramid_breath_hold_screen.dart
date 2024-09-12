@@ -85,6 +85,7 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
                 context.goNamed(RoutesName.pyramidSuccessScreen);
               }else{
                 storeScreenTime();
+                context.read<PyramidCubit>().stopHold();
                 context.read<PyramidCubit>().currentRound = context.read<PyramidCubit>().currentRound+1;
                 context.read<PyramidCubit>().resetJerryVoiceAndPLayAgain();
                 

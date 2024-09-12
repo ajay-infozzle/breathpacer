@@ -18,7 +18,7 @@ class FirebreathingSettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size.width ;
-    final height = MediaQuery.of(context).size.height ;
+    // final height = MediaQuery.of(context).size.height ;
     
     return PopScope(
       canPop: false,

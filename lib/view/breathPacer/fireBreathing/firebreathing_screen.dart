@@ -37,7 +37,7 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
   }
 
   void setUpAnimation() {
-    final cubit = context.read<FirebreathingCubit>();
+    // final cubit = context.read<FirebreathingCubit>();
 
     Duration duration = const Duration(seconds: 1);
     
