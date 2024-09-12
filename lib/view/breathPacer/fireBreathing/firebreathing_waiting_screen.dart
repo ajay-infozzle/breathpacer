@@ -14,6 +14,7 @@ class FirebreathingWaitingScreen extends StatelessWidget {
       title: "Fire Breathing",
       onTimerFinished: (){
         context.read<FirebreathingCubit>().currentSet = 1 ;
+        context.read<FirebreathingCubit>().stopCloseEyes();
         context.read<FirebreathingCubit>().playChime();
         context.read<FirebreathingCubit>().playJerry();
 

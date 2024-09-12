@@ -107,6 +107,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   List<int> breathingTimeList = []; //sec
   List<int> holdTimeList = []; //sec
   List<int> recoveryTimeList = []; //sec
+  AudioPlayer closeEyePlayer = AudioPlayer();
   AudioPlayer musicPlayer = AudioPlayer();
   AudioPlayer chimePlayer = AudioPlayer();
   AudioPlayer jerryVoicePlayer = AudioPlayer();
@@ -154,6 +155,24 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     emit(FirebreathingInitial());
   }
 
+
+  void playCloseEyes() async {
+    try {
+      if(jerryVoice){
+        await closeEyePlayer.play(AssetSource('audio/close_eyes.mp3'), );
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("closeEyesMusic>> ${e.toString()}");
+      }
+    }
+  }
+
+  void stopCloseEyes() async {
+    if(jerryVoice){
+      await closeEyePlayer.stop();
+    }
+  }
 
   void playMusic() async {
     try {

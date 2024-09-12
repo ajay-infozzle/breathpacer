@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:breathpacer/bloc/pineal/pineal_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
@@ -171,7 +170,7 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
                             interval: const Duration(seconds: 1),
                             onFinished: (){
                               storeScreenTime();
-                              // context.read<PinealCubit>().stopJerry();
+                              context.read<PinealCubit>().stopRecovery();
                               
                               navigate(context.read<PinealCubit>());
                             },

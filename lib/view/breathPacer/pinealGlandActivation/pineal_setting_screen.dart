@@ -16,7 +16,7 @@ class PinealSettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size.width ;
-    final height = MediaQuery.of(context).size.height ;
+    // final height = MediaQuery.of(context).size.height ;
     
     return PopScope(
       canPop: false,
@@ -225,6 +225,7 @@ class PinealSettingScreen extends StatelessWidget {
                           radius: 0,
                           onPress: (){
                             context.read<PinealCubit>().playMusic();
+                            context.read<PinealCubit>().playCloseEyes();
                             
                             context.pushNamed(
                               RoutesName.pinealWaitingScreen,

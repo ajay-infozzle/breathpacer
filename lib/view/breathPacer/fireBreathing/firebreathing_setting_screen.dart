@@ -268,6 +268,7 @@ class FirebreathingSettingScreen extends StatelessWidget {
                         radius: 10,
                         onPress: (){
                           context.read<FirebreathingCubit>().playMusic();
+                          context.read<FirebreathingCubit>().playCloseEyes();
                           
                           context.pushNamed(
                             RoutesName.fireBreathingWaitingScreen,

@@ -20,7 +20,7 @@ class PinealCubit extends Cubit<PinealState> {
   bool music = false;
   bool chimes = false;
   int recoveryBreathDuration = 20;
-  String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn);
+  String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.pinealSqeez);
   int holdDuration = 20;
   int breathingPeriod = 120;
   List<int> breathingDurationList = [30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600] ;
@@ -82,6 +82,7 @@ class PinealCubit extends Cubit<PinealState> {
   // ..
   List<int> breathingTimeList = []; //sec
   List<int> recoveryTimeList = []; //sec
+  AudioPlayer closeEyePlayer = AudioPlayer();
   AudioPlayer musicPlayer = AudioPlayer();
   AudioPlayer chimePlayer = AudioPlayer();
   AudioPlayer jerryVoicePlayer = AudioPlayer();
@@ -130,6 +131,23 @@ class PinealCubit extends Cubit<PinealState> {
     emit(PinealInitial());
   }
 
+  void playCloseEyes() async {
+    try {
+      if(jerryVoice){
+        await closeEyePlayer.play(AssetSource('audio/close_eyes.mp3'), );
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("closeEyesMusic>> ${e.toString()}");
+      }
+    }
+  }
+
+  void stopCloseEyes() async {
+    if(jerryVoice){
+      await closeEyePlayer.stop();
+    }
+  }
 
   void playMusic() async {
     try {
@@ -194,12 +212,15 @@ class PinealCubit extends Cubit<PinealState> {
     try {
       if(jerryVoice){
         //~ for pineal purpose if selected
-        jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn) ;
+        jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.pinealSqeez) ;
       
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
 
         jerryVoicePlayer.onPlayerComplete.listen((event) {
-          jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
+          // jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
+          
+          //todo: now hold for ....seconds counting start
+          emit(ResumeHoldCounter());
         });
       }
     } on Exception catch (e) {
@@ -225,7 +246,7 @@ class PinealCubit extends Cubit<PinealState> {
     try {
       if(jerryVoice){
         //~ for pineal purpose if enable
-        jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn);
+        jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.pinealSqeez);
   
         jerryVoicePlayer.stop();
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));

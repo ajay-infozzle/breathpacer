@@ -213,7 +213,8 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen> with Single
                         radius: 10,
                         onPress: (){
                           context.read<PyramidCubit>().playMusic();
-                          
+                          context.read<PyramidCubit>().playCloseEyes();
+
                           context.pushNamed(
                             RoutesName.pyramidWaitingScreen,
                           );

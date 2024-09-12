@@ -64,6 +64,7 @@ class PyramidCubit extends Cubit<PyramidState> {
   int currentRound = 0;
   List<int> breathingTimeList = []; //sec
   List<int> holdTimeList = []; //sec
+  AudioPlayer closeEyePlayer = AudioPlayer();
   AudioPlayer musicPlayer = AudioPlayer();
   AudioPlayer chimePlayer = AudioPlayer();
   AudioPlayer jerryVoicePlayer = AudioPlayer();
@@ -81,6 +82,10 @@ class PyramidCubit extends Cubit<PyramidState> {
 
     // Reset music player if active
     try {
+      if (closeEyePlayer.state == PlayerState.playing) {
+        closeEyePlayer.stop();
+      }
+
       if (musicPlayer.state == PlayerState.playing) {
         musicPlayer.stop();
         // musicPlayer.seek(Duration.zero);
@@ -117,6 +122,24 @@ class PyramidCubit extends Cubit<PyramidState> {
     emit(PyramidToggleSave());
   }
 
+
+  void playCloseEyes() async {
+    try {
+      if(jerryVoice){
+        await closeEyePlayer.play(AssetSource('audio/close_eyes.mp3'), );
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("closeEyesMusic>> ${e.toString()}");
+      }
+    }
+  }
+
+  void stopCloseEyes() async {
+    if(jerryVoice){
+      await closeEyePlayer.stop();
+    }
+  }
 
   void playMusic() async {
     try {

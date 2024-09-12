@@ -14,6 +14,7 @@ class DnaWaitingScreen extends StatelessWidget {
       title: "Pyramid Breathing",
       onTimerFinished: (){
         context.read<DnaCubit>().currentSet = 1 ;
+        context.read<DnaCubit>().stopCloseEyes();
         context.read<DnaCubit>().playChime();
         context.read<DnaCubit>().playJerry();
 

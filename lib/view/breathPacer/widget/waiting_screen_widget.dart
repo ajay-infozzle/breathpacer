@@ -73,7 +73,7 @@ class WaitingScreenWidget extends StatelessWidget {
                         color: AppTheme.colors.blueNotChosen.withOpacity(.3),
                         child: Center(
                           child: Countdown(
-                            seconds: 15,
+                            seconds: 3,
                             build: (BuildContext context, double time) => Text(
                               formatTimer(time),
                               style: TextStyle(

@@ -39,11 +39,11 @@ class _PinealScreenState extends State<PinealScreen> {
   void startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       // todo : dummy for getting hold period start (it will be based on voice later)
-      if(_startTime == 7){
-        if(context.read<PinealCubit>().holdDuration != -1){
-          holdCountdownController.resume();
-        }
-      }
+      // if(_startTime == 7){
+      //   if(context.read<PinealCubit>().holdDuration != -1){
+      //     holdCountdownController.resume();
+      //   }
+      // }
 
       setState(() {
         _startTime++;
@@ -157,20 +157,30 @@ class _PinealScreenState extends State<PinealScreen> {
                       ),
 
                       if(context.read<PinealCubit>().holdDuration != -1)
-                      Container(
-                        margin: EdgeInsets.only(top: height*0.04),
-                        width: size,
-                        alignment: Alignment.center,
-                        child: Center(
-                          child: Text(
-                            "Hold for:",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: size*0.045
+                      BlocConsumer<PinealCubit, PinealState>(
+                        builder: (context, state) {
+                          return Container(
+                            margin: EdgeInsets.only(top: height*0.04),
+                            width: size,
+                            alignment: Alignment.center,
+                            child: Center(
+                              child: Text(
+                                "Hold for:",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: size*0.045
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        }, 
+                        listener: (context, state) {
+                          if(state is ResumeHoldCounter){
+                            holdCountdownController.resume();
+                          }
+                        }, 
                       ),
+                      
 
                       if(context.read<PinealCubit>().holdDuration != -1)
                       Container(
@@ -191,7 +201,7 @@ class _PinealScreenState extends State<PinealScreen> {
                             interval: const Duration(seconds: 1),
                             onFinished: (){
                               storeScreenTime();
-                              // context.read<PinealCubit>().stopJerry();
+                              context.read<PinealCubit>().stopJerry();
                               
                               if(!remainingCountdownController.isCompleted!){
                                 remainingCountdownController.pause();
@@ -236,7 +246,7 @@ class _PinealScreenState extends State<PinealScreen> {
                             interval: const Duration(seconds: 1),
                             onFinished: (){
                               storeScreenTime();
-                              // context.read<PinealCubit>().stopJerry();
+                              context.read<PinealCubit>().stopJerry();
 
                               if(context.read<PinealCubit>().holdDuration != -1){
                                 if(!holdCountdownController.isCompleted!){

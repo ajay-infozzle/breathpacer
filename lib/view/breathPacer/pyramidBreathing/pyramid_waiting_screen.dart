@@ -19,6 +19,7 @@ class _PyramidWaitingScreenState extends State<PyramidWaitingScreen> {
       title: "Pyramid Breathing",
       onTimerFinished: (){
         context.read<PyramidCubit>().currentRound = 1 ;
+        context.read<PyramidCubit>().stopCloseEyes();
         context.read<PyramidCubit>().playChime();
         context.read<PyramidCubit>().playJerry();
 

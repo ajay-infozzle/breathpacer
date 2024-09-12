@@ -4,6 +4,8 @@ enum JerryVoiceEnum {
   breatheBoth,
   hold,
   pineal,
+  pinealSqeez,
+  closeEyes
 }
 
 String jerryVoiceOver(JerryVoiceEnum voice) {
@@ -18,6 +20,10 @@ String jerryVoiceOver(JerryVoiceEnum voice) {
       return "audio/hold.mp3";
     case JerryVoiceEnum.pineal:
       return "audio/pineal.mp3";
+    case JerryVoiceEnum.pinealSqeez:
+      return "audio/pineal_sqeez_breathing.mp3";
+    case JerryVoiceEnum.closeEyes:
+      return "audio/close_eyes.mp3";
     default:
       return "audio/breathe_in.mp3";
   }
