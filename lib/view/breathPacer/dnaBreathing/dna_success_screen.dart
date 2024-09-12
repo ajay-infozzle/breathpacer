@@ -25,7 +25,7 @@ class _DnaSuccessScreenState extends State<DnaSuccessScreen> {
   void initState() {
     super.initState();
 
-    context.read<DnaCubit>().playRelax();
+    // context.read<DnaCubit>().playRelax();
   }
 
   @override

@@ -18,9 +18,9 @@ class DnaCubit extends Cubit<DnaState> {
 
   bool isTimeBreathingApproch = false;
   int noOfBreath = 10;
-  int durationOfSet = 120;
-  int recoveryBreathDuration = 60;
-  int holdDuration = 60;
+  int durationOfSet = 60;
+  int recoveryBreathDuration = 10;
+  int holdDuration = 10;
   bool recoveryBreath = false;
   // bool holdingPeriod = false;
   bool jerryVoice = false;
@@ -34,9 +34,9 @@ class DnaCubit extends Cubit<DnaState> {
   List<String> breathHoldList = ['Breath in', 'Breath out', 'Both'] ; 
   List<int> breathList = [10, 15, 20, 25, 30] ; 
   List<int> setsList = [1, 2, 3, 4, 5] ; 
-  List<int> durationsList = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600] ;
-  List<int> holdDurationList = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600, -1] ;
-  List<int> recoveryDurationList = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600] ;
+  List<int> durationsList = [30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600] ;
+  List<int> holdDurationList = [10, 20, 30, 40, 50, 60, -1] ;
+  List<int> recoveryDurationList = [10,20, 30, 40, 60, 120, 180] ;
 
   bool isReatartEnable = false;
   bool isSaveDialogOn = false;
@@ -47,7 +47,7 @@ class DnaCubit extends Cubit<DnaState> {
     noOfSets = 1;
     currentSet = 0;
     breathHoldIndex = 0;
-    durationOfSet = 120;
+    durationOfSet = 60;
     jerryVoice = false;
     music = false;
     chimes = false;
@@ -154,7 +154,7 @@ class DnaCubit extends Cubit<DnaState> {
     pineal = false;
     music = false;
     chimes = false;
-    durationOfSet = 120;
+    durationOfSet = 60;
 
     currentSet = 0;
     breathHoldIndex = 0;
@@ -274,7 +274,7 @@ class DnaCubit extends Cubit<DnaState> {
     try {
       if(jerryVoice){
         //~ for pineal purpose if selected
-        jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.breatheIn) : jerryVoiceOver(JerryVoiceEnum.breatheIn) ;
+        jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.pineal) : (speed == "Standard" ? "audio/breath_standard.mp3" : (speed == "Fast" ? "audio/breath_fast.mp3" : "audio/breath_slow.mp3"));
       
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
 
@@ -305,7 +305,7 @@ class DnaCubit extends Cubit<DnaState> {
     try {
       if(jerryVoice){
         //~ for pineal purpose if enable
-        jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.breatheIn) : jerryVoiceOver(JerryVoiceEnum.breatheIn) ;
+        jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.pineal) : (speed == "Standard" ? "audio/breath_standard.mp3" : (speed == "Fast" ? "audio/breath_fast.mp3" : "audio/breath_slow.mp3")) ;
   
         jerryVoicePlayer.stop();
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
@@ -353,13 +353,7 @@ class DnaCubit extends Cubit<DnaState> {
   void playRecovery() async {
     try {
       if(jerryVoice){
-        // if(breathHoldIndex == 0){
-        //   await breathHoldPlayer.play(AssetSource('audio/hold_in_breath.mp3'));
-        // }
-        // if(breathHoldIndex == 1){
-        //   await breathHoldPlayer.play(AssetSource('audio/hold_out_breath.mp3'));
-        // }
-        //todo: have to add recover sound
+        await recoveryPlayer.play(AssetSource('audio/recover.mp3'));
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -373,7 +367,6 @@ class DnaCubit extends Cubit<DnaState> {
       if(jerryVoice){
         await recoveryPlayer.stop();
       }
-      //todo: have to add recover sound
     } on Exception catch (e) {
       if (kDebugMode) {
         print("stopRecovery>> ${e.toString()}");

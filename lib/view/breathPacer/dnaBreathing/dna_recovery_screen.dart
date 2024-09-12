@@ -206,9 +206,10 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
   }
 
   void navigate(DnaCubit cubit) {
+    context.read<DnaCubit>().stopRecovery();
+    
     if (cubit.currentSet == cubit.noOfSets) {
       context.read<DnaCubit>().stopJerry();
-      context.read<DnaCubit>().stopRecovery();
       context.read<DnaCubit>().stopMusic();
       context.read<DnaCubit>().playChime();
       context.read<DnaCubit>().playRelax();

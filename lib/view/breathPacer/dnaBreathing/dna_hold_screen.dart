@@ -258,12 +258,16 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
       context.pushReplacementNamed(RoutesName.dnaHoldScreen);
     } 
     else{
+      context.read<DnaCubit>().stopHold();
       if(cubit.recoveryBreath){
+        context.read<DnaCubit>().playRecovery();
         context.goNamed(RoutesName.dnaRecoveryScreen);
       }else{
         if(cubit.noOfSets == cubit.currentSet ){
+          context.read<DnaCubit>().playRelax();
           context.goNamed(RoutesName.dnaSuccessScreen);
         }else{
+          context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
           cubit.currentSet = cubit.currentSet+1 ;
           context.goNamed(RoutesName.dnaBreathingScreen);
         }

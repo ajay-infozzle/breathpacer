@@ -275,6 +275,18 @@ class PyramidCubit extends Cubit<PyramidState> {
     }
   }
 
+  void stopHold() async {
+    try {
+      if(jerryVoice){
+      await breathHoldPlayer.stop();
+    }
+    } catch (e) {
+      if (kDebugMode) {
+        print("stopHold>> ${e.toString()}");
+      }
+    }
+  }
+
   void playRelax() async {
     try {
       if(jerryVoice){

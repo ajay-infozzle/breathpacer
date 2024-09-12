@@ -301,6 +301,8 @@ class _PinealScreenState extends State<PinealScreen> {
   
   
   void navigate(PinealCubit cubit) {
+    context.read<PinealCubit>().stopJerry();
+    context.read<PinealCubit>().playRecovery();
     context.goNamed(RoutesName.pinealRecoveryScreen);
   }
 

@@ -350,6 +350,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
   }
 
   void navigate(DnaCubit cubit) {
+    context.read<DnaCubit>().stopJerry();
     if(cubit.choiceOfBreathHold == "Both"){
       cubit.breathHoldIndex = 0;
       context.read<DnaCubit>().playHold();
@@ -358,32 +359,5 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
       context.read<DnaCubit>().playHold();
     }
     context.goNamed(RoutesName.dnaHoldScreen);
-
-
-    // if (cubit.currentSet == cubit.noOfSets) {
-    //   if(cubit.holdingPeriod){
-    //     context.read<FirebreathingCubit>().playHold();
-    //     context.goNamed(RoutesName.fireBreathingHoldScreen);
-    //   }
-    //   else if (cubit.recoveryBreath){
-    //     context.read<FirebreathingCubit>().playRecovery();
-    //     context.goNamed(RoutesName.fireBreathingRecoveryScreen);
-    //   }
-    //   else{
-    //     context.read<FirebreathingCubit>().playChime();
-    //     context.read<FirebreathingCubit>().playRelax();
-    //     context.goNamed(RoutesName.fireBreathingSuccessScreen);
-    //   }
-    // } else if (cubit.holdingPeriod) {
-    //   context.read<FirebreathingCubit>().playHold();
-    //   context.goNamed(RoutesName.fireBreathingHoldScreen);
-    // } else if (cubit.recoveryBreath) {
-    //   context.read<FirebreathingCubit>().playRecovery();
-    //   context.goNamed(RoutesName.fireBreathingRecoveryScreen);
-    // } else {
-    //   context.read<FirebreathingCubit>().playJerry();
-    //   cubit.currentSet = cubit.currentSet+1;
-    //   context.pushReplacementNamed(RoutesName.fireBreathingScreen);
-    // }
   }
 }

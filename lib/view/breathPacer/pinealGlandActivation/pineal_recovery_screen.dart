@@ -258,10 +258,13 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
   }
   
   void navigate(PinealCubit cubit) {
+    context.read<PinealCubit>().stopRecovery();
     if(cubit.remainingBreathTime > 0){
+      context.read<PinealCubit>().resetJerryVoiceAndPLayAgain();
       cubit.currentSet = cubit.currentSet+1;
       context.goNamed(RoutesName.pinealScreen);
     }else{
+      context.read<PinealCubit>().playRelax();
       context.goNamed(RoutesName.pinealSuccessScreen);
     }
   }

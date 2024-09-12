@@ -14,19 +14,19 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
 
   int noOfSets = 1;
   int currentSet = 0;
-  int durationOfSets = 120;  //sec
+  int durationOfSets = 30;  //sec
   bool recoveryBreath = false;
   bool holdingPeriod = false;
   bool jerryVoice = false;
   bool music = false;
   bool chimes = false;
   bool pineal = false;
-  String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn); //~ temporary
+  String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.fireBreathing); //~ temporary
   String choiceOfBreathHold = 'Breath in';
   int breathHoldIndex = 0;
   List<String> breathHoldList = ['Breath in', 'Breath out'] ; 
   List<int> setsList = [1, 2, 3, 4, 5] ; 
-  List<int> durationsList = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600] ; //sec
+  List<int> durationsList = [30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600] ; //sec
 
   bool isReatartEnable = false;
   bool isSaveDialogOn = false;
@@ -36,7 +36,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   void initialSettings(String stepp, String speedd){
     noOfSets = 1;
     currentSet = 0;
-    durationOfSets = 120;
+    durationOfSets = 30;
     jerryVoice = false;
     music = false;
     chimes = false;
@@ -237,7 +237,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     try {
       if(jerryVoice){
         //~ for pineal purpose if selected
-        jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.breatheIn) : jerryVoiceOver(JerryVoiceEnum.breatheIn) ;
+        jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.pineal) : jerryVoiceOver(JerryVoiceEnum.fireBreathing) ;
       
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
 
@@ -268,7 +268,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     try {
       if(jerryVoice){
         //~ for pineal purpose if enable
-        jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.breatheIn) : jerryVoiceOver(JerryVoiceEnum.breatheIn) ;
+        jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.pineal) : jerryVoiceOver(JerryVoiceEnum.fireBreathing)  ;
   
         jerryVoicePlayer.stop();
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
@@ -312,17 +312,12 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
       }
     }
   }
+  
 
   void playRecovery() async {
     try {
       if(jerryVoice){
-        // if(breathHoldIndex == 0){
-        //   await breathHoldPlayer.play(AssetSource('audio/hold_in_breath.mp3'));
-        // }
-        // if(breathHoldIndex == 1){
-        //   await breathHoldPlayer.play(AssetSource('audio/hold_out_breath.mp3'));
-        // }
-        //todo: have to add recover sound
+        await recoveryPlayer.play(AssetSource('audio/recover.mp3'));
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -333,10 +328,9 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
 
   void stopRecovery() async {
     try {
-      // if(jerryVoice){
-      //   await recoveryPlayer.stop();
-      // }
-      //todo: have to add recover sound
+      if(jerryVoice){
+        await recoveryPlayer.stop();
+      }
     } on Exception catch (e) {
       if (kDebugMode) {
         print("stopRecovery>> ${e.toString()}");

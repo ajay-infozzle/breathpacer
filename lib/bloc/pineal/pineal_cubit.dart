@@ -217,7 +217,7 @@ class PinealCubit extends Cubit<PinealState> {
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
 
         jerryVoicePlayer.onPlayerComplete.listen((event) {
-          // jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
+          jerryVoicePlayer.play(AssetSource("audio/10_countdown.mp3"));
           
           //todo: now hold for ....seconds counting start
           emit(ResumeHoldCounter());
@@ -264,14 +264,7 @@ class PinealCubit extends Cubit<PinealState> {
 
   void playHold() async {
     try {
-      // if(jerryVoice){
-      //   if(breathHoldIndex == 0){
-      //     await breathHoldPlayer.play(AssetSource('audio/hold_in_breath.mp3'));
-      //   }
-      //   if(breathHoldIndex == 1){
-      //     await breathHoldPlayer.play(AssetSource('audio/hold_out_breath.mp3'));
-      //   }
-      // }
+      
     } on Exception catch (e) {
       if (kDebugMode) {
         print("playHold>> ${e.toString()}");
@@ -294,13 +287,7 @@ class PinealCubit extends Cubit<PinealState> {
   void playRecovery() async {
     try {
       if(jerryVoice){
-        // if(breathHoldIndex == 0){
-        //   await breathHoldPlayer.play(AssetSource('audio/hold_in_breath.mp3'));
-        // }
-        // if(breathHoldIndex == 1){
-        //   await breathHoldPlayer.play(AssetSource('audio/hold_out_breath.mp3'));
-        // }
-        //todo: have to add recover sound
+        await recoveryPlayer.play(AssetSource('audio/recover.mp3'));
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -314,7 +301,6 @@ class PinealCubit extends Cubit<PinealState> {
       if(jerryVoice){
         await recoveryPlayer.stop();
       }
-      //todo: have to add recover sound
     } on Exception catch (e) {
       if (kDebugMode) {
         print("stopRecovery>> ${e.toString()}");

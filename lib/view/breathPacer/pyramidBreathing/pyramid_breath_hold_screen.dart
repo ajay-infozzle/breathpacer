@@ -75,7 +75,7 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
               if(context.read<PyramidCubit>().currentRound.toString() == context.read<PyramidCubit>().step){
                 storeScreenTime();
                 context.read<PyramidCubit>().stopMusic();
-                // context.read<PyramidCubit>().resetMusic();
+                context.read<PyramidCubit>().stopHold();
                 context.read<PyramidCubit>().playChime();
                 context.read<PyramidCubit>().stopJerry();
 

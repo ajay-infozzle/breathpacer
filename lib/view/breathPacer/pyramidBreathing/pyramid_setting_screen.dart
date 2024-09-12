@@ -78,14 +78,7 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen> with Single
                 backgroundColor: Colors.transparent,
                 centerTitle: true,
                 leading: GestureDetector(
-                  onTap: (){
-                    if(context.read<PyramidCubit>().isReatartEnable){
-                      context.goNamed(RoutesName.homeScreen);
-                    }
-                    else{
-                      context.pop();
-                    }
-                  },
+                  onTap: () => context.pop(),
                   child: const Icon(Icons.arrow_back_ios),
                 ),
                 title: const Text(
@@ -102,126 +95,155 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen> with Single
       
               //~
               Expanded(
-                child: ListView(
+                child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    SizedBox(
-                      width: size,
-                      child: CircleAvatar(
-                        radius: size*0.12,
-                        child: Image.asset("assets/images/pyramid_icon.png"),
-                      ),
-                    ),
-      
-                    Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: size*0.04),
-                      width: size,
-                      child: Text(
-                        "${widget.step} step",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: size*0.04,
+                    ListView(
+                      children: [
+                        SizedBox(
+                          width: size,
+                          child: CircleAvatar(
+                            radius: size*0.12,
+                            child: Image.asset("assets/images/pyramid_icon.png"),
+                          ),
                         ),
-                      ),
-                    ),
-      
-                    SizedBox(height: size*0.05,),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: size*0.05),
-                      child: customTabBar(),
-                    ),
+                          
+                        Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(top: size*0.04),
+                          width: size,
+                          child: Text(
+                            "${widget.step} step",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: size*0.04,
+                            ),
+                          ),
+                        ),
+                          
+                        SizedBox(height: size*0.05,),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: size*0.05),
+                          child: customTabBar(),
+                        ),
+                        
+                          
+                        SizedBox(height: size*0.06,),
+                        Container(
+                          width: size,
+                          margin: EdgeInsets.symmetric(horizontal: size*0.05),
+                          child: BlocBuilder<PyramidCubit, PyramidState>(
+                            buildWhen: (previous, current) => current is PyramidToggleJerryVoice || current is PyramidInitial,
+                            builder: (context, state) {
+                              return SettingsToggleButton(
+                                onToggle: () {
+                                  context.read<PyramidCubit>().toggleJerryVoice();
+                                }, 
+                                title: "Jerry's voice :", 
+                                isOn: context.read<PyramidCubit>().jerryVoice
+                              );
+                            }, 
+                          ),
+                        ),
+                          
+                        SizedBox(height: size*0.03,),
+                        Container(
+                          width: size,
+                          margin: EdgeInsets.symmetric(horizontal: size*0.05),
+                          child: BlocBuilder<PyramidCubit, PyramidState>(
+                            buildWhen: (previous, current) => current is PyramidInitial || current is PyramidToggleMusic,
+                            builder:  (context, state) => SettingsToggleButton(
+                              onToggle: () {
+                                context.read<PyramidCubit>().toggleMusic();
+                              }, 
+                              title: "Music :", 
+                              isOn: context.read<PyramidCubit>().music
+                            ),
+                          ),
+                        ),
+                          
+                        SizedBox(height: size*0.03,),
+                        Container(
+                          width: size,
+                          margin: EdgeInsets.symmetric(horizontal: size*0.05),
+                          child: BlocBuilder<PyramidCubit, PyramidState>(
+                              buildWhen: (previous, current) => current is PyramidInitial || current is PyramidToggleChimes,
+                              builder: (context, state) => SettingsToggleButton(
+                              onToggle: () {
+                                context.read<PyramidCubit>().toggleChimes();
+                              }, 
+                              title: "Chimes at start / stop points :", 
+                              isOn: context.read<PyramidCubit>().chimes
+                            ), 
+                          ),
+                        ),
+                          
+                        SizedBox(height: size*0.03,),
+                        Container(
+                          width: size,
+                          margin: EdgeInsets.symmetric(horizontal: size*0.05),
+                          child: BlocBuilder<PyramidCubit, PyramidState>(
+                            buildWhen: (previous, current) => current is PyramidInitial || current is PyramidToggleBreathHold,
+                            builder: (context, state) {
+                              return BreathingChoices(
+                                chosenItem: context.read<PyramidCubit>().breathHoldIndex, 
+                                choicesList: context.read<PyramidCubit>().breathHoldList,
+                                onUpdateChoiceIndex: (int index) {
+                                  context.read<PyramidCubit>().toggleBreathHold(index);
+                                }, 
+                                onUpdateVoiceOver: (JerryVoiceEnum audio) {
+                                  context.read<PyramidCubit>().changeJerryVoiceAudio(jerryVoiceOver(audio));
+                                },
+                              );
+                            }, 
+                          ),
+                        ),
+                          
+                        Container(
+                          margin: EdgeInsets.only(top: size*0.09,bottom: size*0.09, right: size*0.05, left: size*0.05),
+                          height: 48,
+                          // child: CustomButton(
+                          //   title: "Start", 
+                          //   height: 48,
+                          //   spacing: .7,
+                          //   radius: 10,
+                          //   onPress: (){
+                          //     context.read<PyramidCubit>().playMusic();
+                          //     context.read<PyramidCubit>().playCloseEyes();
                     
-      
-                    SizedBox(height: size*0.06,),
-                    Container(
-                      width: size,
-                      margin: EdgeInsets.symmetric(horizontal: size*0.05),
-                      child: BlocBuilder<PyramidCubit, PyramidState>(
-                        buildWhen: (previous, current) => current is PyramidToggleJerryVoice || current is PyramidInitial,
-                        builder: (context, state) {
-                          return SettingsToggleButton(
-                            onToggle: () {
-                              context.read<PyramidCubit>().toggleJerryVoice();
-                            }, 
-                            title: "Jerry's voice :", 
-                            isOn: context.read<PyramidCubit>().jerryVoice
-                          );
-                        }, 
-                      ),
-                    ),
-      
-                    SizedBox(height: size*0.03,),
-                    Container(
-                      width: size,
-                      margin: EdgeInsets.symmetric(horizontal: size*0.05),
-                      child: BlocBuilder<PyramidCubit, PyramidState>(
-                        buildWhen: (previous, current) => current is PyramidInitial || current is PyramidToggleMusic,
-                        builder:  (context, state) => SettingsToggleButton(
-                          onToggle: () {
-                            context.read<PyramidCubit>().toggleMusic();
-                          }, 
-                          title: "Music :", 
-                          isOn: context.read<PyramidCubit>().music
+                          //     context.pushNamed(
+                          //       RoutesName.pyramidWaitingScreen,
+                          //     );
+                          //   }
+                          // )
                         ),
-                      ),
+                          
+                      ],
                     ),
-      
-                    SizedBox(height: size*0.03,),
-                    Container(
-                      width: size,
-                      margin: EdgeInsets.symmetric(horizontal: size*0.05),
-                      child: BlocBuilder<PyramidCubit, PyramidState>(
-                          buildWhen: (previous, current) => current is PyramidInitial || current is PyramidToggleChimes,
-                          builder: (context, state) => SettingsToggleButton(
-                          onToggle: () {
-                            context.read<PyramidCubit>().toggleChimes();
-                          }, 
-                          title: "Chimes at start / stop points :", 
-                          isOn: context.read<PyramidCubit>().chimes
-                        ), 
-                      ),
-                    ),
-      
-                    SizedBox(height: size*0.03,),
-                    Container(
-                      width: size,
-                      margin: EdgeInsets.symmetric(horizontal: size*0.05),
-                      child: BlocBuilder<PyramidCubit, PyramidState>(
-                        buildWhen: (previous, current) => current is PyramidInitial || current is PyramidToggleBreathHold,
-                        builder: (context, state) {
-                          return BreathingChoices(
-                            chosenItem: context.read<PyramidCubit>().breathHoldIndex, 
-                            choicesList: context.read<PyramidCubit>().breathHoldList,
-                            onUpdateChoiceIndex: (int index) {
-                              context.read<PyramidCubit>().toggleBreathHold(index);
-                            }, 
-                            onUpdateVoiceOver: (JerryVoiceEnum audio) {
-                              context.read<PyramidCubit>().changeJerryVoiceAudio(jerryVoiceOver(audio));
-                            },
-                          );
-                        }, 
-                      ),
-                    ),
-      
-                    Container(
-                      margin: EdgeInsets.only(top: size*0.09,bottom: size*0.09, right: size*0.05, left: size*0.05),
-                      child: CustomButton(
-                        title: "Start", 
-                        height: 48,
-                        spacing: .7,
-                        radius: 10,
-                        onPress: (){
-                          context.read<PyramidCubit>().playMusic();
-                          context.read<PyramidCubit>().playCloseEyes();
 
-                          context.pushNamed(
-                            RoutesName.pyramidWaitingScreen,
-                          );
-                        }
-                      )
-                    ),
-      
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        margin: EdgeInsets.only(top: size*0.09,),
+                        child: CustomButton(
+                          title: "Start", 
+                          height: 48,
+                          spacing: .7,
+                          radius: 0,
+                          onPress: (){
+                            context.read<PyramidCubit>().playMusic();
+                            context.read<PyramidCubit>().playCloseEyes();
+                  
+                            context.pushNamed(
+                              RoutesName.pyramidWaitingScreen,
+                            );
+                          }
+                        )
+                      ),
+                    )
                   ],
                 ) 
               ),

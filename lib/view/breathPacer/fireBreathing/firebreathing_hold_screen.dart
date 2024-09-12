@@ -198,20 +198,24 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
     if (cubit.currentSet == cubit.noOfSets) {
       if (cubit.recoveryBreath){
         context.read<FirebreathingCubit>().stopJerry();
+        context.read<FirebreathingCubit>().stopHold();
         context.read<FirebreathingCubit>().playRecovery();
         context.goNamed(RoutesName.fireBreathingRecoveryScreen);
       }
       else{
         context.read<FirebreathingCubit>().stopJerry();
+        context.read<FirebreathingCubit>().stopHold();
         context.read<FirebreathingCubit>().stopMusic();
         context.read<FirebreathingCubit>().playChime();
         context.read<FirebreathingCubit>().playRelax();
         context.goNamed(RoutesName.fireBreathingSuccessScreen);
       }
     }else if (cubit.recoveryBreath) {
+      context.read<FirebreathingCubit>().stopHold();
       context.read<FirebreathingCubit>().playRecovery();
       context.goNamed(RoutesName.fireBreathingRecoveryScreen);
     } else {
+      context.read<FirebreathingCubit>().stopHold();
       context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
       cubit.currentSet = cubit.currentSet+1;
       context.goNamed(RoutesName.fireBreathingScreen);

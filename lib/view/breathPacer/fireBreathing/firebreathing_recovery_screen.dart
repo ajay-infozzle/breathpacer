@@ -186,6 +186,8 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
       context.read<FirebreathingCubit>().playRelax();
       context.goNamed(RoutesName.fireBreathingSuccessScreen);
     }else {
+      context.read<FirebreathingCubit>().stopJerry();
+      context.read<FirebreathingCubit>().stopRecovery();
       context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
       cubit.currentSet = cubit.currentSet+1;
       context.goNamed(RoutesName.fireBreathingScreen);
