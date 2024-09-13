@@ -198,7 +198,7 @@ class _FirebreathingSuccessScreenState extends State<FirebreathingSuccessScreen>
                           child: CustomButton(
                             title: "Save breathwork", 
                             textsize: size*0.043,
-                            height: 48,
+                            height: height*0.062,
                             spacing: .7,
                             radius: 10,
                             onPress: (){

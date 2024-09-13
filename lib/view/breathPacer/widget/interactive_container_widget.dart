@@ -105,7 +105,8 @@ class _InteractiveContainerWidgetState extends State<InteractiveContainerWidget>
       child: CustomButton(
         title: "Start", 
         radius: 5,
-        height: 43,
+        height: height*0.053,
+        textsize: size*0.04,
         spacing: 0.3,
         onPress: widget.onTap
       ),

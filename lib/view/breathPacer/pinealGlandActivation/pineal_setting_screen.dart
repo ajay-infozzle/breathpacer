@@ -16,7 +16,7 @@ class PinealSettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size.width ;
-    // final height = MediaQuery.of(context).size.height ;
+    final height = MediaQuery.of(context).size.height ;
     
     return PopScope(
       canPop: false,
@@ -220,7 +220,8 @@ class PinealSettingScreen extends StatelessWidget {
                         margin: EdgeInsets.only(top: size*0.09,),
                         child: CustomButton(
                           title: "Start", 
-                          height: 48,
+                          textsize: size*0.043,
+                          height: height*0.062,
                           spacing: .7,
                           radius: 0,
                           onPress: (){

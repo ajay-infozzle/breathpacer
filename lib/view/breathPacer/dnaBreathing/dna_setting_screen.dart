@@ -440,7 +440,8 @@ class _DnaSettingScreenState extends State<DnaSettingScreen> with SingleTickerPr
                         margin: EdgeInsets.only(top: size*0.09,),
                         child: CustomButton(
                           title: "Start", 
-                          height: 48,
+                          textsize: size*0.043,
+                          height: height*0.062,
                           spacing: .7,
                           radius: 0,
                           onPress: (){

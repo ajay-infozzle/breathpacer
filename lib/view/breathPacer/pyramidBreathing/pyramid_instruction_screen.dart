@@ -23,6 +23,7 @@ class PyramidInstructionScreen extends StatelessWidget {
         child: Column(
           children: [
             AppBar(
+              scrolledUnderElevation: 0,
               iconTheme: const IconThemeData(color: Colors.white),
               backgroundColor: Colors.transparent,
               centerTitle: true,
