@@ -145,6 +145,28 @@ class FirebreathingSettingScreen extends StatelessWidget {
                             }, 
                           ),
                         ),
+
+
+                        BlocBuilder<FirebreathingCubit, FirebreathingState>(
+                          builder: (context, state) {
+                            if(context.read<FirebreathingCubit>().recoveryBreath){
+                              return Container(
+                                width: size,
+                                margin: EdgeInsets.only(left: size*0.05, right: size*0.07, top: size*0.05),
+                                child: SettingsDropdownButton(
+                                  onSelected: (int selected) {
+                                    context.read<FirebreathingCubit>().updateRecoveryDuration(selected);
+                                  },
+                                  title: "Recovery breath duration:",
+                                  selected: context.read<FirebreathingCubit>().recoveryBreathDuration, 
+                                  options: context.read<FirebreathingCubit>().recoveryDurationList, 
+                                  isTime: true,
+                                ),
+                              );
+                            }
+                            return const SizedBox();
+                          }, 
+                        ),
                     
                     
                         SizedBox(height: size*0.03,),
@@ -163,6 +185,53 @@ class FirebreathingSettingScreen extends StatelessWidget {
                               );
                             }, 
                           ),
+                        ),
+
+
+                        BlocBuilder<FirebreathingCubit, FirebreathingState>(
+                          buildWhen: (previous, current) => current is FirebreathingInitial || current is FirebreathingToggleBreathHoldChoice || current is FirebreathingToggleHolding,
+                          builder: (context, state) {
+                            if(!context.read<FirebreathingCubit>().holdingPeriod){
+                              return const SizedBox();
+                            }
+                            return Container(
+                              width: size,
+                              margin: EdgeInsets.only(left: size*0.05, right: size*0.07, top: size*0.05),
+                              child: SettingsDropdownButton(
+                                  onSelected: (int selected) {
+                                    context.read<FirebreathingCubit>().updateHold(selected);
+                                  },
+                                  title: "Breath hold duration:",
+                                  selected: context.read<FirebreathingCubit>().holdDuration, 
+                                  options: context.read<FirebreathingCubit>().holdDurationList, 
+                                  isTime: true,
+                                ),
+                            );
+                          }, 
+                        ),
+
+
+                        BlocBuilder<FirebreathingCubit, FirebreathingState>(
+                          buildWhen: (previous, current) => current is FirebreathingInitial || current is FirebreathingToggleBreathHoldChoice || current is FirebreathingToggleHolding,
+                          builder: (context, state) {
+                            if(!context.read<FirebreathingCubit>().holdingPeriod){
+                              return const SizedBox();
+                            }
+                            return Container(
+                              width: size,
+                              margin: EdgeInsets.only(left: size*0.05, right: size*0.05, top: size*0.03),
+                              child: BreathingChoices(
+                                chosenItem: context.read<FirebreathingCubit>().breathHoldIndex, 
+                                choicesList: context.read<FirebreathingCubit>().breathHoldList,
+                                onUpdateChoiceIndex: (int index) {
+                                  context.read<FirebreathingCubit>().toggleBreathHold(index);
+                                }, 
+                                onUpdateVoiceOver: (JerryVoiceEnum audio) {
+                                  context.read<FirebreathingCubit>().changeJerryVoiceAudio(jerryVoiceOver(audio));
+                                },
+                              ),
+                            );
+                          }, 
                         ),
                     
                     
@@ -241,27 +310,7 @@ class FirebreathingSettingScreen extends StatelessWidget {
                           ),
                         ),
                     
-                        SizedBox(height: size*0.03,),
-                        Container(
-                          width: size,
-                          margin: EdgeInsets.symmetric(horizontal: size*0.05),
-                          child: BlocBuilder<FirebreathingCubit, FirebreathingState>(
-                            buildWhen: (previous, current) => current is FirebreathingInitial || current is FirebreathingToggleBreathHoldChoice,
-                            builder: (context, state) {
-                              return BreathingChoices(
-                                chosenItem: context.read<FirebreathingCubit>().breathHoldIndex, 
-                                choicesList: context.read<FirebreathingCubit>().breathHoldList,
-                                onUpdateChoiceIndex: (int index) {
-                                  context.read<FirebreathingCubit>().toggleBreathHold(index);
-                                }, 
-                                onUpdateVoiceOver: (JerryVoiceEnum audio) {
-                                  context.read<FirebreathingCubit>().changeJerryVoiceAudio(jerryVoiceOver(audio));
-                                },
-                              );
-                            }, 
-                          ),
-                        ),
-                        
+                                                
                         Container(
                           margin: EdgeInsets.only(top: size*0.09,bottom: size*0.09, right: size*0.05, left: size*0.05),
                           height: 48,

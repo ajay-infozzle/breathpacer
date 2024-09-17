@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:timer_count_down/timer_controller.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
 class FirebreathingHoldScreen extends StatefulWidget {
   const FirebreathingHoldScreen({super.key});
@@ -17,6 +19,7 @@ class FirebreathingHoldScreen extends StatefulWidget {
 
 class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
 
+  late CountdownController countdownController;
   late Timer _timer;
   int _startTime = 0;
 
@@ -24,6 +27,10 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
   void initState() {
     super.initState();
     startTimer();
+
+    if(context.read<FirebreathingCubit>().holdDuration != -1){
+      countdownController = CountdownController(autoStart: true);
+    }
   }
 
   void startTimer() {
@@ -127,21 +134,46 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
                         ),
                       ),
             
-                      SizedBox(height: height*0.04,),
+                      // SizedBox(height: height*0.04,),
+                      // Container(
+                      //   width: size,
+                      //   alignment: Alignment.center,
+                      //   child: Center(
+                      //     child: Text(
+                      //       getScreenTiming,
+                      //       style: TextStyle(
+                      //         color: Colors.white,
+                      //         fontSize: size*0.2
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(height: height*0.04,),
+
+                      if(context.read<FirebreathingCubit>().holdDuration != -1)
                       Container(
+                        margin: EdgeInsets.only(top: height*0.04,bottom: height*0.04),
                         width: size,
                         alignment: Alignment.center,
                         child: Center(
-                          child: Text(
-                            getScreenTiming,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: size*0.2
+                          child: Countdown(
+                            controller: countdownController,
+                            seconds: context.read<FirebreathingCubit>().holdDuration,
+                            build: (BuildContext context, double time) => Text(
+                              formatTimer(time),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: size*0.2
+                              ),
                             ),
+                            interval: const Duration(seconds: 1),
+                            onFinished: (){
+                              storeScreenTime();
+                              navigate(context.read<FirebreathingCubit>());
+                            },
                           ),
                         ),
                       ),
-                      SizedBox(height: height*0.04,),
 
                       const Spacer(),
                       Container(
@@ -220,6 +252,16 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
       cubit.currentSet = cubit.currentSet+1;
       context.goNamed(RoutesName.fireBreathingScreen);
     }
+  }
+  
+  String formatTimer(double time) {
+    int minutes = (time / 60).floor(); 
+    int seconds = (time % 60).floor(); 
+    
+    String minutesStr = minutes.toString().padLeft(2, '0'); 
+    String secondsStr = seconds.toString().padLeft(2, '0'); 
+    
+    return "$minutesStr:$secondsStr";
   }
 
 }

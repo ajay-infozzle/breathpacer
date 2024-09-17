@@ -24,7 +24,7 @@ class PinealCubit extends Cubit<PinealState> {
   int holdDuration = 10;
   int breathingPeriod = 60;
   List<int> breathingDurationList = [30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600] ;
-  List<int> holdDurationList = [10, -1] ;
+  List<int> holdDurationList = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 75, 90, 120, -1] ;
   List<int> recoveryDurationList = [10, 20, 30, 60, 120] ;
   
   int remainingBreathTime = 0;

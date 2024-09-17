@@ -4,6 +4,7 @@ import 'package:breathpacer/config/theme.dart';
 import 'package:breathpacer/utils/constant/jerry_voice.dart';
 import 'package:breathpacer/utils/custom_button.dart';
 import 'package:breathpacer/view/breathPacer/widget/breathing_choices_widget.dart';
+import 'package:breathpacer/view/breathPacer/widget/settings_dropdown_widget.dart';
 import 'package:breathpacer/view/breathPacer/widget/settings_toggle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -178,6 +179,29 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen> with Single
                             ), 
                           ),
                         ),
+
+
+                        BlocBuilder<PyramidCubit, PyramidState>(
+                          buildWhen: (previous, current) => current is PyramidInitial || current is PyramidToggleBreathHold,
+                          builder: (context, state) {
+                            // if(!context.read<PyramidCubit>().holdingPeriod){
+                            //   return const SizedBox();
+                            // }
+                            return Container(
+                              width: size,
+                              margin: EdgeInsets.only(left: size*0.05, right: size*0.05, top: size*0.03),
+                              child: SettingsDropdownButton(
+                                  onSelected: (int selected) {
+                                    context.read<PyramidCubit>().updateHold(selected);
+                                  },
+                                  title: "Breath hold duration:",
+                                  selected: context.read<PyramidCubit>().holdDuration, 
+                                  options: context.read<PyramidCubit>().holdDurationList, 
+                                  isTime: true,
+                                ),
+                            );
+                          }, 
+                        ),
                           
                         SizedBox(height: size*0.03,),
                         Container(
@@ -199,6 +223,7 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen> with Single
                             }, 
                           ),
                         ),
+
                           
                         Container(
                           margin: EdgeInsets.only(top: size*0.09,bottom: size*0.09, right: size*0.05, left: size*0.05),

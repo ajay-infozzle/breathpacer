@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:timer_count_down/timer_controller.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
 class FirebreathingRecoveryScreen extends StatefulWidget {
   const FirebreathingRecoveryScreen({super.key});
@@ -17,6 +19,7 @@ class FirebreathingRecoveryScreen extends StatefulWidget {
 
 class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScreen> {
 
+  late CountdownController countdownController;
   late Timer _timer;
   int _startTime = 0;
 
@@ -24,6 +27,8 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
   void initState() {
     super.initState();
     startTimer();
+
+    countdownController = CountdownController(autoStart: true);
   }
 
   void startTimer() {
@@ -73,7 +78,6 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
           child: GestureDetector(
             onTap: () {
               storeScreenTime();
-              
               navigate(context.read<FirebreathingCubit>());
             },
             child: Column(
@@ -130,12 +134,21 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
                         width: size,
                         alignment: Alignment.center,
                         child: Center(
-                          child: Text(
-                            getScreenTiming,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: size*0.2
+                          child: Countdown(
+                            controller: countdownController,
+                            seconds: context.read<FirebreathingCubit>().recoveryBreathDuration,
+                            build: (BuildContext context, double time) => Text(
+                              formatTimer(time),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: size*0.2
+                              ),
                             ),
+                            interval: const Duration(seconds: 1),
+                            onFinished: (){
+                              storeScreenTime();
+                              navigate(context.read<FirebreathingCubit>());
+                            },
                           ),
                         ),
                       ),
@@ -192,6 +205,16 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
       cubit.currentSet = cubit.currentSet+1;
       context.goNamed(RoutesName.fireBreathingScreen);
     }
+  }
+
+  String formatTimer(double time) {
+    int minutes = (time / 60).floor(); 
+    int seconds = (time % 60).floor(); 
+    
+    String minutesStr = minutes.toString().padLeft(2, '0'); 
+    String secondsStr = seconds.toString().padLeft(2, '0'); 
+    
+    return "$minutesStr:$secondsStr";
   }
 
 }

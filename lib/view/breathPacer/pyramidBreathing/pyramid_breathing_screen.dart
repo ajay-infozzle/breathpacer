@@ -24,6 +24,7 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
   int _startTime = 0; // Time in seconds
 
   int breathCount = 0;
+  String breathOption = 'Breath In' ;
   
   @override
   void initState() {
@@ -59,16 +60,26 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
     )..repeat(reverse: true);  // Repeat the animation in both directions
 
     
-    _animation = Tween<double>(begin: 0.1, end: 1).animate(CurvedAnimation(
+    _animation = Tween<double>(begin: 1, end: 0.1).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
     ));
 
     bool hasDecreased = false; // Flag to ensure we only decrease once per cycle
+    bool hasIncreased = false; // Flag to ensure we only decrease once per cycle
 
     _controller.addListener(() {
+      if(_controller.status == AnimationStatus.forward && _animation.value > 0.98  && !hasIncreased){
+        if (kDebugMode) {
+          setState(() {
+            breathOption = 'Breath In' ;
+          });
+          hasIncreased = true;
+        }
+      }
+
       // Check if the animation is shrinking and has passed a threshold (close to the minimum)
-      if (_controller.status == AnimationStatus.reverse && _animation.value < 0.3 && !hasDecreased) {
+      if (_controller.status == AnimationStatus.reverse && _animation.value < 0.2 && !hasDecreased) {
         if (kDebugMode) {
           print("Breath count: $breathCount");
         }
@@ -77,8 +88,9 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
         if (breathCount > 0) {
           setState(() {
             breathCount--;
+            breathOption = 'Breath Out';
           });
-          hasDecreased = true; // Set the flag to true to prevent further decrements during this cycle
+          hasDecreased = true; 
         }
 
         // Stop the animation if the breath count reaches 0
@@ -94,6 +106,11 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
       // Reset the flag when the animation is expanding again
       if (_controller.status == AnimationStatus.forward && hasDecreased) {
         hasDecreased = false;
+      }
+
+      // Reset the flag when the animation is shrinking again
+      if (_controller.status == AnimationStatus.reverse && hasIncreased) {
+        hasIncreased = false;
       }
     });
   }
@@ -185,6 +202,26 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
                           "Take ${checkBreathnumber(context)} deep breaths",
                           style: TextStyle(
                             color: Colors.white,
+                            fontSize: size*0.05,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ),
+
+
+                      Container(
+                        width: size*0.4,
+                        margin: EdgeInsets.symmetric(horizontal: size*0.05, vertical: size*0.05),
+                        padding: EdgeInsets.symmetric(vertical: size*0.03,horizontal: size*0.03),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12)
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          breathOption,
+                          style: TextStyle(
+                            color: AppTheme.colors.primaryColor,
                             fontSize: size*0.05,
                             fontWeight: FontWeight.bold
                           ),

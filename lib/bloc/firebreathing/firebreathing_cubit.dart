@@ -16,7 +16,9 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   int currentSet = 0;
   int durationOfSets = 30;  //sec
   bool recoveryBreath = false;
+  int recoveryBreathDuration = 10;
   bool holdingPeriod = false;
+  int holdDuration = 10;
   bool jerryVoice = false;
   bool music = false;
   bool chimes = false;
@@ -27,6 +29,8 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   List<String> breathHoldList = ['Breath in', 'Breath out'] ; 
   List<int> setsList = [1, 2, 3, 4, 5] ; 
   List<int> durationsList = [30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600] ; //sec
+  List<int> recoveryDurationList = [10,20, 30, 40, 60, 120, 180] ;
+  List<int> holdDurationList = [10, 20, 30, 40, 50, 60] ;
 
   bool isReatartEnable = false;
   bool isSaveDialogOn = false;
@@ -42,7 +46,9 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     chimes = false;
     pineal = false;
     recoveryBreath = false;
+    recoveryBreathDuration = 10;
     holdingPeriod = false;
+    holdDuration = 10;
     isReatartEnable = true ;
     jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn);
     breathHoldIndex = 0;
@@ -67,9 +73,19 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     emit(FirebreathingToggleRecoveryBreath());
   }
 
+  void updateRecoveryDuration(int number){
+    recoveryBreathDuration = number ;
+    emit(FirebreathingToggleRecoveryBreath());
+  }
+
   void toggleHolding(){
     holdingPeriod = !holdingPeriod ;
     emit(FirebreathingToggleHolding());
+  }
+
+  void updateHold(int number){
+    holdDuration = number ;
+     emit(FirebreathingToggleHolding());
   }
 
   void toggleJerryVoice(){

@@ -33,7 +33,7 @@ class DnaCubit extends Cubit<DnaState> {
   String breathingApproachGroupValue = 'No. of Breaths' ; //No. of Breaths,Time per set
   List<String> breathHoldList = ['Breath in', 'Breath out', 'Both'] ; 
   List<int> breathList = [10, 15, 20, 25, 30] ; 
-  List<int> setsList = [1, 2, 3, 4, 5] ; 
+  List<int> setsList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30] ; 
   List<int> durationsList = [30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600] ;
   List<int> holdDurationList = [10, 20, 30, 40, 50, 60, -1] ;
   List<int> recoveryDurationList = [10,20, 30, 40, 60, 120, 180] ;

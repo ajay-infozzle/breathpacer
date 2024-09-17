@@ -336,23 +336,23 @@ class _DnaSettingScreenState extends State<DnaSettingScreen> with SingleTickerPr
                         ),
                     
                     
-                        SizedBox(height: size*0.03,),
-                        Container(
-                          width: size,
-                          margin: EdgeInsets.only(left: size*0.1, right: size*0.05),
-                          child: BlocBuilder<DnaCubit, DnaState>(
-                            buildWhen: (previous, current) => current is DnaInitial || current is DnaTogglePineal,
-                            builder: (context, state) {
-                              return SettingsToggleButton(
-                                onToggle: () {
-                                  context.read<DnaCubit>().togglePineal();
-                                }, 
-                                title: "Pineal Gland :", 
-                                isOn: context.read<DnaCubit>().pineal
-                              );
-                            }, 
-                          ),
-                        ),
+                        // SizedBox(height: size*0.03,),
+                        // Container(
+                        //   width: size,
+                        //   margin: EdgeInsets.only(left: size*0.1, right: size*0.05),
+                        //   child: BlocBuilder<DnaCubit, DnaState>(
+                        //     buildWhen: (previous, current) => current is DnaInitial || current is DnaTogglePineal,
+                        //     builder: (context, state) {
+                        //       return SettingsToggleButton(
+                        //         onToggle: () {
+                        //           context.read<DnaCubit>().togglePineal();
+                        //         }, 
+                        //         title: "Pineal Gland :", 
+                        //         isOn: context.read<DnaCubit>().pineal
+                        //       );
+                        //     }, 
+                        //   ),
+                        // ),
                     
                         SizedBox(height: size*0.03,),
                         Container(

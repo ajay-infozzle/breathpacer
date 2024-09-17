@@ -21,6 +21,8 @@ class PyramidCubit extends Cubit<PyramidState> {
   String choiceOfBreathHold = 'Breath in';
   int breathHoldIndex = 0;
   List<String> breathHoldList = ['Breath in', 'Breath out'] ; 
+  int holdDuration = 10;
+  List<int> holdDurationList = [10, 20, 30, 40, 50, 60, -1] ;
 
   bool isReatartEnable = false;
   bool isSaveDialogOn = false;
@@ -33,6 +35,7 @@ class PyramidCubit extends Cubit<PyramidState> {
     music = false;
     chimes = false;
     isReatartEnable = true ;
+    holdDuration = 10;
     saveInputCont.clear();
   
     emit(PyramidInitial());
@@ -55,6 +58,12 @@ class PyramidCubit extends Cubit<PyramidState> {
     breathHoldIndex = index;
     emit(PyramidToggleBreathHold());
   }
+
+  void updateHold(int number){
+    holdDuration = number ;
+     emit(PyramidToggleBreathHold());
+  }
+
   void changeJerryVoiceAudio(String audioFile){
     jerryVoiceAssetFile = audioFile;
     emit(PyramidToggleBreathHold());
@@ -77,6 +86,7 @@ class PyramidCubit extends Cubit<PyramidState> {
     chimes = false;
 
     currentRound = 0;
+    holdDuration = 10;
     breathingTimeList.clear();
     holdTimeList.clear();
 

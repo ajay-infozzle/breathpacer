@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:timer_count_down/timer_controller.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
 class PyramidBreathHoldScreen extends StatefulWidget {
   const PyramidBreathHoldScreen({super.key});
@@ -17,6 +19,7 @@ class PyramidBreathHoldScreen extends StatefulWidget {
 
 class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
 
+  late CountdownController countdownController;
   late Timer _timer;
   int _startTime = 0; // Time in seconds
   
@@ -24,6 +27,10 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
   void initState() {
     super.initState();
     startTimer();
+
+    if(context.read<PyramidCubit>().holdDuration != -1){
+      countdownController = CountdownController(autoStart: true);
+    }
   }
 
   @override
@@ -143,21 +150,64 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
                         ),
                       ),
             
-                      SizedBox(height: height*0.04,),
+                      // SizedBox(height: height*0.04,),
+                      // Container(
+                      //   width: size,
+                      //   alignment: Alignment.center,
+                      //   child: Center(
+                      //     child: Text(
+                      //       getScreenTiming,
+                      //       style: TextStyle(
+                      //         color: Colors.white,
+                      //         fontSize: size*0.2
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(height: height*0.04,),
+                      
+                      if(context.read<PyramidCubit>().holdDuration != -1)
                       Container(
+                        margin: EdgeInsets.only(top: height*0.04,bottom: height*0.04),
                         width: size,
                         alignment: Alignment.center,
                         child: Center(
-                          child: Text(
-                            getScreenTiming,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: size*0.2
+                          child: Countdown(
+                            controller: countdownController,
+                            seconds: context.read<PyramidCubit>().holdDuration,
+                            build: (BuildContext context, double time) => Text(
+                              formatTimer(time),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: size*0.2
+                              ),
                             ),
+                            interval: const Duration(seconds: 1),
+                            onFinished: (){
+                              if(context.read<PyramidCubit>().currentRound.toString() == context.read<PyramidCubit>().step){
+                                storeScreenTime();
+                                context.read<PyramidCubit>().stopMusic();
+                                context.read<PyramidCubit>().stopHold();
+                                context.read<PyramidCubit>().playChime();
+                                context.read<PyramidCubit>().stopJerry();
+
+                                if (kDebugMode) {
+                                  print("pyramid rounds finished");
+                                }
+                                context.goNamed(RoutesName.pyramidSuccessScreen);
+                              }else{
+                                storeScreenTime();
+                                context.read<PyramidCubit>().stopHold();
+                                context.read<PyramidCubit>().currentRound = context.read<PyramidCubit>().currentRound+1;
+                                context.read<PyramidCubit>().resetJerryVoiceAndPLayAgain();
+                                
+                                context.goNamed(RoutesName.pyramidBreathingScreen);
+                              }
+                            },
                           ),
                         ),
                       ),
-                      SizedBox(height: height*0.04,),
+                      
 
                       const Spacer(),
                       Container(
@@ -195,6 +245,16 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
     }else{
       return 'out-breath';
     }
+  }
+  
+  String formatTimer(double time) {
+    int minutes = (time / 60).floor(); 
+    int seconds = (time % 60).floor(); 
+    
+    String minutesStr = minutes.toString().padLeft(2, '0'); 
+    String secondsStr = seconds.toString().padLeft(2, '0'); 
+    
+    return "$minutesStr:$secondsStr";
   }
  
 }
