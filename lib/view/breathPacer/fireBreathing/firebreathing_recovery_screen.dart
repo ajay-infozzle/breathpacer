@@ -22,6 +22,7 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
   late CountdownController countdownController;
   late Timer _timer;
   int _startTime = 0;
+  bool _isPaused = false;
 
   @override
   void initState() {
@@ -45,6 +46,34 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
     String minutesStr = minutes.toString().padLeft(2, '0');
     String secondsStr = seconds.toString().padLeft(2, '0');
     return "$minutesStr:$secondsStr";
+  }
+
+  void stopTimer() {
+    _timer.cancel();
+  }
+
+  void resumeTimer() {
+    startTimer();
+  }
+
+  void togglePauseResume() {
+    setState(() {
+      final cubit = context.read<FirebreathingCubit>();
+      _isPaused = !_isPaused;
+      if (_isPaused) {
+        cubit.pauseAudio(cubit.musicPlayer, cubit.music);
+        cubit.pauseAudio(cubit.recoveryPlayer, cubit.jerryVoice);
+
+        countdownController.pause();
+        stopTimer();        
+      } else {
+        cubit.resumeAudio(cubit.musicPlayer, cubit.music);
+        cubit.resumeAudio(cubit.recoveryPlayer, cubit.jerryVoice);
+
+        countdownController.resume();
+        resumeTimer();         
+      }
+    });
   }
 
   void storeScreenTime() {
@@ -87,10 +116,35 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
                   backgroundColor: Colors.transparent,
                   centerTitle: true,
                   automaticallyImplyLeading: false,
+                  leading: GestureDetector(
+                    onTap: (){
+                      context.read<FirebreathingCubit>().resetSettings();
+
+                      context.goNamed(
+                        RoutesName.fireSettingScreen,
+                        extra:{
+                          "subTitle" : "TYPE 2: Fire breathing"
+                        }
+                      );
+                    },
+                    child: const Icon(Icons.close,color: Colors.white,),
+                  ),
                   title: Text(
                     "Set ${context.read<FirebreathingCubit>().currentSet}",
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
+                  actions: [
+                    IconButton(
+                      onPressed: togglePauseResume, 
+                      icon: Icon(
+                        _isPaused ? Icons.play_arrow : Icons.pause, 
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+
+                    SizedBox(width: size*0.03,)
+                  ],
                 ),
                 SizedBox(height: size*0.02,),
                 Container(

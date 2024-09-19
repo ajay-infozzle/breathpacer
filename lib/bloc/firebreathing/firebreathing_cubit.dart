@@ -162,6 +162,10 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
       if (breathHoldPlayer.state == PlayerState.playing) {
         breathHoldPlayer.stop();
       }
+
+      if (recoveryPlayer.state == PlayerState.playing) {
+        recoveryPlayer.stop();
+      }
     } on Exception catch (e) {
       if (kDebugMode) {
         print("resetSettings>> ${e.toString()}");
@@ -169,6 +173,19 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     }
     
     emit(FirebreathingInitial());
+  }
+
+
+  void pauseAudio(AudioPlayer sound, bool check) async {
+    if(check){
+      sound.pause();
+    }
+  }
+
+  void resumeAudio(AudioPlayer sound, bool check) async {
+    if(check){
+      sound.resume();
+    }
   }
 
 

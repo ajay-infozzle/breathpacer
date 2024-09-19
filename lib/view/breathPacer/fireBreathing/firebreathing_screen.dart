@@ -26,6 +26,8 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
   late Timer _timer;
   int _startTime = 0;
 
+  bool _isPaused = false;
+
   @override
   void initState() {
     super.initState();
@@ -37,7 +39,7 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
   }
 
   void setUpAnimation() {
-    // final cubit = context.read<FirebreathingCubit>();
+    // final cubit = context.read<FirebreathingCubit>();  
 
     Duration duration = const Duration(seconds: 1);
     
@@ -94,6 +96,35 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
     });
   }
 
+
+  void stopTimer() {
+    _timer.cancel();
+  }
+
+  void resumeTimer() {
+    startTimer();
+  }
+
+  void togglePauseResume() {
+    setState(() {
+      final cubit = context.read<FirebreathingCubit>();
+      _isPaused = !_isPaused;
+      if (_isPaused) {
+        cubit.pauseAudio(cubit.musicPlayer, cubit.music);
+        cubit.pauseAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+
+        countdownController.pause();
+        stopTimer();        
+      } else {
+        cubit.resumeAudio(cubit.musicPlayer, cubit.music);
+        cubit.resumeAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+
+        countdownController.resume();
+        resumeTimer();         
+      }
+    });
+  }
+
   String get getScreenTiming {
     int minutes = _startTime ~/ 60;
     int seconds = _startTime % 60;
@@ -147,10 +178,35 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
                   backgroundColor: Colors.transparent,
                   centerTitle: true,
                   automaticallyImplyLeading: false,
+                  leading: GestureDetector(
+                    onTap: (){
+                      context.read<FirebreathingCubit>().resetSettings();
+
+                      context.goNamed(
+                        RoutesName.fireSettingScreen,
+                        extra:{
+                          "subTitle" : "TYPE 2: Fire breathing"
+                        }
+                      );
+                    },
+                    child: const Icon(Icons.close,color: Colors.white,),
+                  ),
                   title: Text(
                     "Set ${context.read<FirebreathingCubit>().currentSet}",
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
+                  actions: [
+                    IconButton(
+                      onPressed: togglePauseResume, 
+                      icon: Icon(
+                        _isPaused ? Icons.play_arrow : Icons.pause, 
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+
+                    SizedBox(width: size*0.03,)
+                  ],
                 ),
                 SizedBox(height: size*0.02,),
                 Container(
