@@ -260,22 +260,85 @@ class _DnaSettingScreenState extends State<DnaSettingScreen> with SingleTickerPr
                         
                         Container(
                           width: size,
-                          margin: EdgeInsets.only(left: size*0.05, right: size*0.07, top: size*0.05),
+                          margin: EdgeInsets.only(left: size*0.05, right: size*0.05, top: size*0.05),
                           child: BlocBuilder<DnaCubit, DnaState>(
-                            buildWhen: (previous, current) => current is DnaInitial || current is DnaHoldDurationUpdate,
+                            buildWhen: (previous, current) => current is DnaInitial || current is DnaToggleHolding,
                             builder: (context, state) {
-                              return SettingsDropdownButton(
-                                onSelected: (int selected) {
-                                  context.read<DnaCubit>().updateHold(selected);
-                                },
-                                title: "Hold time:",
-                                selected: context.read<DnaCubit>().holdDuration, 
-                                options: context.read<DnaCubit>().holdDurationList, 
-                                isTime: true,
+                               return SettingsToggleButton(
+                                onToggle: () {
+                                  context.read<DnaCubit>().toggleHolding();
+                                }, 
+                                title: "Holding period after each set :", 
+                                isOn: context.read<DnaCubit>().holdingPeriod
                               );
                             }, 
                           ),
                         ),
+
+                        BlocBuilder<DnaCubit, DnaState>(
+                          buildWhen: (previous, current) => current is DnaInitial || current is DnaToggleBreathHoldChoice || current is DnaToggleHolding,
+                          builder: (context, state) {
+                            if(!context.read<DnaCubit>().holdingPeriod){
+                              return const SizedBox();
+                            }
+                            return Container(
+                              width: size,
+                              margin: EdgeInsets.only(left: size*0.05, right: size*0.07, top: size*0.05),
+                              child: SettingsDropdownButton(
+                                  onSelected: (int selected) {
+                                    context.read<DnaCubit>().updateHold(selected);
+                                  },
+                                  title: "Breath hold duration:",
+                                  selected: context.read<DnaCubit>().holdDuration, 
+                                  options: context.read<DnaCubit>().holdDurationList, 
+                                  isTime: true,
+                                ),
+                            );
+                          }, 
+                        ),
+
+
+                        BlocBuilder<DnaCubit, DnaState>(
+                          buildWhen: (previous, current) => current is DnaInitial || current is DnaToggleBreathHoldChoice || current is DnaToggleHolding,
+                          builder: (context, state) {
+                            if(!context.read<DnaCubit>().holdingPeriod){
+                              return const SizedBox();
+                            }
+                            return Container(
+                              width: size,
+                              margin: EdgeInsets.only(left: size*0.05, right: size*0.05, top: size*0.03),
+                              child: BreathingChoices(
+                                chosenItem: context.read<DnaCubit>().breathHoldIndex, 
+                                choicesList: context.read<DnaCubit>().breathHoldList,
+                                onUpdateChoiceIndex: (int index) {
+                                  context.read<DnaCubit>().toggleBreathHold(index);
+                                }, 
+                                onUpdateVoiceOver: (JerryVoiceEnum audio) {
+                                  context.read<DnaCubit>().changeJerryVoiceAudio(jerryVoiceOver(audio));
+                                },
+                              ),
+                            );
+                          }, 
+                        ),
+
+                        // Container(
+                        //   width: size,
+                        //   margin: EdgeInsets.only(left: size*0.05, right: size*0.07, top: size*0.05),
+                        //   child: BlocBuilder<DnaCubit, DnaState>(
+                        //     buildWhen: (previous, current) => current is DnaInitial || current is DnaHoldDurationUpdate,
+                        //     builder: (context, state) {
+                        //       return SettingsDropdownButton(
+                        //         onSelected: (int selected) {
+                        //           context.read<DnaCubit>().updateHold(selected);
+                        //         },
+                        //         title: "Hold time:",
+                        //         selected: context.read<DnaCubit>().holdDuration, 
+                        //         options: context.read<DnaCubit>().holdDurationList, 
+                        //         isTime: true,
+                        //       );
+                        //     }, 
+                        //   ),
+                        // ),
                     
                         SizedBox(height: size*0.03,),
                         Container(
@@ -390,26 +453,26 @@ class _DnaSettingScreenState extends State<DnaSettingScreen> with SingleTickerPr
                           ),
                         ),
                     
-                        SizedBox(height: size*0.03,),
-                        Container(
-                          width: size,
-                          margin: EdgeInsets.symmetric(horizontal: size*0.05),
-                          child: BlocBuilder<DnaCubit, DnaState>(
-                            buildWhen: (previous, current) => current is DnaInitial || current is DnaToggleBreathHoldChoice,
-                            builder: (context, state) {
-                              return BreathingChoices(
-                                chosenItem: context.read<DnaCubit>().breathHoldIndex, 
-                                choicesList: context.read<DnaCubit>().breathHoldList,
-                                onUpdateChoiceIndex: (int index) {
-                                  context.read<DnaCubit>().toggleBreathHold(index);
-                                }, 
-                                onUpdateVoiceOver: (JerryVoiceEnum audio) {
-                                  context.read<DnaCubit>().changeJerryVoiceAudio(jerryVoiceOver(audio));
-                                },
-                              );
-                            }, 
-                          ),
-                        ),
+                        // SizedBox(height: size*0.03,),
+                        // Container(
+                        //   width: size,
+                        //   margin: EdgeInsets.symmetric(horizontal: size*0.05),
+                        //   child: BlocBuilder<DnaCubit, DnaState>(
+                        //     buildWhen: (previous, current) => current is DnaInitial || current is DnaToggleBreathHoldChoice,
+                        //     builder: (context, state) {
+                        //       return BreathingChoices(
+                        //         chosenItem: context.read<DnaCubit>().breathHoldIndex, 
+                        //         choicesList: context.read<DnaCubit>().breathHoldList,
+                        //         onUpdateChoiceIndex: (int index) {
+                        //           context.read<DnaCubit>().toggleBreathHold(index);
+                        //         }, 
+                        //         onUpdateVoiceOver: (JerryVoiceEnum audio) {
+                        //           context.read<DnaCubit>().changeJerryVoiceAudio(jerryVoiceOver(audio));
+                        //         },
+                        //       );
+                        //     }, 
+                        //   ),
+                        // ),
                         
                         Container(
                           margin: EdgeInsets.only(top: size*0.09,bottom: size*0.06, right: size*0.05, left: size*0.05),

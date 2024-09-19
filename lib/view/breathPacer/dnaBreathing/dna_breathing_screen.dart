@@ -31,6 +31,8 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
 
   late Timer _timer;
   int _startTime = 0;
+  String breathOption = 'Breath In' ;
+  bool _isPaused = false;
 
   @override
   void initState() {
@@ -71,16 +73,27 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
     )..repeat(reverse: true);  // Repeat the animation in both directions
 
     
-    _animation = Tween<double>(begin: 0.1, end: 1).animate(CurvedAnimation(
+    _animation = Tween<double>(begin: 1, end: 0.1).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
     ));
 
     bool hasDecreased = false; // Flag to ensure we only decrease once per cycle
+    bool hasIncreased = false;
 
     _controller.addListener(() {
+
+      if(_controller.status == AnimationStatus.forward && _animation.value > 0.98  && !hasIncreased){
+        if (kDebugMode) {
+          setState(() {
+            breathOption = 'Breath In' ;
+          });
+          hasIncreased = true;
+        }
+      }
+
       // Check if the animation is shrinking and has passed a threshold (close to the minimum)
-      if (_controller.status == AnimationStatus.reverse && _animation.value < 0.3 && !hasDecreased) {
+      if (_controller.status == AnimationStatus.reverse && _animation.value < 0.2 && !hasDecreased) {
         if (kDebugMode) {
           print("Dna Breath count: $breathCount");
         }
@@ -89,6 +102,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
         if (breathCount > 0) {
           setState(() {
             breathCount--;
+            breathOption = 'Breath Out';
           });
           hasDecreased = true; // Set the flag to true to prevent further decrements during this cycle
         }
@@ -98,7 +112,6 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
           _controller.stop();
 
           storeScreenTime();
-          // context.read<DnaCubit>().stopJerry();
           navigate(context.read<DnaCubit>());
         }
       }
@@ -106,6 +119,10 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
       // Reset the flag when the animation is expanding again
       if (_controller.status == AnimationStatus.forward && hasDecreased) {
         hasDecreased = false;
+      }
+
+      if (_controller.status == AnimationStatus.reverse && hasIncreased) {
+        hasIncreased = false;
       }
     });
   }
@@ -125,6 +142,45 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
     });
   }
 
+
+  void stopTimer() {
+    _timer.cancel();
+  }
+
+  void resumeTimer() {
+    startTimer();
+  }
+
+  void togglePauseResume() {
+    setState(() {
+      final cubit = context.read<DnaCubit>();
+      _isPaused = !_isPaused;
+      if (_isPaused) {
+        cubit.pauseAudio(cubit.musicPlayer, cubit.music);
+        cubit.pauseAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+
+        if(context.read<DnaCubit>().isTimeBreathingApproch){
+          countdownController.pause();
+        }
+        else{
+          _controller.stop();
+        }
+        stopTimer();        
+      } else {
+        cubit.resumeAudio(cubit.musicPlayer, cubit.music);
+        cubit.resumeAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+
+        if(context.read<DnaCubit>().isTimeBreathingApproch){
+          countdownController.resume();
+        }
+        else{
+          _controller.repeat(reverse: true);
+        }
+        resumeTimer();         
+      }
+    });
+  }
+
   String get getScreenTiming {
     int minutes = _startTime ~/ 60;
     int seconds = _startTime % 60;
@@ -135,8 +191,6 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
 
   void storeScreenTime() {
     context.read<DnaCubit>().breathingTimeList.add(_startTime);
-
-    context.read<DnaCubit>().playHold();
 
     if (kDebugMode) {
       print("dna breathing Stored Screen Time: $getScreenTiming");
@@ -171,7 +225,6 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
                 countdownController.pause();
               }
 
-              context.read<DnaCubit>().stopJerry();
               navigate(context.read<DnaCubit>());
             },
             child: Column(
@@ -181,10 +234,35 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
                   backgroundColor: Colors.transparent,
                   centerTitle: true,
                   automaticallyImplyLeading: false,
+                  leading: GestureDetector(
+                    onTap: (){
+                      context.read<DnaCubit>().resetSettings();
+
+                      context.goNamed(
+                        RoutesName.dnaSettingScreen,
+                        extra: {
+                          "subTitle" : "DNA breathing"
+                        }
+                      );
+                    },
+                    child: const Icon(Icons.close,color: Colors.white,),
+                  ),
                   title: Text(
                     "Set ${context.read<DnaCubit>().currentSet}",
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
+                  actions: [
+                    IconButton(
+                      onPressed: togglePauseResume, 
+                      icon: Icon(
+                        _isPaused ? Icons.play_arrow : Icons.pause, 
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+
+                    SizedBox(width: size*0.03,)
+                  ],
                 ),
                 SizedBox(height: size*0.02,),
                 Container(
@@ -290,8 +368,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
                                   interval: const Duration(seconds: 1),
                                   onFinished: (){
                                     storeScreenTime();
-                                    context.read<DnaCubit>().stopJerry();
-
+                                    
                                     navigate(context.read<DnaCubit>());
                                   },
                                 ),
@@ -341,23 +418,53 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
   }
 
   String generateTapText(DnaCubit cubit) {
-    if(cubit.choiceOfBreathHold == "Both"){
-      return "Tap to hold ${cubit.breathHoldList[0]}";
+    if(cubit.holdingPeriod){
+      if(cubit.choiceOfBreathHold == "Both"){
+        return "Tap to hold ${cubit.breathHoldList[0]}";
+      }
+      else{
+        return "Tap to hold ${cubit.choiceOfBreathHold}";
+      }
     } 
+    else if(cubit.recoveryBreath){
+      return "Tap to go to recovery breath";
+    }
     else{
-      return "Tap to hold ${cubit.choiceOfBreathHold}";
+      if(cubit.noOfSets == cubit.currentSet){
+        return "Tap to finish";
+      }
+      else{
+        return "Tap to go to next set";
+      }
     }
   }
 
   void navigate(DnaCubit cubit) {
     context.read<DnaCubit>().stopJerry();
-    if(cubit.choiceOfBreathHold == "Both"){
-      cubit.breathHoldIndex = 0;
-      context.read<DnaCubit>().playHold();
+    if(cubit.holdingPeriod){
+      if(cubit.choiceOfBreathHold == "Both"){
+        cubit.breathHoldIndex = 0;
+        context.read<DnaCubit>().playHold();
+      }
+      else{
+        context.read<DnaCubit>().playHold();
+      }
+      context.goNamed(RoutesName.dnaHoldScreen);
     } 
-    else{
-      context.read<DnaCubit>().playHold();
+    else if(cubit.recoveryBreath){
+      context.read<DnaCubit>().playRecovery();
+      context.goNamed(RoutesName.dnaRecoveryScreen);
     }
-    context.goNamed(RoutesName.dnaHoldScreen);
+    else{
+      if(cubit.noOfSets == cubit.currentSet){
+        context.read<DnaCubit>().playChime();
+        context.goNamed(RoutesName.dnaSuccessScreen);
+      }
+      else{
+        cubit.currentSet = cubit.currentSet+1;
+        context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
+        context.goNamed(RoutesName.dnaBreathingScreen);
+      }
+    }
   }
 }

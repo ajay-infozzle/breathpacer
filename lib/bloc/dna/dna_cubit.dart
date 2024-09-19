@@ -22,7 +22,7 @@ class DnaCubit extends Cubit<DnaState> {
   int recoveryBreathDuration = 10;
   int holdDuration = 10;
   bool recoveryBreath = false;
-  // bool holdingPeriod = false;
+  bool holdingPeriod = false;
   bool jerryVoice = false;
   bool music = false;
   bool chimes = false;
@@ -99,10 +99,10 @@ class DnaCubit extends Cubit<DnaState> {
     emit(DnaToggleRecoveryBreath());
   }
 
-  // void toggleHolding(){
-  //   holdingPeriod = !holdingPeriod ;
-  //   emit(DnaToggleHolding());
-  // }
+  void toggleHolding(){
+    holdingPeriod = !holdingPeriod ;
+    emit(DnaToggleHolding());
+  }
 
   void toggleJerryVoice(){
     jerryVoice = !jerryVoice ;
@@ -183,6 +183,10 @@ class DnaCubit extends Cubit<DnaState> {
       if (breathHoldPlayer.state == PlayerState.playing) {
         breathHoldPlayer.stop();
       }
+
+      if (recoveryPlayer.state == PlayerState.playing) {
+        recoveryPlayer.stop();
+      }
     } on Exception catch (e) {
       if (kDebugMode) {
         print("Dna resetSettings>> ${e.toString()}");
@@ -190,6 +194,18 @@ class DnaCubit extends Cubit<DnaState> {
     }
     
     emit(DnaInitial());
+  }
+
+  void pauseAudio(AudioPlayer sound, bool check) async {
+    if(check){
+      sound.pause();
+    }
+  }
+
+  void resumeAudio(AudioPlayer sound, bool check) async {
+    if(check){
+      sound.resume();
+    }
   }
 
 
