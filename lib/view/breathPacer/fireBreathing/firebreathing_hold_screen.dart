@@ -124,12 +124,7 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
                     onTap: (){
                       context.read<FirebreathingCubit>().resetSettings();
 
-                      context.goNamed(
-                        RoutesName.fireSettingScreen,
-                        extra:{
-                          "subTitle" : "TYPE 2: Fire breathing"
-                        }
-                      );
+                      context.goNamed(RoutesName.homeScreen,);
                     },
                     child: const Icon(Icons.close,color: Colors.white,),
                   ),

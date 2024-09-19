@@ -122,6 +122,10 @@ class PinealCubit extends Cubit<PinealState> {
       if (breathHoldPlayer.state == PlayerState.playing) {
         breathHoldPlayer.stop();
       }
+
+      if (recoveryPlayer.state == PlayerState.playing) {
+        recoveryPlayer.stop();
+      }
     } on Exception catch (e) {
       if (kDebugMode) {
         print("Dna resetSettings>> ${e.toString()}");
@@ -129,6 +133,18 @@ class PinealCubit extends Cubit<PinealState> {
     }
     
     emit(PinealInitial());
+  }
+
+  void pauseAudio(AudioPlayer sound, bool check) async {
+    if(check){
+      sound.pause();
+    }
+  }
+
+  void resumeAudio(AudioPlayer sound, bool check) async {
+    if(check){
+      sound.resume();
+    }
   }
 
   void playCloseEyes() async {

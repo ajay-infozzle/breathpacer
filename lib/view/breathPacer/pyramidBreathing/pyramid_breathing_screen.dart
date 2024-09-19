@@ -220,12 +220,7 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
                         context.read<PyramidCubit>().speed!
                       );
 
-                      context.goNamed(
-                        RoutesName.pyramidSettingScreen,
-                        extra: {
-                          "step" : context.read<PyramidCubit>().step
-                        }
-                      );
+                      context.goNamed(RoutesName.homeScreen,);
                     },
                     child: const Icon(Icons.close,color: Colors.white,),
                   ),

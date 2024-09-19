@@ -122,12 +122,7 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
                     onTap: (){
                       context.read<DnaCubit>().resetSettings();
 
-                      context.goNamed(
-                        RoutesName.dnaSettingScreen,
-                        extra: {
-                          "subTitle" : "DNA breathing"
-                        }
-                      );
+                      context.goNamed(RoutesName.homeScreen,);
                     },
                     child: const Icon(Icons.close,color: Colors.white,),
                   ),

@@ -22,6 +22,7 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
     
   // late Timer _timer;
   int _startTime = 0;
+  bool _isPaused = false;
 
   @override
   void initState() {
@@ -45,6 +46,32 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
     String minutesStr = minutes.toString().padLeft(2, '0');
     String secondsStr = seconds.toString().padLeft(2, '0');
     return "$minutesStr:$secondsStr";
+  }
+
+  // void stopTimer() {
+  //   _timer.cancel();
+  // }
+
+  // void resumeTimer() {
+  //   startTimer();
+  // }
+
+  void togglePauseResume() {
+    setState(() {
+      final cubit = context.read<PinealCubit>();
+      _isPaused = !_isPaused;
+      if (_isPaused) {
+        cubit.pauseAudio(cubit.musicPlayer, cubit.music);
+        cubit.pauseAudio(cubit.recoveryPlayer, cubit.jerryVoice);
+
+        recoverCountdownController.pause();        
+      } else {
+        cubit.resumeAudio(cubit.musicPlayer, cubit.music);
+        cubit.resumeAudio(cubit.recoveryPlayer, cubit.jerryVoice);
+
+        recoverCountdownController.resume();         
+      }
+    });
   }
 
   void storeScreenTime() {
@@ -94,10 +121,30 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
                   backgroundColor: Colors.transparent,
                   centerTitle: true,
                   automaticallyImplyLeading: false,
+                  leading: GestureDetector(
+                    onTap: (){
+                      context.read<PinealCubit>().resetSettings();
+
+                      context.goNamed(RoutesName.homeScreen,);
+                    },
+                    child: const Icon(Icons.close,color: Colors.white,),
+                  ),
                   title: Text(
                     "Set ${context.read<PinealCubit>().currentSet}",
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
+                  actions: [
+                    IconButton(
+                      onPressed: togglePauseResume, 
+                      icon: Icon(
+                        _isPaused ? Icons.play_arrow : Icons.pause, 
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+
+                    SizedBox(width: size*0.03,)
+                  ],
                 ),
                 SizedBox(height: size*0.02,),
                 Container(

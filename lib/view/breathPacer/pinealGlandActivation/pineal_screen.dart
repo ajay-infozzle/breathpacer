@@ -23,6 +23,7 @@ class _PinealScreenState extends State<PinealScreen> {
   late CountdownController remainingCountdownController;  
   late Timer _timer;
   int _startTime = 0;
+  bool _isPaused = false;
 
   @override
   void initState() {
@@ -50,6 +51,41 @@ class _PinealScreenState extends State<PinealScreen> {
       });
     });
   }
+
+  void stopTimer() {
+    _timer.cancel();
+  }
+
+  void resumeTimer() {
+    startTimer();
+  }
+
+  void togglePauseResume() {
+    setState(() {
+      final cubit = context.read<PinealCubit>();
+      _isPaused = !_isPaused;
+      if (_isPaused) {
+        cubit.pauseAudio(cubit.musicPlayer, cubit.music);
+        cubit.pauseAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+
+        if(context.read<PinealCubit>().holdDuration == -1){
+          holdCountdownController.pause();
+        }
+        remainingCountdownController.pause();
+        stopTimer();        
+      } else {
+        cubit.resumeAudio(cubit.musicPlayer, cubit.music);
+        cubit.resumeAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+
+        if(context.read<PinealCubit>().holdDuration == -1){
+          holdCountdownController.resume();
+        }
+        remainingCountdownController.resume();
+        resumeTimer();         
+      }
+    });
+  }
+
 
   String get getScreenTiming {
     int minutes = _startTime ~/ 60;
@@ -113,10 +149,30 @@ class _PinealScreenState extends State<PinealScreen> {
                   backgroundColor: Colors.transparent,
                   centerTitle: true,
                   automaticallyImplyLeading: false,
+                  leading: GestureDetector(
+                    onTap: (){
+                      context.read<PinealCubit>().resetSettings();
+
+                      context.goNamed(RoutesName.homeScreen,);
+                    },
+                    child: const Icon(Icons.close,color: Colors.white,),
+                  ),
                   title: Text(
                     "Set ${context.read<PinealCubit>().currentSet}",
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
+                  actions: [
+                    IconButton(
+                      onPressed: togglePauseResume, 
+                      icon: Icon(
+                        _isPaused ? Icons.play_arrow : Icons.pause, 
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+
+                    SizedBox(width: size*0.03,)
+                  ],
                 ),
                 SizedBox(height: size*0.02,),
                 Container(
