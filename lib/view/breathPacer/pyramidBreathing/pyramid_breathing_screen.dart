@@ -25,6 +25,7 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
 
   int breathCount = 0;
   String breathOption = 'Breath In' ;
+  bool _isPaused = false;
   
   @override
   void initState() {
@@ -98,7 +99,11 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
           _controller.stop();
 
           storeScreenTime();
+          context.read<PyramidCubit>().playHold();
           context.read<PyramidCubit>().stopJerry();
+          if(context.read<PyramidCubit>().choiceOfBreathHold == "Both"){
+            context.read<PyramidCubit>().breathHoldIndex = 0;
+          }
           context.goNamed(RoutesName.pyramidBreathHoldScreen);
         }
       }
@@ -124,6 +129,34 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
     });
   }
 
+  void stopTimer() {
+    _timer.cancel();
+  }
+
+  void resumeTimer() {
+    startTimer();
+  }
+
+  void togglePauseResume() {
+    setState(() {
+      final cubit = context.read<PyramidCubit>();
+      _isPaused = !_isPaused;
+      if (_isPaused) {
+        cubit.pauseAudio(cubit.musicPlayer, cubit.music);
+        cubit.pauseAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+
+        _controller.stop(); 
+        stopTimer();        
+      } else {
+        cubit.resumeAudio(cubit.musicPlayer, cubit.music);
+        cubit.resumeAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+
+        _controller.repeat(reverse: true); 
+        resumeTimer();         
+      }
+    });
+  }
+
   String get getScreenTiming {
     int minutes = _startTime ~/ 60;
     int seconds = _startTime % 60;
@@ -134,8 +167,6 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
 
   void storeScreenTime() {
     context.read<PyramidCubit>().breathingTimeList.add(_startTime);
-
-    context.read<PyramidCubit>().playHold();
 
     if (kDebugMode) {
       print("Stored Screen Time: $getScreenTiming");
@@ -167,7 +198,11 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
           child: GestureDetector(
             onTap: () {
               storeScreenTime();
-
+              
+              if(context.read<PyramidCubit>().choiceOfBreathHold == "Both"){
+                context.read<PyramidCubit>().breathHoldIndex = 0;
+              } 
+              context.read<PyramidCubit>().playHold();
               context.read<PyramidCubit>().stopJerry();
               context.goNamed(RoutesName.pyramidBreathHoldScreen);
             },
@@ -178,10 +213,38 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
                   backgroundColor: Colors.transparent,
                   centerTitle: true,
                   automaticallyImplyLeading: false,
+                  leading: GestureDetector(
+                    onTap: (){
+                      context.read<PyramidCubit>().resetSettings(
+                        context.read<PyramidCubit>().step!, 
+                        context.read<PyramidCubit>().speed!
+                      );
+
+                      context.goNamed(
+                        RoutesName.pyramidSettingScreen,
+                        extra: {
+                          "step" : context.read<PyramidCubit>().step
+                        }
+                      );
+                    },
+                    child: const Icon(Icons.close,color: Colors.white,),
+                  ),
                   title: Text(
                     "Round ${context.read<PyramidCubit>().currentRound}",
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
+                  actions: [
+                    IconButton(
+                      onPressed: togglePauseResume, 
+                      icon: Icon(
+                        _isPaused ? Icons.play_arrow : Icons.pause, 
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+
+                    SizedBox(width: size*0.03,)
+                  ],
                 ),
                 SizedBox(height: size*0.02,),
                 Container(

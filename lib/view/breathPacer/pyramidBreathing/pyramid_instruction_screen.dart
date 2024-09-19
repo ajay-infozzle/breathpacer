@@ -27,10 +27,10 @@ class PyramidInstructionScreen extends StatelessWidget {
               iconTheme: const IconThemeData(color: Colors.white),
               backgroundColor: Colors.transparent,
               centerTitle: true,
-                leading: GestureDetector(
-                  onTap: () => context.pop(),
-                  child: const Icon(Icons.arrow_back_ios),
-                ),
+              leading: GestureDetector(
+                onTap: () => context.pop(),
+                child: const Icon(Icons.arrow_back_ios),
+              ),
               title: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

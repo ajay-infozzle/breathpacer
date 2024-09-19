@@ -197,10 +197,24 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                           textColor: Colors.black.withOpacity(.7),
                           iconColor: const Color(0xffFE60D4),
                         ),
-              
+
+                        if(context.read<PyramidCubit>().savedBreathwork[i].holdBreathOutTimeList!.isNotEmpty)
                         ResultContainerSectionWidget(
-                          title: 'Total Holding time:',
-                          content: getTotalTimeString(context.read<PyramidCubit>().savedBreathwork[i].holdTimeList!),
+                          title: 'Out-Breath hold time:',
+                          content: getTotalTimeString(context.read<PyramidCubit>().savedBreathwork[i].holdBreathOutTimeList!),
+                          iconPath: "assets/images/time.png",
+                          iconSize: 25.0,
+                          showIcon: true,
+                          showContent: true,
+                          containerColor: Colors.white,
+                          textColor: Colors.black.withOpacity(.7),
+                          iconColor: const Color(0xffFE60D4),
+                        ),
+
+                        if(context.read<PyramidCubit>().savedBreathwork[i].holdBreathInTimeList!.isNotEmpty)
+                        ResultContainerSectionWidget(
+                          title: 'In-Breath hold time:',
+                          content: getTotalTimeString(context.read<PyramidCubit>().savedBreathwork[i].holdBreathInTimeList!),
                           iconPath: "assets/images/time.png",
                           iconSize: 25.0,
                           showIcon: true,
@@ -234,7 +248,8 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                                 spacing: .7,
                                 radius: 8,
                                 onPress: (){
-                                  context.read<PyramidCubit>().holdTimeList.clear();
+                                  context.read<PyramidCubit>().holdBreathoutTimeList.clear();
+                                  context.read<PyramidCubit>().holdInbreathTimeList.clear();
                                   context.read<PyramidCubit>().breathingTimeList.clear();
 
                                   final savedWork = context.read<PyramidCubit>().savedBreathwork[i] ;

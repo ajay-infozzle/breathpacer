@@ -20,7 +20,7 @@ class PyramidCubit extends Cubit<PyramidState> {
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn);
   String choiceOfBreathHold = 'Breath in';
   int breathHoldIndex = 0;
-  List<String> breathHoldList = ['Breath in', 'Breath out'] ; 
+  List<String> breathHoldList = ['Breath in', 'Breath out', 'Both'] ; 
   int holdDuration = 10;
   List<int> holdDurationList = [10, 20, 30, 40, 50, 60, -1] ;
 
@@ -72,13 +72,15 @@ class PyramidCubit extends Cubit<PyramidState> {
 
   int currentRound = 0;
   List<int> breathingTimeList = []; //sec
-  List<int> holdTimeList = []; //sec
+  List<int> holdInbreathTimeList = []; //sec
+  List<int> holdBreathoutTimeList = []; //sec
   AudioPlayer closeEyePlayer = AudioPlayer();
   AudioPlayer musicPlayer = AudioPlayer();
   AudioPlayer chimePlayer = AudioPlayer();
   AudioPlayer jerryVoicePlayer = AudioPlayer();
   AudioPlayer breathHoldPlayer = AudioPlayer();
   AudioPlayer relaxPlayer = AudioPlayer();
+
 
   void resetSettings(String stepp, String speedd){
     jerryVoice = false;
@@ -88,7 +90,8 @@ class PyramidCubit extends Cubit<PyramidState> {
     currentRound = 0;
     holdDuration = 10;
     breathingTimeList.clear();
-    holdTimeList.clear();
+    holdBreathoutTimeList.clear();
+    holdInbreathTimeList.clear();
 
     // Reset music player if active
     try {
@@ -116,7 +119,10 @@ class PyramidCubit extends Cubit<PyramidState> {
       // Reset breath hold player if active
       if (breathHoldPlayer.state == PlayerState.playing) {
         breathHoldPlayer.stop();
-        // breathHoldPlayer.seek(Duration.zero);
+      }
+
+      if (relaxPlayer.state == PlayerState.playing) {
+        relaxPlayer.stop();
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -173,6 +179,17 @@ class PyramidCubit extends Cubit<PyramidState> {
   void stopMusic() async {
     if(music){
       await musicPlayer.stop();
+    }
+  }
+
+  void pauseAudio(AudioPlayer sound, bool check) async {
+    if(check){
+      sound.pause();
+    }
+  }
+  void resumeAudio(AudioPlayer sound, bool check) async {
+    if(check){
+      sound.resume();
     }
   }
 
@@ -334,7 +351,8 @@ class PyramidCubit extends Cubit<PyramidState> {
       chimes: chimes,
       choiceOfBreathHold: breathHoldList[breathHoldIndex],
       breathingTimeList: breathingTimeList,
-      holdTimeList: holdTimeList,
+      holdBreathInTimeList: holdInbreathTimeList,
+      holdBreathOutTimeList: holdBreathoutTimeList
     );
 
     await box.add(breathwork.toJson());

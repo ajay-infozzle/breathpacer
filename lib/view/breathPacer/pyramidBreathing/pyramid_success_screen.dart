@@ -4,6 +4,7 @@ import 'package:breathpacer/config/theme.dart';
 import 'package:breathpacer/utils/custom_button.dart';
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/widget/pyramid_breath_work_preference_widget.dart';
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/widget/pyramid_breathing_time_widget.dart';
+import 'package:breathpacer/view/breathPacer/pyramidBreathing/widget/pyramid_hold_out_breath_time_widget.dart';
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/widget/pyramid_hold_time_widget.dart';
 import 'package:breathpacer/view/breathPacer/widget/restart_breathing_widget.dart';
 import 'package:breathpacer/view/breathPacer/widget/save_custom_dialog_box_widget.dart';
@@ -155,12 +156,18 @@ class _PyramidSuccessScreenState extends State<PyramidSuccessScreen> {
                           child: const  PyramidBreathingTimeWidget(),
                         ),
                     
-                        SizedBox(height: height*0.03,),
-                        //~ total holding time
+                        if(context.read<PyramidCubit>().holdInbreathTimeList.isNotEmpty)
                         Container(
-                          margin: EdgeInsets.symmetric(horizontal: size*0.05),
+                          margin: EdgeInsets.only(right: size*0.05, left: size*0.05, top: height*0.03),
                           color: Colors.white,
                           child: const  PyramidHoldTimeWidget(),
+                        ),
+
+                        if(context.read<PyramidCubit>().holdBreathoutTimeList.isNotEmpty)
+                        Container(
+                          margin: EdgeInsets.only(right: size*0.05, left: size*0.05, top: height*0.03),
+                          color: Colors.white,
+                          child: const  PyramidOutBreathHoldTimeWidget(),
                         ),
                     
                     

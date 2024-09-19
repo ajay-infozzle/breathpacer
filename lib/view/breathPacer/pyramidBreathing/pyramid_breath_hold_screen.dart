@@ -22,6 +22,7 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
   late CountdownController countdownController;
   late Timer _timer;
   int _startTime = 0; // Time in seconds
+  bool _isPaused = false;
   
   @override
   void initState() {
@@ -47,6 +48,38 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
     });
   }
 
+  void stopTimer() {
+    _timer.cancel();
+  }
+
+  void resumeTimer() {
+    startTimer();
+  }
+
+  void togglePauseResume() {
+    setState(() {
+      final cubit = context.read<PyramidCubit>();
+      _isPaused = !_isPaused;
+      if (_isPaused) {
+        cubit.pauseAudio(cubit.musicPlayer, cubit.music);
+        cubit.pauseAudio(cubit.breathHoldPlayer, cubit.jerryVoice);
+         
+        if(context.read<PyramidCubit>().holdDuration != -1){
+          countdownController.pause();
+        } 
+        stopTimer();        
+      } else {
+        cubit.resumeAudio(cubit.musicPlayer, cubit.music);
+        cubit.resumeAudio(cubit.breathHoldPlayer, cubit.jerryVoice);
+
+        if(context.read<PyramidCubit>().holdDuration != -1){
+          countdownController.resume();
+        } 
+        resumeTimer();         
+      }
+    });
+  }
+
   String get getScreenTiming {
     int minutes = _startTime ~/ 60;
     int seconds = _startTime % 60;
@@ -56,7 +89,12 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
   }
 
   void storeScreenTime() {
-    context.read<PyramidCubit>().holdTimeList.add(_startTime);
+    if(context.read<PyramidCubit>().breathHoldIndex == 0 || context.read<PyramidCubit>().breathHoldIndex == 2){
+      context.read<PyramidCubit>().holdInbreathTimeList.add(_startTime);
+    }
+    else{
+      context.read<PyramidCubit>().holdBreathoutTimeList.add(_startTime);
+    }
 
     if (kDebugMode) {
       print("breath hold Time: $getScreenTiming");
@@ -79,25 +117,28 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
           ),
           child: GestureDetector(
             onTap: () {
-              if(context.read<PyramidCubit>().currentRound.toString() == context.read<PyramidCubit>().step){
-                storeScreenTime();
-                context.read<PyramidCubit>().stopMusic();
-                context.read<PyramidCubit>().stopHold();
-                context.read<PyramidCubit>().playChime();
-                context.read<PyramidCubit>().stopJerry();
+              // if(context.read<PyramidCubit>().currentRound.toString() == context.read<PyramidCubit>().step){
+              //   storeScreenTime();
+              //   context.read<PyramidCubit>().stopMusic();
+              //   context.read<PyramidCubit>().stopHold();
+              //   context.read<PyramidCubit>().playChime();
+              //   context.read<PyramidCubit>().stopJerry();
 
-                if (kDebugMode) {
-                  print("pyramid rounds finished");
-                }
-                context.goNamed(RoutesName.pyramidSuccessScreen);
-              }else{
-                storeScreenTime();
-                context.read<PyramidCubit>().stopHold();
-                context.read<PyramidCubit>().currentRound = context.read<PyramidCubit>().currentRound+1;
-                context.read<PyramidCubit>().resetJerryVoiceAndPLayAgain();
+              //   if (kDebugMode) {
+              //     print("pyramid rounds finished");
+              //   }
+              //   context.goNamed(RoutesName.pyramidSuccessScreen);
+              // }else{
+              //   storeScreenTime();
+              //   context.read<PyramidCubit>().stopHold();
+              //   context.read<PyramidCubit>().currentRound = context.read<PyramidCubit>().currentRound+1;
+              //   context.read<PyramidCubit>().resetJerryVoiceAndPLayAgain();
                 
-                context.goNamed(RoutesName.pyramidBreathingScreen);
-              }
+              //   context.goNamed(RoutesName.pyramidBreathingScreen);
+              // }
+
+              storeScreenTime();
+              navigate(context.read<PyramidCubit>());
             },
             child: Column(
               children: [
@@ -106,10 +147,38 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
                   backgroundColor: Colors.transparent,
                   centerTitle: true,
                   automaticallyImplyLeading: false,
+                  leading: GestureDetector(
+                    onTap: (){
+                      context.read<PyramidCubit>().resetSettings(
+                        context.read<PyramidCubit>().step!, 
+                        context.read<PyramidCubit>().speed!
+                      );
+
+                      context.goNamed(
+                        RoutesName.pyramidSettingScreen,
+                        extra: {
+                          "step" : context.read<PyramidCubit>().step
+                        }
+                      );
+                    },
+                    child: const Icon(Icons.close,color: Colors.white,),
+                  ),
                   title: Text(
                     "Round ${context.read<PyramidCubit>().currentRound}",
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
+                  actions: [
+                    IconButton(
+                      onPressed: togglePauseResume, 
+                      icon: Icon(
+                        _isPaused ? Icons.play_arrow : Icons.pause, 
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+
+                    SizedBox(width: size*0.03,)
+                  ],
                 ),
                 SizedBox(height: size*0.02,),
                 Container(
@@ -184,25 +253,28 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
                             ),
                             interval: const Duration(seconds: 1),
                             onFinished: (){
-                              if(context.read<PyramidCubit>().currentRound.toString() == context.read<PyramidCubit>().step){
-                                storeScreenTime();
-                                context.read<PyramidCubit>().stopMusic();
-                                context.read<PyramidCubit>().stopHold();
-                                context.read<PyramidCubit>().playChime();
-                                context.read<PyramidCubit>().stopJerry();
+                              // if(context.read<PyramidCubit>().currentRound.toString() == context.read<PyramidCubit>().step){
+                              //   storeScreenTime();
+                              //   context.read<PyramidCubit>().stopMusic();
+                              //   context.read<PyramidCubit>().stopHold();
+                              //   context.read<PyramidCubit>().playChime();
+                              //   context.read<PyramidCubit>().stopJerry();
 
-                                if (kDebugMode) {
-                                  print("pyramid rounds finished");
-                                }
-                                context.goNamed(RoutesName.pyramidSuccessScreen);
-                              }else{
-                                storeScreenTime();
-                                context.read<PyramidCubit>().stopHold();
-                                context.read<PyramidCubit>().currentRound = context.read<PyramidCubit>().currentRound+1;
-                                context.read<PyramidCubit>().resetJerryVoiceAndPLayAgain();
+                              //   if (kDebugMode) {
+                              //     print("pyramid rounds finished");
+                              //   }
+                              //   context.goNamed(RoutesName.pyramidSuccessScreen);
+                              // }else{
+                              //   storeScreenTime();
+                              //   context.read<PyramidCubit>().stopHold();
+                              //   context.read<PyramidCubit>().currentRound = context.read<PyramidCubit>().currentRound+1;
+                              //   context.read<PyramidCubit>().resetJerryVoiceAndPLayAgain();
                                 
-                                context.goNamed(RoutesName.pyramidBreathingScreen);
-                              }
+                              //   context.goNamed(RoutesName.pyramidBreathingScreen);
+                              // }
+
+                              storeScreenTime();
+                              navigate(context.read<PyramidCubit>());
                             },
                           ),
                         ),
@@ -217,9 +289,7 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              context.read<PyramidCubit>().currentRound.toString() == context.read<PyramidCubit>().step 
-                              ?"Tap to finish"
-                              :"Tap for next round",
+                              generateTapText(context.read<PyramidCubit>()),
                               style: TextStyle(color: Colors.white, fontSize: size*0.045),
                             ),
                             const SizedBox(width: 10),
@@ -255,6 +325,57 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
     String secondsStr = seconds.toString().padLeft(2, '0'); 
     
     return "$minutesStr:$secondsStr";
+  }
+
+  String generateTapText(PyramidCubit cubit) {
+    if(cubit.choiceOfBreathHold == "Both" && cubit.breathHoldIndex == 0){
+      return "Tap to hold ${cubit.breathHoldList[1]}";
+    } 
+    else{
+      // if(cubit.recoveryBreath){
+      if(1 > 2){
+        return "Tap to go to recovery breath";
+      }else{
+        if(cubit.step == cubit.currentRound.toString() ){
+          return "Tap to finish";
+        }else{
+          return "Tap to go to next set";
+        }
+      }
+    }
+  }
+
+  void navigate(PyramidCubit cubit) {
+    if(cubit.choiceOfBreathHold == "Both" && cubit.breathHoldIndex == 0){
+      cubit.breathHoldIndex = 1;
+      context.read<PyramidCubit>().stopHold();
+      context.read<PyramidCubit>().playHold();
+      
+      context.pushReplacementNamed(RoutesName.pyramidBreathHoldScreen);
+    } 
+    else{
+      cubit.stopHold();
+      if(1 > 2){
+        // context.read<PyramidCubit>().playRecovery();
+        // context.goNamed(RoutesName.dnaRecoveryScreen);
+      }else{
+        if(cubit.step == cubit.currentRound.toString()){
+          cubit.stopMusic();
+          cubit.playChime();
+          cubit.stopJerry();
+
+          if (kDebugMode) {
+            print("pyramid rounds finished");
+          }
+          context.goNamed(RoutesName.pyramidSuccessScreen);
+        }else{
+          cubit.currentRound = cubit.currentRound+1;
+          cubit.resetJerryVoiceAndPLayAgain();
+          
+          context.goNamed(RoutesName.pyramidBreathingScreen);
+        }
+      }
+    }
   }
  
 }

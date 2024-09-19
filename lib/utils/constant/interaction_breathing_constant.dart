@@ -25,12 +25,12 @@ const interactionOptions = [
 //~ for pyramid
 const breathingStepGuide = [
   {
-    "title": "4 step breathing(12-9-6-3 breathing)",
+    "title": "4 step (12-9-6-3 breathing)",
     "description": "Four-step pyramid breathing is a structured breathing exercise that can help reduce stress and promote relaxation. It involves four step each.",
     "instruction" : "Ensure you’re in a safe and quiet space. If you’re new to this, consider having someone supervise your practice. Start in a comfortable seated position. Keep a steady pace and avoid rushing. If you have any medical conditions, are pregnant, or experience discomfort, it’s essential to consult a healthcare professional. Regular practice can lead to noticeable results, but don’t push yourself if you’re feeling unwell. The most important thing is to enjoy your practice and pay attention to how your body feels."
   },
   {
-    "title": "2 step breathing(12-6 breathing)",
+    "title": "2 step (12-6 breathing)",
     "description": "Two-step pyramid breathing is a simpler version of the pyramid breathing technique. It focuses on two main steps: inhalation and exhalation, with varying counts that form a pyramid shape.",
     "instruction" : "Ensure you’re in a safe and quiet space. If you’re new to this, consider having someone supervise your practice. Start in a comfortable seated position. Keep a steady pace and avoid rushing. If you have any medical conditions, are pregnant, or experience discomfort, it’s essential to consult a healthcare professional. Regular practice can lead to noticeable results, but don’t push yourself if you’re feeling unwell. The most important thing is to enjoy your practice and pay attention to how your body feels."
   }

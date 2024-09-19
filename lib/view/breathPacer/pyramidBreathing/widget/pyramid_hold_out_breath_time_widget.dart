@@ -4,18 +4,19 @@ import 'package:breathpacer/view/breathPacer/widget/result_container_section_wid
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PyramidHoldTimeWidget extends StatelessWidget {
-  const PyramidHoldTimeWidget({super.key});
+class PyramidOutBreathHoldTimeWidget extends StatelessWidget {
+  const PyramidOutBreathHoldTimeWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
 
     return Column(
       children: [
-        if(context.read<PyramidCubit>().holdInbreathTimeList.isNotEmpty)
+
+        if(context.read<PyramidCubit>().holdBreathoutTimeList.isNotEmpty)
         ResultContainerSectionWidget(
-          title: 'In-breath holding time:',
-          content: getTotalTimeString(context.read<PyramidCubit>().holdInbreathTimeList),
+          title: 'Out-breath holding time:',
+          content: getTotalTimeString(context.read<PyramidCubit>().holdBreathoutTimeList),
           iconPath: "assets/images/time.png",
           iconSize: 25.0,
           showIcon: true,
@@ -25,13 +26,13 @@ class PyramidHoldTimeWidget extends StatelessWidget {
           iconColor: Colors.white,
         ),
 
-        if(context.read<PyramidCubit>().holdInbreathTimeList.isNotEmpty)
-        for (int i = 0; i < context.read<PyramidCubit>().holdInbreathTimeList.length; i++) ...[
+        if(context.read<PyramidCubit>().holdBreathoutTimeList.isNotEmpty)
+        for (int i = 0; i < context.read<PyramidCubit>().holdBreathoutTimeList.length; i++) ...[
           ResultContainerSectionWidget(
             title: "Round ${i + 1} hold time:",
             showIcon: false,
             showContent: true,
-            content: getFormattedTime(context.read<PyramidCubit>().holdInbreathTimeList[i]),
+            content: getFormattedTime(context.read<PyramidCubit>().holdBreathoutTimeList[i]),
             containerColor: Colors.white,
             textColor: Colors.black.withOpacity(.7),
           ),

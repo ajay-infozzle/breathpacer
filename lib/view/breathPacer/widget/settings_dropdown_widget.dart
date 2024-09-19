@@ -53,7 +53,7 @@ class SettingsDropdownButton extends StatelessWidget {
               return options.map<Widget>((int value) {
                 return Text(
                   isTime! ? (value==-1 ? "Infinite" :getFormattedTime(value)) :(isnumber!? '$value' : '$value set'),
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white, ),
                 );
               }).toList();
             },
