@@ -12,6 +12,7 @@ class FirebreathingWaitingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WaitingScreenWidget(
       title: "Fire Breathing",
+      countdownTime: context.read<FirebreathingCubit>().waitingTime,
       onTimerFinished: (){
         context.read<FirebreathingCubit>().currentSet = 1 ;
         context.read<FirebreathingCubit>().stopCloseEyes();

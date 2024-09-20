@@ -23,7 +23,7 @@ class DnaCubit extends Cubit<DnaState> {
   int holdDuration = 10;
   bool recoveryBreath = false;
   bool holdingPeriod = false;
-  bool jerryVoice = false;
+  bool jerryVoice = true;
   bool music = false;
   bool chimes = false;
   bool pineal = false;
@@ -209,10 +209,17 @@ class DnaCubit extends Cubit<DnaState> {
   }
 
 
+  late int waitingTime ;
   void playCloseEyes() async {
     try {
       if(jerryVoice){
         await closeEyePlayer.play(AssetSource('audio/close_eyes.mp3'), );
+        Duration? duration = await closeEyePlayer.getDuration();
+        waitingTime = duration!.inSeconds;
+        emit(NavigateToWaitingScreen());
+      }else{
+        waitingTime = 10;
+        emit(NavigateToWaitingScreen());
       }
     } on Exception catch (e) {
       if (kDebugMode) {

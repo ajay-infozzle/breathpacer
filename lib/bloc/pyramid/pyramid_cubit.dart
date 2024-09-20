@@ -14,7 +14,7 @@ class PyramidCubit extends Cubit<PyramidState> {
 
   String? step ;
   String? speed ; //Standard, Fast, Slow
-  bool jerryVoice = false;
+  bool jerryVoice = true;
   bool music = false;
   bool chimes = false;
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn);
@@ -31,7 +31,7 @@ class PyramidCubit extends Cubit<PyramidState> {
   void initialSettings(String stepp, String speedd){
     step = stepp;
     speed = speedd;
-    jerryVoice = false;
+    jerryVoice = true;
     music = false;
     chimes = false;
     isReatartEnable = true ;
@@ -139,10 +139,17 @@ class PyramidCubit extends Cubit<PyramidState> {
   }
 
 
+  late int waitingTime ;
   void playCloseEyes() async {
     try {
       if(jerryVoice){
         await closeEyePlayer.play(AssetSource('audio/close_eyes.mp3'), );
+        Duration? duration = await closeEyePlayer.getDuration();
+        waitingTime = duration!.inSeconds;
+        emit(NavigateToWaitingScreen());
+      }else{
+        waitingTime = 10;
+        emit(NavigateToWaitingScreen());
       }
     } on Exception catch (e) {
       if (kDebugMode) {

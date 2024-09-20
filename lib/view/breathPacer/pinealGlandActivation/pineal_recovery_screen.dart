@@ -311,7 +311,10 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
       cubit.currentSet = cubit.currentSet+1;
       context.goNamed(RoutesName.pinealScreen);
     }else{
+      context.read<PinealCubit>().stopMusic();
+      context.read<PinealCubit>().stopJerry();
       context.read<PinealCubit>().playRelax();
+      context.read<PinealCubit>().playChime();
       context.goNamed(RoutesName.pinealSuccessScreen);
     }
   }

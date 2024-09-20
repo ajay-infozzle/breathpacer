@@ -17,6 +17,7 @@ class _PyramidWaitingScreenState extends State<PyramidWaitingScreen> {
   Widget build(BuildContext context) {
     return WaitingScreenWidget(
       title: "Pyramid Breathing",
+      countdownTime: context.read<PyramidCubit>().waitingTime,
       onTimerFinished: (){
         context.read<PyramidCubit>().currentRound = 1 ;
         context.read<PyramidCubit>().stopCloseEyes();

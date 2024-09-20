@@ -4,6 +4,8 @@ part of 'dna_cubit.dart';
 sealed class DnaState {}
 
 final class DnaInitial extends DnaState {}
+final class NavigateToWaitingScreen extends DnaState {}
+final class CloseWaitingScreen extends DnaState {}
 
 final class DnaUpdateSetNumber extends DnaState {}
 final class DnaUpdateBreathNumber extends DnaState {}

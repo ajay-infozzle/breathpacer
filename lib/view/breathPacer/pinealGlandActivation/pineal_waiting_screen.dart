@@ -12,6 +12,7 @@ class PinealWaitingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WaitingScreenWidget(
       title: "Pineal Gland Activation",
+      countdownTime: context.read<PinealCubit>().waitingTime,
       onTimerFinished: (){
         context.read<PinealCubit>().currentSet = 1 ;
         context.read<PinealCubit>().stopCloseEyes();

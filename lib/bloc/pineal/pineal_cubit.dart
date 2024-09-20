@@ -16,7 +16,7 @@ class PinealCubit extends Cubit<PinealState> {
   int currentSet = 0;
   int durationOfSet = 120;
   bool recoveryBreath = false;
-  bool jerryVoice = false;
+  bool jerryVoice = true;
   bool music = false;
   bool chimes = false;
   int recoveryBreathDuration = 20;
@@ -147,10 +147,17 @@ class PinealCubit extends Cubit<PinealState> {
     }
   }
 
+  late int waitingTime ;
   void playCloseEyes() async {
     try {
       if(jerryVoice){
         await closeEyePlayer.play(AssetSource('audio/close_eyes.mp3'), );
+        Duration? duration = await closeEyePlayer.getDuration();
+        waitingTime = duration!.inSeconds;
+        emit(NavigateToWaitingScreen());
+      }else{
+        waitingTime = 10;
+        emit(NavigateToWaitingScreen());
       }
     } on Exception catch (e) {
       if (kDebugMode) {

@@ -68,7 +68,7 @@ class _PinealScreenState extends State<PinealScreen> {
         cubit.pauseAudio(cubit.musicPlayer, cubit.music);
         cubit.pauseAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
 
-        if(context.read<PinealCubit>().holdDuration == -1){
+        if(context.read<PinealCubit>().holdDuration != -1 ){
           holdCountdownController.pause();
         }
         remainingCountdownController.pause();
@@ -77,7 +77,7 @@ class _PinealScreenState extends State<PinealScreen> {
         cubit.resumeAudio(cubit.musicPlayer, cubit.music);
         cubit.resumeAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
 
-        if(context.read<PinealCubit>().holdDuration == -1){
+        if(context.read<PinealCubit>().holdDuration != -1){
           holdCountdownController.resume();
         }
         remainingCountdownController.resume();

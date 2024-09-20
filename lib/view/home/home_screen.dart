@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:breathpacer/config/theme.dart';
 import 'package:breathpacer/utils/drawer.dart';
 import 'package:flutter/material.dart';
@@ -9,199 +11,205 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final double size = MediaQuery.of(context).size.width ;
 
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: AppTheme.colors.appBarColor,
-      ),
-      drawer: const AppDrawerWidget(),
-      bottomNavigationBar: SizedBox(
-        height: 80,
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(topLeft: Radius.circular(0), topRight: Radius.circular(0)),
-          child: Container(color: AppTheme.colors.thumbColor,),
-          // child: buildTabBar(context, 0, state.isGuest, state.isActive),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        exit(0);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          iconTheme: const IconThemeData(color: Colors.white),
+          backgroundColor: AppTheme.colors.appBarColor,
         ),
-      ),
-      body: Container(
-        width: size,
-        height: double.maxFinite,
-        decoration: BoxDecoration(gradient: AppTheme.colors.linearGradient),
-        child: 
-        // !state.isLoading ?
-        ListView(
-          children: [
-            SizedBox(height: size*0.06),
-            SizedBox(
-              width: size,
-              child: Text(
-                "Welcome to Infinity",
-                style: TextStyle(
-                  fontSize: size*0.085,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500
+        drawer: const AppDrawerWidget(),
+        bottomNavigationBar: SizedBox(
+          height: 80,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(topLeft: Radius.circular(0), topRight: Radius.circular(0)),
+            child: Container(color: AppTheme.colors.thumbColor,),
+            // child: buildTabBar(context, 0, state.isGuest, state.isActive),
+          ),
+        ),
+        body: Container(
+          width: size,
+          height: double.maxFinite,
+          decoration: BoxDecoration(gradient: AppTheme.colors.linearGradient),
+          child: 
+          // !state.isLoading ?
+          ListView(
+            children: [
+              SizedBox(height: size*0.06),
+              SizedBox(
+                width: size,
+                child: Text(
+                  "Welcome to Infinity",
+                  style: TextStyle(
+                    fontSize: size*0.085,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-        
-            SizedBox(
-              width: size,
-              child: Text(
-                "The Ultimate Consciousness \nExpanding Toolbox",
-                style: TextStyle(
-                  fontSize: size*0.06,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500
+          
+              SizedBox(
+                width: size,
+                child: Text(
+                  "The Ultimate Consciousness \nExpanding Toolbox",
+                  style: TextStyle(
+                    fontSize: size*0.06,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-        
-            SizedBox(height: size*0.06),
-
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: size*0.04),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    Expanded(
-                      flex: 1,
-                      child: buildIcons(
-                        context, true, false, "Light\nLanguage",
-                        'assets/images/icon_home_light_language.png', 
-                        () {}
-                      ),
-                    ),
-                    
-                    Expanded(
-                      flex: 1,
-                      child: buildIcons(
-                        context, true, false, "Meditation", 
-                        'assets/images/icon_home_meditation.png', 
-                        () {}
-                      ),
-                    ),
-                    
-                    Expanded(
-                      flex: 1,
-                      child: buildIcons(
-                        context, true, false, "Free\nHealing",
-                        'assets/images/icon_home_distance_healing.png', () {
-                          
-                        }
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            SizedBox(height: size*0.03,),
-
-            Container(
+          
+              SizedBox(height: size*0.06),
+      
+              Container(
                 margin: EdgeInsets.symmetric(horizontal: size*0.04),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    Expanded(
-                      flex: 1,
-                      child: buildIcons(context, true, false, "High\nVibration",
-                          'assets/images/icon_home_recipes.png', () {
-                        
-                      }),
-                    ),
-                    
-                    Expanded(
-                      flex: 1,
-                      child: buildIcons(context, true, false, "Yoga", 'assets/images/icon_home_yoga.png', () {
-                        
-                      }),
-                    ),
-                    
-                    Expanded(
-                      flex: 1,
-                      child: buildIcons(context, false, false, "Blogs", 'assets/images/icon_home_blog.png', () {
-                        
-                      }),
-                    ),
-                ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                      Expanded(
+                        flex: 1,
+                        child: buildIcons(
+                          context, true, false, "Light\nLanguage",
+                          'assets/images/icon_home_light_language.png', 
+                          () {}
+                        ),
+                      ),
+                      
+                      Expanded(
+                        flex: 1,
+                        child: buildIcons(
+                          context, true, false, "Meditation", 
+                          'assets/images/icon_home_meditation.png', 
+                          () {}
+                        ),
+                      ),
+                      
+                      Expanded(
+                        flex: 1,
+                        child: buildIcons(
+                          context, true, false, "Free\nHealing",
+                          'assets/images/icon_home_distance_healing.png', () {
+                            
+                          }
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: size*0.03,),
-
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: size*0.04),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    Expanded(
-                      flex: 1,
-                      child: buildIcons(context, true, false, "Curated\nPlaylists",
-                          'assets/images/icon_home_playlist.png', () {
-                       
-                      }),
-                    ),
-                    
-                    Expanded(
-                      flex: 1,
-                      child: buildIcons(context, true, false, "Mystery\nSchool",
-                          'assets/images/icon_home_mystery_school.png', () {
-                        
-                      }),
-                    ),
-                    
-                    Expanded(
-                      flex: 1,
-                      child: buildIcons(context, true, false, "Resources\nSection",
-                          'assets/images/icon_infinite_wisdom.png', () {
-                        
-                      }),
-                    ),
-                ],
+              SizedBox(height: size*0.03,),
+      
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: size*0.04),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                      Expanded(
+                        flex: 1,
+                        child: buildIcons(context, true, false, "High\nVibration",
+                            'assets/images/icon_home_recipes.png', () {
+                          
+                        }),
+                      ),
+                      
+                      Expanded(
+                        flex: 1,
+                        child: buildIcons(context, true, false, "Yoga", 'assets/images/icon_home_yoga.png', () {
+                          
+                        }),
+                      ),
+                      
+                      Expanded(
+                        flex: 1,
+                        child: buildIcons(context, false, false, "Blogs", 'assets/images/icon_home_blog.png', () {
+                          
+                        }),
+                      ),
+                  ],
+                ),
               ),
-            ),
-  
-            SizedBox(height: size*0.03,),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: size*0.04),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    Expanded(
-                      flex: 1,
-                      child: buildIcons(context, false, false, "Cart", 'assets/images/icon_home_cart.png', () {
-                        
-                      }),
-                    ),
-                    const Expanded(flex: 1,child: SizedBox()),
-                    const Expanded(flex: 1,child: SizedBox())
-                ],
+              SizedBox(height: size*0.03,),
+      
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: size*0.04),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                      Expanded(
+                        flex: 1,
+                        child: buildIcons(context, true, false, "Curated\nPlaylists",
+                            'assets/images/icon_home_playlist.png', () {
+                         
+                        }),
+                      ),
+                      
+                      Expanded(
+                        flex: 1,
+                        child: buildIcons(context, true, false, "Mystery\nSchool",
+                            'assets/images/icon_home_mystery_school.png', () {
+                          
+                        }),
+                      ),
+                      
+                      Expanded(
+                        flex: 1,
+                        child: buildIcons(context, true, false, "Resources\nSection",
+                            'assets/images/icon_infinite_wisdom.png', () {
+                          
+                        }),
+                      ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        )
-        // :Container(
-        //     color: Colors.transparent,
-        //     child: Center(
-        //       child: Padding(
-        //         padding: const EdgeInsets.only(top: 20),
-        //         child: Container(
-        //           width: 100,
-        //           height: 100,
-        //           decoration: BoxDecoration(
-        //             borderRadius: const BorderRadius.all(Radius.circular(10)),
-        //             color: AppTheme.colors.transparentGrey.withOpacity(.1),
-        //           ),
-        //           child: const Center(
-        //             child: CircularProgressIndicator(color: Colors.white),
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
+        
+              SizedBox(height: size*0.03,),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: size*0.04),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                      Expanded(
+                        flex: 1,
+                        child: buildIcons(context, false, false, "Cart", 'assets/images/icon_home_cart.png', () {
+                          
+                        }),
+                      ),
+                      const Expanded(flex: 1,child: SizedBox()),
+                      const Expanded(flex: 1,child: SizedBox())
+                  ],
+                ),
+              ),
+            ],
+          )
+          // :Container(
+          //     color: Colors.transparent,
+          //     child: Center(
+          //       child: Padding(
+          //         padding: const EdgeInsets.only(top: 20),
+          //         child: Container(
+          //           width: 100,
+          //           height: 100,
+          //           decoration: BoxDecoration(
+          //             borderRadius: const BorderRadius.all(Radius.circular(10)),
+          //             color: AppTheme.colors.transparentGrey.withOpacity(.1),
+          //           ),
+          //           child: const Center(
+          //             child: CircularProgressIndicator(color: Colors.white),
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+        ),
       ),
     );
   }

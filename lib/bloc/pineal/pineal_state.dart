@@ -4,6 +4,8 @@ part of 'pineal_cubit.dart';
 sealed class PinealState {}
 
 final class PinealInitial extends PinealState {}
+final class NavigateToWaitingScreen extends PinealState {}
+final class CloseWaitingScreen extends PinealState {}
 
 final class PinealBreathingUpdate extends PinealState {}
 final class PinealHoldUpdate extends PinealState {}

@@ -4,6 +4,8 @@ part of 'firebreathing_cubit.dart';
 sealed class FirebreathingState {}
 
 final class FirebreathingInitial extends FirebreathingState {}
+final class NavigateToWaitingScreen extends FirebreathingState {}
+final class CloseWaitingScreen extends FirebreathingState {}
 
 final class FirebreathingUpdateSetDuration extends FirebreathingState {}
 final class FirebreathingUpdateSetNumber extends FirebreathingState {}

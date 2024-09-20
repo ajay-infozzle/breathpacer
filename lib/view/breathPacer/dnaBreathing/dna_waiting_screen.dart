@@ -11,7 +11,8 @@ class DnaWaitingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WaitingScreenWidget(
-      title: "Pyramid Breathing",
+      title: "DNA Breathing",
+      countdownTime: context.read<DnaCubit>().waitingTime,
       onTimerFinished: (){
         context.read<DnaCubit>().currentSet = 1 ;
         context.read<DnaCubit>().stopCloseEyes();

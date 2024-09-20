@@ -4,6 +4,7 @@ part of 'pyramid_cubit.dart';
 sealed class PyramidState {}
 
 final class PyramidInitial extends PyramidState {}
+final class NavigateToWaitingScreen extends PyramidState {}
 
 final class PyramidToggleJerryVoice extends PyramidState {}
 final class PyramidToggleMusic extends PyramidState {}

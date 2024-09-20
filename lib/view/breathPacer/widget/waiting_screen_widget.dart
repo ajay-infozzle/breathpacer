@@ -1,12 +1,18 @@
+import 'package:breathpacer/bloc/dna/dna_cubit.dart';
+import 'package:breathpacer/bloc/firebreathing/firebreathing_cubit.dart';
+import 'package:breathpacer/bloc/pineal/pineal_cubit.dart';
+import 'package:breathpacer/bloc/pyramid/pyramid_cubit.dart';
 import 'package:breathpacer/config/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
 class WaitingScreenWidget extends StatelessWidget {
-  const WaitingScreenWidget({super.key, required this.title, required this.onTimerFinished});
+  const WaitingScreenWidget({super.key, required this.title, required this.onTimerFinished, this.countdownTime = 10});
 
+  final int countdownTime;
   final String title;
   final Function onTimerFinished ;
 
@@ -26,10 +32,20 @@ class WaitingScreenWidget extends StatelessWidget {
               iconTheme: const IconThemeData(color: Colors.white),
               backgroundColor: Colors.transparent,
               centerTitle: true,
-                leading: GestureDetector(
-                  onTap: () => context.pop(),
-                  child: const Icon(Icons.arrow_back_ios),
-                ),
+              leading: GestureDetector(
+                onTap: () {
+                  context.read<PyramidCubit>().resetSettings(
+                    context.read<PyramidCubit>().step ?? '', 
+                    context.read<PyramidCubit>().speed ?? ''
+                  );
+                  context.read<FirebreathingCubit>().resetSettings();
+                  context.read<DnaCubit>().resetSettings();
+                  context.read<PinealCubit>().resetSettings();
+                  
+                  context.pop();
+                },
+                child: const Icon(Icons.arrow_back_ios),
+              ),
               title: Text(
                 title,
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -73,7 +89,7 @@ class WaitingScreenWidget extends StatelessWidget {
                         color: AppTheme.colors.blueNotChosen.withOpacity(.3),
                         child: Center(
                           child: Countdown(
-                            seconds: 5,
+                            seconds: countdownTime,
                             build: (BuildContext context, double time) => Text(
                               formatTimer(time),
                               style: TextStyle(
