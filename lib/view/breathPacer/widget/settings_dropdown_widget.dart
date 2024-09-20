@@ -1,3 +1,4 @@
+import 'package:breathpacer/config/theme.dart';
 import 'package:breathpacer/utils/constant/interaction_breathing_constant.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,7 @@ class SettingsDropdownButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
 
     return Row(
       children: [
@@ -74,7 +76,7 @@ class SettingsDropdownButton extends StatelessWidget {
               }
             },
             icon: Container(
-              margin: const EdgeInsets.only(left: 4),
+              margin: const EdgeInsets.only(left: 5),
               alignment: Alignment.center,
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -91,8 +93,51 @@ class SettingsDropdownButton extends StatelessWidget {
             dropdownColor: Colors.white,
             menuMaxHeight: height*0.35,
           ),
-        ),
+        ),        
       ],
     );
   }
 }
+
+
+
+// SizedBox(
+        //   child: DropdownMenu<int>(
+        //     menuHeight: height * 0.35,
+        //     menuStyle: MenuStyle(
+        //       backgroundColor: const WidgetStatePropertyAll(Colors.white),
+        //       side: WidgetStatePropertyAll(BorderSide(color: AppTheme.colors.blueSlider)),
+        //       padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+        //     ),
+        //     initialSelection: selected,
+        //     textStyle: const TextStyle(color: Colors.white,),
+        //     onSelected: (int? newValue) {
+        //       if (newValue != null) {
+        //         onSelected(newValue);
+        //       }
+        //     },
+        //     width: size*0.3,
+        //     // trailingIcon: Icon(Icons.abc_rounded),
+        //     // selectedTrailingIcon: ,
+        //     inputDecorationTheme: const InputDecorationTheme(
+        //       suffixIconColor: Colors.white,
+        //       enabledBorder: OutlineInputBorder(
+        //         borderSide: BorderSide(color: Colors.white),
+        //       ), 
+        //       // constraints: BoxConstraints(
+        //       //   minHeight: 30,
+        //       //   maxHeight: 30,
+        //       // ),
+        //       contentPadding: EdgeInsets.symmetric(horizontal: 8),
+        //     ),
+        //     dropdownMenuEntries: options.map<DropdownMenuEntry<int>>((int value) {
+        //       return DropdownMenuEntry<int>(
+        //         value: value,
+        //         label: isTime!
+        //               ? (value == -1 ? "Infinite" : getFormattedTime(value))
+        //               : (isnumber! ? '$value' : '$value set'),
+        //       );
+        //     }).toList(),
+            
+        //   ),
+        // ),

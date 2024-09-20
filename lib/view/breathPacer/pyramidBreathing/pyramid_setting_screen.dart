@@ -96,7 +96,7 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen>
 
               //~
               Expanded(
-                  child: Stack(
+                child: Stack(
                 fit: StackFit.expand,
                 children: [
                   ListView(

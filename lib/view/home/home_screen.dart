@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
-        exit(0);
+        // exit(0);
       },
       child: Scaffold(
         appBar: AppBar(

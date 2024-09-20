@@ -75,7 +75,7 @@ String getFormattedTime(int seconds) {
     int minutes = seconds ~/ 60;
     int remainingSeconds = seconds % 60;
     return remainingSeconds > 0
-        ? '$minutes min $remainingSeconds sec'
-        : '$minutes mins';
+        ? '$minutes m $remainingSeconds s'
+        : '$minutes min';
   }
 }

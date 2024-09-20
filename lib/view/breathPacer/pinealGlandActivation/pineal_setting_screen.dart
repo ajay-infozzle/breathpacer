@@ -200,7 +200,7 @@ class PinealSettingScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: size * 0.03,
+                        height: size * 0.02,
                       ),
                       Container(
                         width: size,
@@ -220,7 +220,7 @@ class PinealSettingScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: size * 0.03,
+                        height: size * 0.02,
                       ),
                       Container(
                         width: size,
