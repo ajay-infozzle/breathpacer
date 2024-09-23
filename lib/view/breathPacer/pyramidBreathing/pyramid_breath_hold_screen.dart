@@ -150,8 +150,8 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
                   leading: GestureDetector(
                     onTap: (){
                       context.read<PyramidCubit>().resetSettings(
-                        context.read<PyramidCubit>().step!, 
-                        context.read<PyramidCubit>().speed!
+                        context.read<PyramidCubit>().step ?? '', 
+                        context.read<PyramidCubit>().speed ?? ''
                       );
 
                       context.goNamed(RoutesName.homeScreen,);

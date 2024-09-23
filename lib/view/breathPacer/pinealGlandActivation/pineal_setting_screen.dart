@@ -2,7 +2,7 @@ import 'package:breathpacer/bloc/pineal/pineal_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
 import 'package:breathpacer/utils/custom_button.dart';
-import 'package:breathpacer/view/breathPacer/widget/settings_dropdown_widget.dart';
+import 'package:breathpacer/view/breathPacer/widget/custom_modal_dropdown.dart';
 import 'package:breathpacer/view/breathPacer/widget/settings_toggle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,6 +54,7 @@ class PinealSettingScreen extends StatelessWidget {
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
+
               SizedBox(
                 height: size * 0.02,
               ),
@@ -66,213 +67,207 @@ class PinealSettingScreen extends StatelessWidget {
               //~
               Expanded(
                   child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  ListView(
-                    children: [
-                      SizedBox(
-                        width: size,
-                        child: CircleAvatar(
-                          radius: size * 0.12,
-                          child: Image.asset("assets/images/pineal_icon.png"),
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.only(top: size * 0.04),
-                        width: size,
-                        child: Text(
-                          subTitle,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: size * 0.04,
+                  fit: StackFit.expand,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: size*0.04),
+                      child: ListView(
+                        children: [
+                          SizedBox(
+                            width: size,
+                            child: CircleAvatar(
+                              radius: size * 0.12,
+                              child: Image.asset("assets/images/pineal_icon.png"),
+                            ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: size * 0.05,
-                      ),
-                      Container(
-                        width: size,
-                        margin: EdgeInsets.only(
-                            left: size * 0.05, right: size * 0.07),
-                        child: BlocBuilder<PinealCubit, PinealState>(
-                          buildWhen: (previous, current) =>
-                              current is PinealInitial ||
-                              current is PinealBreathingUpdate,
-                          builder: (context, state) {
-                            return SettingsDropdownButton(
-                              onSelected: (int selected) {
-                                context
-                                    .read<PinealCubit>()
-                                    .updateBreathing(selected);
-                              },
-                              title: "Breathing Period:",
-                              selected:
-                                  context.read<PinealCubit>().breathingPeriod,
-                              options: context
-                                  .read<PinealCubit>()
-                                  .breathingDurationList,
-                              isTime: true,
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: size * 0.05,
-                      ),
-                      Container(
-                        width: size,
-                        margin: EdgeInsets.only(
-                            left: size * 0.05, right: size * 0.07),
-                        child: BlocBuilder<PinealCubit, PinealState>(
-                          buildWhen: (previous, current) =>
-                              current is PinealInitial ||
-                              current is PinealHoldUpdate,
-                          builder: (context, state) {
-                            return SettingsDropdownButton(
-                              onSelected: (int selected) {
-                                context
-                                    .read<PinealCubit>()
-                                    .updateHold(selected);
-                              },
-                              title: "Hold time:",
-                              selected:
-                                  context.read<PinealCubit>().holdDuration,
-                              options:
-                                  context.read<PinealCubit>().holdDurationList,
-                              isTime: true,
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: size * 0.05,
-                      ),
-                      Container(
-                        width: size,
-                        margin: EdgeInsets.only(
-                            left: size * 0.05, right: size * 0.07),
-                        child: BlocBuilder<PinealCubit, PinealState>(
-                          buildWhen: (previous, current) =>
-                              current is PinealInitial ||
-                              current is PinealRecoveryUpdate,
-                          builder: (context, state) {
-                            return SettingsDropdownButton(
-                              onSelected: (int selected) {
-                                context
-                                    .read<PinealCubit>()
-                                    .updateRecovery(selected);
-                              },
-                              title: "Recovery breath duration:",
-                              selected: context
-                                  .read<PinealCubit>()
-                                  .recoveryBreathDuration,
-                              options: context
-                                  .read<PinealCubit>()
-                                  .recoveryDurationList,
-                              isTime: true,
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: size * 0.03,
-                      ),
-                      Container(
-                        width: size,
-                        margin: EdgeInsets.symmetric(horizontal: size * 0.05),
-                        child: BlocBuilder<PinealCubit, PinealState>(
-                          buildWhen: (previous, current) =>
-                              current is PinealInitial ||
-                              current is PinealToggleJerryVoice,
-                          builder: (context, state) {
-                            return SettingsToggleButton(
-                                onToggle: () {
-                                  context
+
+                          Container(
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.only(top: size * 0.04),
+                            width: size,
+                            child: Text(
+                              subTitle,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: size * 0.04,
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: size * 0.05,),
+                          SizedBox(
+                            width: size,
+                            child: BlocBuilder<PinealCubit, PinealState>(
+                              buildWhen: (previous, current) =>
+                                  current is PinealInitial ||
+                                  current is PinealBreathingUpdate,
+                              builder: (context, state) {
+                                return CustomDropDown(
+                                  onSelected: (int selected) {
+                                    context
+                                        .read<PinealCubit>()
+                                        .updateBreathing(selected);
+                                  },
+                                  title: "Breathing Period:",
+                                  selected:
+                                      context.read<PinealCubit>().breathingPeriod,
+                                  options: context
                                       .read<PinealCubit>()
-                                      .toggleJerryVoice();
-                                },
-                                title: "Jerry's voice :",
-                                isOn: context.read<PinealCubit>().jerryVoice);
-                          },
-                        ),
+                                      .breathingDurationList,
+                                  isTime: true,
+                                );
+                              },
+                            ),
+                          ),
+
+
+                          SizedBox(height: size * 0.05,),
+                          SizedBox(
+                            width: size,
+                            child: BlocBuilder<PinealCubit, PinealState>(
+                              buildWhen: (previous, current) =>
+                                  current is PinealInitial ||
+                                  current is PinealHoldUpdate,
+                              builder: (context, state) {
+                                return CustomDropDown(
+                                  onSelected: (int selected) {
+                                    context
+                                        .read<PinealCubit>()
+                                        .updateHold(selected);
+                                  },
+                                  title: "Hold time:",
+                                  selected:
+                                      context.read<PinealCubit>().holdDuration,
+                                  options:
+                                      context.read<PinealCubit>().holdDurationList,
+                                  isTime: true,
+                                );
+                              },
+                            ),
+                          ),
+
+                          SizedBox(height: size * 0.05,),
+                          SizedBox(
+                            width: size,
+                            child: BlocBuilder<PinealCubit, PinealState>(
+                              buildWhen: (previous, current) =>
+                                  current is PinealInitial ||
+                                  current is PinealRecoveryUpdate,
+                              builder: (context, state) {
+                                return CustomDropDown(
+                                  onSelected: (int selected) {
+                                    context
+                                        .read<PinealCubit>()
+                                        .updateRecovery(selected);
+                                  },
+                                  title: "Recovery breath duration:",
+                                  selected: context
+                                      .read<PinealCubit>()
+                                      .recoveryBreathDuration,
+                                  options: context
+                                      .read<PinealCubit>()
+                                      .recoveryDurationList,
+                                  isTime: true,
+                                );
+                              },
+                            ),
+                          ),
+
+
+                          SizedBox(height: size * 0.05,),
+                          SizedBox(
+                            width: size,
+                            child: BlocBuilder<PinealCubit, PinealState>(
+                              buildWhen: (previous, current) =>
+                                  current is PinealInitial ||
+                                  current is PinealToggleJerryVoice,
+                              builder: (context, state) {
+                                return SettingsToggleButton(
+                                    onToggle: () {
+                                      context
+                                          .read<PinealCubit>()
+                                          .toggleJerryVoice();
+                                    },
+                                    title: "Jerry's voice :",
+                                    isOn: context.read<PinealCubit>().jerryVoice);
+                              },
+                            ),
+                          ),
+
+
+                          SizedBox(height: size * 0.05,),
+                          SizedBox(
+                            width: size,
+                            child: BlocBuilder<PinealCubit, PinealState>(
+                              buildWhen: (previous, current) =>
+                                  current is PinealInitial ||
+                                  current is PinealToggleMusic,
+                              builder: (context, state) {
+                                return SettingsToggleButton(
+                                    onToggle: () {
+                                      context.read<PinealCubit>().toggleMusic();
+                                    },
+                                    title: "Music :",
+                                    isOn: context.read<PinealCubit>().music);
+                              },
+                            ),
+                          ),
+
+                          SizedBox(height: size * 0.05,),
+                          SizedBox(
+                            width: size,
+                            child: BlocBuilder<PinealCubit, PinealState>(
+                              buildWhen: (previous, current) =>
+                                  current is PinealInitial ||
+                                  current is PinealToggleChimes,
+                              builder: (context, state) {
+                                return SettingsToggleButton(
+                                    onToggle: () {
+                                      context.read<PinealCubit>().toggleChimes();
+                                    },
+                                    title: "Chimes at start / stop points :",
+                                    isOn: context.read<PinealCubit>().chimes);
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        height: size * 0.02,
-                      ),
-                      Container(
-                        width: size,
-                        margin: EdgeInsets.symmetric(horizontal: size * 0.05),
-                        child: BlocBuilder<PinealCubit, PinealState>(
-                          buildWhen: (previous, current) =>
-                              current is PinealInitial ||
-                              current is PinealToggleMusic,
-                          builder: (context, state) {
-                            return SettingsToggleButton(
-                                onToggle: () {
-                                  context.read<PinealCubit>().toggleMusic();
-                                },
-                                title: "Music :",
-                                isOn: context.read<PinealCubit>().music);
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: size * 0.02,
-                      ),
-                      Container(
-                        width: size,
-                        margin: EdgeInsets.symmetric(horizontal: size * 0.05),
-                        child: BlocBuilder<PinealCubit, PinealState>(
-                          buildWhen: (previous, current) =>
-                              current is PinealInitial ||
-                              current is PinealToggleChimes,
-                          builder: (context, state) {
-                            return SettingsToggleButton(
-                                onToggle: () {
-                                  context.read<PinealCubit>().toggleChimes();
-                                },
-                                title: "Chimes at start / stop points :",
-                                isOn: context.read<PinealCubit>().chimes);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                        margin: EdgeInsets.only(
-                          top: size * 0.09,
-                        ),
-                        child: BlocConsumer<PinealCubit, PinealState>(
-                          listener: (context, state) {
-                            if(state is NavigateToWaitingScreen){
-                              context.pushNamed(
-                                RoutesName.pinealWaitingScreen,
-                              );
-                            }
-                          },
-                          builder: (context, state) {
-                            return CustomButton(
-                                title: "Start",
-                                textsize: size * 0.043,
-                                height: height * 0.062,
-                                spacing: .7,
-                                radius: 0,
-                                onPress: () {
-                                  context.read<PinealCubit>().playMusic();
-                                  context.read<PinealCubit>().playCloseEyes();
-                                });
-                          },
-                        )),
-                  )
-                ],
-              )),
+                    ),
+                    
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                          margin: EdgeInsets.only(
+                            top: size * 0.09,
+                          ),
+                          child: BlocConsumer<PinealCubit, PinealState>(
+                            listener: (context, state) {
+                              if(state is NavigateToWaitingScreen){
+                                context.pushNamed(
+                                  RoutesName.pinealWaitingScreen,
+                                );
+                              }
+                            },
+                            builder: (context, state) {
+                              return CustomButton(
+                                  title: "Start",
+                                  textsize: size * 0.043,
+                                  height: height * 0.062,
+                                  spacing: .7,
+                                  radius: 0,
+                                  onPress: () {
+                                    context.read<PinealCubit>().playMusic();
+                                    context.read<PinealCubit>().playCloseEyes();
+                                  });
+                            },
+                          )),
+                    )
+                  ],
+                )
+              ),
             ],
           ),
         ),

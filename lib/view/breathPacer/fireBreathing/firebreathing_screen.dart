@@ -22,7 +22,7 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
 
   late CountdownController countdownController;
   late AnimationController _controller;
-  late Animation<double> _animation;
+  // late Animation<double> _animation;
   late Timer _timer;
   int _startTime = 0;
 
@@ -50,10 +50,10 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
     )..repeat(reverse: true);  // Repeat the animation in both directions
 
     
-    _animation = Tween<double>(begin: 0.1, end: 1).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    // _animation = Tween<double>(begin: 0.1, end: 1).animate(CurvedAnimation(
+    //   parent: _controller,
+    //   curve: Curves.easeInOut,
+    // ));
 
     // bool hasDecreased = false; // Flag to ensure we only decrease once per cycle
     // _controller.addListener(() {

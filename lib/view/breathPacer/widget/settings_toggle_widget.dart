@@ -13,6 +13,7 @@ class SettingsToggleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     return Row(
       children: [
@@ -57,18 +58,23 @@ class SettingsToggleButton extends StatelessWidget {
 
                 
         SizedBox(width: size*0.03,),
-        Transform.scale(
-          scale: 0.9,
-          child: Switch( 
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            trackColor: isOn ? WidgetStateProperty.all(Colors.white) : WidgetStateProperty.all(Colors.transparent),
-            trackOutlineColor: WidgetStateProperty.all(Colors.white),
-            thumbColor:
-                isOn ? WidgetStateProperty.all(AppTheme.colors.thumbColor) : WidgetStateProperty.all(Colors.white),
-            value: isOn,
-            onChanged: (_) {
-              onToggle();
-            }
+        Container(
+          width: size*0.14,
+          height: height*0.033,
+          alignment: Alignment.centerRight,
+          child: Transform.scale(
+            scale: 0.9,
+            child: Switch( 
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              trackColor: isOn ? WidgetStateProperty.all(Colors.white) : WidgetStateProperty.all(Colors.transparent),
+              trackOutlineColor: WidgetStateProperty.all(Colors.white),
+              thumbColor:
+                  isOn ? WidgetStateProperty.all(AppTheme.colors.thumbColor) : WidgetStateProperty.all(Colors.white),
+              value: isOn,
+              onChanged: (_) {
+                onToggle();
+              }
+            ),
           ),
         )
       ]

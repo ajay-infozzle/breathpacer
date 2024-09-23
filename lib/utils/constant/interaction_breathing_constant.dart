@@ -70,7 +70,7 @@ String getTotalTimeString(List<int> timeList) {
 
 String getFormattedTime(int seconds) {
   if (seconds < 60) {
-    return '$seconds secs';
+    return '$seconds sec';
   } else {
     int minutes = seconds ~/ 60;
     int remainingSeconds = seconds % 60;

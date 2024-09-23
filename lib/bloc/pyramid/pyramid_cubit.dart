@@ -34,7 +34,7 @@ class PyramidCubit extends Cubit<PyramidState> {
     jerryVoice = true;
     music = false;
     chimes = false;
-    isReatartEnable = true ;
+    // isReatartEnable = true ;
     holdDuration = 10;
     saveInputCont.clear();
   
