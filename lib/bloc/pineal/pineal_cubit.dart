@@ -322,6 +322,13 @@ class PinealCubit extends Cubit<PinealState> {
   void playMotivation(double cntDown) async {
     int count = cntDown.toInt() ;
     try {
+      if(holdDuration == -1){
+        if(motivationPlayer.state != PlayerState.playing && motivationPlayer.state != PlayerState.paused){
+          await motivationPlayer.play(AssetSource("audio/motivation.mp3"));
+        }
+        return ;
+      }
+
       if(jerryVoice && (count != holdDuration) && (count != holdDuration-1) && (count != holdDuration-2) && (count != holdDuration-3) && (count != 3) && (count != 2) && (count != 1) && (count != 0) && (cntDown%6 == 0)){
         jerryVoicePlayer.pause();
         Duration? jerryCurrentVoiceDur = await jerryVoicePlayer.getCurrentPosition(); 

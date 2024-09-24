@@ -41,11 +41,11 @@ class _PinealScreenState extends State<PinealScreen> {
   void startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       // todo : dummy for getting hold period start (it will be based on voice later)
-      // if(_startTime == 7){
-      //   if(context.read<PinealCubit>().holdDuration != -1){
-      //     holdCountdownController.resume();
-      //   }
-      // }
+      if(_startTime%7 == 0){
+        if(context.read<PinealCubit>().holdDuration == -1){
+          context.read<PinealCubit>().playMotivation(0.0);
+        }
+      }
 
       setState(() {
         _startTime++;
