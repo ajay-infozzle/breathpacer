@@ -95,11 +95,11 @@ class PyramidCubit extends Cubit<PyramidState> {
 
     // Reset music player if active
     try {
-      if (closeEyePlayer.state == PlayerState.playing) {
+      if (closeEyePlayer.state == PlayerState.playing ) {
         closeEyePlayer.stop();
       }
 
-      if (musicPlayer.state == PlayerState.playing) {
+      if (musicPlayer.state == PlayerState.playing || musicPlayer.state == PlayerState.paused) {
         musicPlayer.stop();
         // musicPlayer.seek(Duration.zero);
       }
@@ -111,17 +111,17 @@ class PyramidCubit extends Cubit<PyramidState> {
       }
       
       // Reset Jerry Voice player if active
-      if (jerryVoicePlayer.state == PlayerState.playing) {
+      if (jerryVoicePlayer.state == PlayerState.playing || jerryVoicePlayer.state == PlayerState.paused) {
         jerryVoicePlayer.stop();
         // jerryVoicePlayer.seek(Duration.zero);
       }
       
       // Reset breath hold player if active
-      if (breathHoldPlayer.state == PlayerState.playing) {
+      if (breathHoldPlayer.state == PlayerState.playing || breathHoldPlayer.state == PlayerState.paused) {
         breathHoldPlayer.stop();
       }
 
-      if (relaxPlayer.state == PlayerState.playing) {
+      if (relaxPlayer.state == PlayerState.playing || relaxPlayer.state == PlayerState.paused) {
         relaxPlayer.stop();
       }
     } on Exception catch (e) {
@@ -191,12 +191,17 @@ class PyramidCubit extends Cubit<PyramidState> {
 
   void pauseAudio(AudioPlayer sound, bool check) async {
     if(check){
-      sound.pause();
+      if(sound.state == PlayerState.playing){
+        sound.pause();
+      }
     }
   }
+
   void resumeAudio(AudioPlayer sound, bool check) async {
     if(check){
-      sound.resume();
+      if(sound.state == PlayerState.paused){
+        sound.resume();
+      }
     }
   }
 

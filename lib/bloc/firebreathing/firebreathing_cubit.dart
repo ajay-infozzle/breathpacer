@@ -144,7 +144,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
 
     // Reset music player if active
     try {
-      if (musicPlayer.state == PlayerState.playing) {
+      if (musicPlayer.state == PlayerState.playing || musicPlayer.state == PlayerState.paused) {
         musicPlayer.stop();
       }
       
@@ -154,16 +154,16 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
       }
       
       // Reset Jerry Voice player if active
-      if (jerryVoicePlayer.state == PlayerState.playing) {
+      if (jerryVoicePlayer.state == PlayerState.playing || jerryVoicePlayer.state == PlayerState.paused) {
         jerryVoicePlayer.stop();
       }
       
       // Reset breath hold player if active
-      if (breathHoldPlayer.state == PlayerState.playing) {
+      if (breathHoldPlayer.state == PlayerState.playing || breathHoldPlayer.state == PlayerState.paused) {
         breathHoldPlayer.stop();
       }
 
-      if (recoveryPlayer.state == PlayerState.playing) {
+      if (recoveryPlayer.state == PlayerState.playing || recoveryPlayer.state == PlayerState.paused) {
         recoveryPlayer.stop();
       }
     } on Exception catch (e) {
@@ -178,13 +178,17 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
 
   void pauseAudio(AudioPlayer sound, bool check) async {
     if(check){
-      sound.pause();
+      if(sound.state == PlayerState.playing){
+        sound.pause();
+      }
     }
   }
 
   void resumeAudio(AudioPlayer sound, bool check) async {
     if(check){
-      sound.resume();
+      if(sound.state == PlayerState.paused){
+        sound.resume();
+      }
     }
   }
 
@@ -193,7 +197,12 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   void playCloseEyes() async {
     try {
       if(jerryVoice){
-        await closeEyePlayer.play(AssetSource('audio/close_eyes.mp3'), );
+        if(pineal){
+          await closeEyePlayer.play(AssetSource('audio/close_eyes_pineal.mp3'), );
+        }
+        else{
+          await closeEyePlayer.play(AssetSource('audio/close_eyes.mp3'), );
+        }
         Duration? duration = await closeEyePlayer.getDuration();
         waitingTime = duration!.inSeconds;
         emit(NavigateToWaitingScreen());

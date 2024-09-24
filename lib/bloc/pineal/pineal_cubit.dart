@@ -30,6 +30,7 @@ class PinealCubit extends Cubit<PinealState> {
   int remainingBreathTime = 0;
   bool isReatartEnable = false;
   bool isSaveDialogOn = false;
+  bool isFirstSet = true;
   TextEditingController saveInputCont = TextEditingController();
 
 
@@ -89,12 +90,14 @@ class PinealCubit extends Cubit<PinealState> {
   AudioPlayer breathHoldPlayer = AudioPlayer();
   AudioPlayer recoveryPlayer = AudioPlayer();
   AudioPlayer relaxPlayer = AudioPlayer();
+  AudioPlayer motivationPlayer = AudioPlayer();
 
 
   void resetSettings(){
     jerryVoice = false;
     music = false;
     chimes = false;
+    isFirstSet = true;
     durationOfSet = 120;
 
     currentSet = 0;
@@ -104,7 +107,7 @@ class PinealCubit extends Cubit<PinealState> {
 
     // Reset music player if active
     try {
-      if (musicPlayer.state == PlayerState.playing) {
+      if (musicPlayer.state == PlayerState.playing || musicPlayer.state == PlayerState.paused) {
         musicPlayer.stop();
       }
       
@@ -114,17 +117,21 @@ class PinealCubit extends Cubit<PinealState> {
       }
       
       // Reset Jerry Voice player if active
-      if (jerryVoicePlayer.state == PlayerState.playing) {
+      if (jerryVoicePlayer.state == PlayerState.playing || jerryVoicePlayer.state == PlayerState.paused) {
         jerryVoicePlayer.stop();
       }
       
       // Reset breath hold player if active
-      if (breathHoldPlayer.state == PlayerState.playing) {
+      if (breathHoldPlayer.state == PlayerState.playing || breathHoldPlayer.state == PlayerState.paused) {
         breathHoldPlayer.stop();
       }
 
-      if (recoveryPlayer.state == PlayerState.playing) {
+      if (recoveryPlayer.state == PlayerState.playing || recoveryPlayer.state == PlayerState.paused) {
         recoveryPlayer.stop();
+      }
+      
+      if (motivationPlayer.state == PlayerState.playing || motivationPlayer.state == PlayerState.paused) {
+        motivationPlayer.stop();
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -137,13 +144,17 @@ class PinealCubit extends Cubit<PinealState> {
 
   void pauseAudio(AudioPlayer sound, bool check) async {
     if(check){
-      sound.pause();
+      if(sound.state == PlayerState.playing){
+        sound.pause();
+      }
     }
   }
 
   void resumeAudio(AudioPlayer sound, bool check) async {
     if(check){
-      sound.resume();
+      if(sound.state == PlayerState.paused){
+        sound.resume();
+      }
     }
   }
 
@@ -151,7 +162,7 @@ class PinealCubit extends Cubit<PinealState> {
   void playCloseEyes() async {
     try {
       if(jerryVoice){
-        await closeEyePlayer.play(AssetSource('audio/close_eyes.mp3'), );
+        await closeEyePlayer.play(AssetSource('audio/close_eyes_pineal.mp3'), );
         Duration? duration = await closeEyePlayer.getDuration();
         waitingTime = duration!.inSeconds;
         emit(NavigateToWaitingScreen());
@@ -231,22 +242,27 @@ class PinealCubit extends Cubit<PinealState> {
     }
   }
 
+  
   void playJerry() async {
     try {
       if(jerryVoice){
-        //~ for pineal purpose if selected
-        jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.pinealSqeez) ;
-      
-        await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
-
-        jerryVoicePlayer.onPlayerComplete.listen((event) {
+        if(isFirstSet){
           if(holdDuration != -1){
-            jerryVoicePlayer.play(AssetSource("audio/10_countdown.mp3"));
+            String countDownAudio = "audio/10_countdown.mp3" ;
+            if(holdDuration == 15){
+              countDownAudio = "audio/15_countdown.mp3" ;
+            }
+            if(holdDuration == 20){
+              countDownAudio = "audio/20_countdown.mp3" ;
+            }
+            
+            await jerryVoicePlayer.stop();
+            await jerryVoicePlayer.play(AssetSource(countDownAudio));
+
+            emit(ResumeHoldCounter());
+            isFirstSet = false;
           }
-                    
-          //todo: now hold for ....seconds counting start
-          emit(ResumeHoldCounter());
-        });
+        }
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -275,10 +291,73 @@ class PinealCubit extends Cubit<PinealState> {
   
         jerryVoicePlayer.stop();
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
+
+        // jerryVoicePlayer.getCurrentPosition(); // current duration
+        // jerryVoicePlayer.getDuration(); // total duration
+
+        jerryVoicePlayer.onPlayerComplete.listen((event) {
+          if(holdDuration != -1){
+            String countDownAudio = "audio/10_countdown.mp3" ;
+            if(holdDuration == 15){
+              countDownAudio = "audio/15_countdown.mp3" ;
+            }
+            if(holdDuration == 20){
+              countDownAudio = "audio/20_countdown.mp3" ;
+            }
+
+            jerryVoicePlayer.play(AssetSource(countDownAudio));
+          }
+                    
+          //todo: now hold for ....seconds counting start
+          emit(ResumeHoldCounter());
+        });
       }
     } on Exception catch (e) {
       if (kDebugMode) {
         print("resetJerryVoiceAndPLayAgain>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playMotivation(double cntDown) async {
+    int count = cntDown.toInt() ;
+    try {
+      if(jerryVoice && (count != holdDuration) && (count != holdDuration-1) && (count != holdDuration-2) && (count != holdDuration-3) && (count != 3) && (count != 2) && (count != 1) && (count != 0) && (cntDown%6 == 0)){
+        jerryVoicePlayer.pause();
+        Duration? jerryCurrentVoiceDur = await jerryVoicePlayer.getCurrentPosition(); 
+        int jerryCurrentVoice = jerryCurrentVoiceDur!.inSeconds ;
+        print("cntDown%6>>${cntDown%6}");
+        print("current_jerry>>$jerryCurrentVoice");
+        
+        // Duration? jerryTotalDur = await jerryVoicePlayer.getDuration(); 
+        // int jerryTotalVoice = jerryTotalDur!.inSeconds ;
+
+        await motivationPlayer.play(AssetSource("audio/motivation.mp3"));
+        Duration? motivationDur = await motivationPlayer.getDuration(); 
+        int motivationVoice = motivationDur!.inSeconds ;
+        print("total_motivation>>$motivationVoice");
+
+        motivationPlayer.onPlayerComplete.listen((event) {
+          print("jerry_seek>>${jerryCurrentVoice+motivationVoice+2}");
+          jerryVoicePlayer.seek(Duration(seconds: (jerryCurrentVoice+motivationVoice+2) )); //move forward
+          jerryVoicePlayer.resume();
+        });
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playMotivation>> ${e.toString()}");
+      }
+    }
+  }
+
+  void stopMotivation() async {
+    try {
+      if(jerryVoice){
+        await motivationPlayer.stop();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("stopMotivation>> ${e.toString()}");
       }
     }
   }

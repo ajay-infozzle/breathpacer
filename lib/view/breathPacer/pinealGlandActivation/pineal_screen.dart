@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:breathpacer/bloc/pineal/pineal_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
@@ -67,6 +68,7 @@ class _PinealScreenState extends State<PinealScreen> {
       if (_isPaused) {
         cubit.pauseAudio(cubit.musicPlayer, cubit.music);
         cubit.pauseAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+        cubit.pauseAudio(cubit.motivationPlayer, cubit.jerryVoice);
 
         if(context.read<PinealCubit>().holdDuration != -1 ){
           holdCountdownController.pause();
@@ -75,7 +77,11 @@ class _PinealScreenState extends State<PinealScreen> {
         stopTimer();        
       } else {
         cubit.resumeAudio(cubit.musicPlayer, cubit.music);
-        cubit.resumeAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+        cubit.resumeAudio(cubit.motivationPlayer, cubit.jerryVoice);
+        if(cubit.motivationPlayer.state != PlayerState.playing && cubit.motivationPlayer.state != PlayerState.paused){
+          cubit.resumeAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+        }
+              
 
         if(context.read<PinealCubit>().holdDuration != -1){
           holdCountdownController.resume();
@@ -104,7 +110,7 @@ class _PinealScreenState extends State<PinealScreen> {
     }
 
     if (kDebugMode) {
-      print("pineal breathing & hold Time: $getScreenTiming");
+      print("pineal breathing & hold Time>>: $getScreenTiming");
     }
   }
 
@@ -212,9 +218,25 @@ class _PinealScreenState extends State<PinealScreen> {
                         ),
                       ),
 
-                      if(context.read<PinealCubit>().holdDuration != -1)
                       BlocConsumer<PinealCubit, PinealState>(
                         builder: (context, state) {
+                          return const SizedBox();
+                        }, 
+                        listener: (context, state) {
+                          print(">>$state");
+                        },
+                      ),
+
+                      if(context.read<PinealCubit>().holdDuration != -1)
+                      BlocConsumer<PinealCubit, PinealState>(
+                        listener: (context, state) {
+                          print("Current state>>: $state");
+                          if(state is ResumeHoldCounter){
+                            print("resumHold>>");
+                            holdCountdownController.resume();
+                          }
+                        }, 
+                        builder: (context, state) { 
                           return Container(
                             margin: EdgeInsets.only(top: height*0.04),
                             width: size,
@@ -230,11 +252,6 @@ class _PinealScreenState extends State<PinealScreen> {
                             ),
                           );
                         }, 
-                        listener: (context, state) {
-                          if(state is ResumeHoldCounter){
-                            holdCountdownController.resume();
-                          }
-                        }, 
                       ),
                       
 
@@ -247,13 +264,17 @@ class _PinealScreenState extends State<PinealScreen> {
                           child: Countdown(
                             controller: holdCountdownController,
                             seconds: context.read<PinealCubit>().holdDuration,
-                            build: (BuildContext context, double time) => Text(
-                              formatTimer(time),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: size*0.2
-                              ),
-                            ),
+                            build: (BuildContext cnt, double time) {
+                              context.read<PinealCubit>().playMotivation(time);
+                             
+                              return Text(
+                                formatTimer(time),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: size*0.2
+                                ),
+                              );
+                            },
                             interval: const Duration(seconds: 1),
                             onFinished: (){
                               storeScreenTime();
