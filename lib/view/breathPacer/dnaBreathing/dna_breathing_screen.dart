@@ -45,6 +45,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
     }
     else{
       countdownController = CountdownController(autoStart: true);
+      setUpAnimation();
     }
     startTimer();
   }
@@ -82,11 +83,22 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
     bool hasIncreased = false;
 
     _controller.addListener(() {
-
       if(_controller.status == AnimationStatus.forward && _animation.value > 0.98  && !hasIncreased){
-        if (kDebugMode) {
+        if(isTimeBreathingApproch){
           setState(() {
-            breathOption = 'Breath In' ;
+            if(!countdownController.isCompleted!){
+              breathOption = 'Breath In' ;
+              context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
+            }
+          });
+          hasIncreased = true;
+        }
+        else{
+          setState(() {
+            if(breathCount != 0 && breathCount != -1){
+              breathOption = 'Breath In' ;
+              context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
+            }
           });
           hasIncreased = true;
         }
@@ -98,21 +110,38 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
           print("Dna Breath count: $breathCount");
         }
         
-        // Decrease the breath count only once during the shrink phase
-        if (breathCount > 0) {
-          setState(() {
-            breathCount--;
-            breathOption = 'Breath Out';
-          });
-          hasDecreased = true; // Set the flag to true to prevent further decrements during this cycle
-        }
+        if(isTimeBreathingApproch) {
+          if(countdownController.isCompleted!){
+            _controller.stop();
+            
+            storeScreenTime();
+            navigate(context.read<DnaCubit>());
+          }else{
+            setState(() {
+              breathOption = 'Breath Out';
+              context.read<DnaCubit>().playBreathing("audio/single_breath_out_standard.mp3");
+            });
+            hasDecreased = true;
+          } 
+        }else{
+          if (breathCount > -1) {
+            setState(() {
+              breathCount--;
+              breathOption = 'Breath Out';
+              if(breathCount != -1){
+                context.read<DnaCubit>().playBreathing("audio/single_breath_out_standard.mp3");
+              }
+            });
+            hasDecreased = true; // Set the flag to true to prevent further decrements during this cycle
+          }
 
-        // Stop the animation if the breath count reaches 0
-        if (breathCount == 0) {
-          _controller.stop();
+          // Stop the animation if the breath count reaches 0
+          if (breathCount == -1) {
+            _controller.stop();
 
-          storeScreenTime();
-          navigate(context.read<DnaCubit>());
+            storeScreenTime();
+            navigate(context.read<DnaCubit>());
+          }
         }
       }
 
@@ -138,6 +167,12 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
         _startTime++;
+
+        if(_startTime % 15 == 0 && (_startTime != context.read<DnaCubit>().noOfBreath || _startTime!=context.read<DnaCubit>().durationOfSet) && breathCount!=3 && breathCount!=2 && breathCount!=1 && _startTime!=0 && _startTime!=1){
+          if(!context.read<DnaCubit>().isTimeBreathingApproch){
+            context.read<DnaCubit>().playHoldMotivation();
+          }
+        }
       });
     });
   }
@@ -159,8 +194,11 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
         cubit.pauseAudio(cubit.musicPlayer, cubit.music);
         cubit.pauseAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
 
+        cubit.pauseAudio(cubit.breathHoldPlayer, cubit.jerryVoice);
+
         if(context.read<DnaCubit>().isTimeBreathingApproch){
           countdownController.pause();
+          _controller.stop();
         }
         else{
           _controller.stop();
@@ -169,9 +207,12 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
       } else {
         cubit.resumeAudio(cubit.musicPlayer, cubit.music);
         cubit.resumeAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+        
+        cubit.resumeAudio(cubit.breathHoldPlayer, cubit.jerryVoice);
 
         if(context.read<DnaCubit>().isTimeBreathingApproch){
           countdownController.resume();
+          _controller.repeat(reverse: true);
         }
         else{
           _controller.repeat(reverse: true);
@@ -190,7 +231,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
   }
 
   void storeScreenTime() {
-    context.read<DnaCubit>().breathingTimeList.add(_startTime);
+    context.read<DnaCubit>().breathingTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
 
     if (kDebugMode) {
       print("dna breathing Stored Screen Time: $getScreenTiming");
@@ -199,9 +240,10 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
 
   @override
   void dispose() {
-    if(!isTimeBreathingApproch){
-      _controller.dispose();
-    }
+    // if(!isTimeBreathingApproch){
+    //   _controller.dispose();
+    // }
+    _controller.dispose();
     _timer.cancel();
 
     super.dispose();
@@ -285,11 +327,32 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
                           ),
                         ),
                       ),
+
+                      if(!context.read<DnaCubit>().isTimeBreathingApproch) 
+                      Container(
+                        width: size*0.4,
+                        margin: EdgeInsets.symmetric(horizontal: size*0.05, vertical: size*0.05),
+                        padding: EdgeInsets.symmetric(vertical: size*0.03,horizontal: size*0.03),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12)
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          breathOption,
+                          style: TextStyle(
+                            color: AppTheme.colors.primaryColor,
+                            fontSize: size*0.05,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ),
             
+
                       SizedBox(height: height*0.05,),
                       
                       if(!context.read<DnaCubit>().isTimeBreathingApproch)
-                      breathCount == 0 ?
+                      breathCount == -1 ?
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: size*0.12),
                         height: size-2*(size*0.12),
@@ -340,37 +403,75 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
 
 
                       if(context.read<DnaCubit>().isTimeBreathingApproch)
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: size*0.12),
-                          height: size-2*(size*0.12),
-                          alignment: Alignment.center,
-                          child: ClipPath(
-                            clipper: OctagonalClipper(),
+                        AnimatedBuilder(
+                          animation: _controller,
+                          builder: (context, child) {
+                            return Transform.scale(
+                              scale: _animation.value,
                               child: Container(
-                              height: size-2*(size*0.12),
-                              color: AppTheme.colors.blueNotChosen.withOpacity(.3),
-                              child: Center(
-                                child: Countdown(
-                                  controller: countdownController,
-                                  seconds: context.read<DnaCubit>().durationOfSet,
-                                  build: (BuildContext context, double time) => Text(
-                                    formatTimer(time),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: size*0.2
+                                margin: EdgeInsets.symmetric(horizontal: size * 0.12),
+                                height: size - 2 * (size * 0.12),
+                                alignment: Alignment.center,
+                                child: ClipPath(
+                                  clipper: OctagonalClipper(),
+                                  child: Container(
+                                    height: size - 2 * (size * 0.12),
+                                    color: AppTheme.colors.blueNotChosen.withOpacity(.3),
+                                    child: Center(
+                                      child: Countdown(
+                                      controller: countdownController,
+                                      seconds: context.read<DnaCubit>().durationOfSet,
+                                      build: (BuildContext context, double time) => Text(
+                                        formatTimer(time),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: size*0.2
+                                        ),
+                                      ),
+                                      interval: const Duration(seconds: 1),
+                                      onFinished: (){
+                                        // storeScreenTime();
+                                        // navigate(context.read<DnaCubit>());
+                                      },
+                                    ),
                                     ),
                                   ),
-                                  interval: const Duration(seconds: 1),
-                                  onFinished: (){
-                                    storeScreenTime();
-                                    
-                                    navigate(context.read<DnaCubit>());
-                                  },
                                 ),
-                              ),
-                            ),
-                          ),
+                              )
+                            );
+                          }
                         ),
+                        // Container(
+                        //   margin: EdgeInsets.symmetric(horizontal: size*0.12),
+                        //   height: size-2*(size*0.12),
+                        //   alignment: Alignment.center,
+                        //   child: ClipPath(
+                        //     clipper: OctagonalClipper(),
+                        //       child: Container(
+                        //       height: size-2*(size*0.12),
+                        //       color: AppTheme.colors.blueNotChosen.withOpacity(.3),
+                        //       child: Center(
+                        //         child: Countdown(
+                        //           controller: countdownController,
+                        //           seconds: context.read<DnaCubit>().durationOfSet,
+                        //           build: (BuildContext context, double time) => Text(
+                        //             formatTimer(time),
+                        //             style: TextStyle(
+                        //               color: Colors.white,
+                        //               fontSize: size*0.2
+                        //             ),
+                        //           ),
+                        //           interval: const Duration(seconds: 1),
+                        //           onFinished: (){
+                        //             storeScreenTime();
+                                    
+                        //             navigate(context.read<DnaCubit>());
+                        //           },
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
 
             
                       SizedBox(height: height*0.04,),
@@ -408,6 +509,18 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
     
     String minutesStr = minutes.toString().padLeft(2, '0'); 
     String secondsStr = seconds.toString().padLeft(2, '0'); 
+
+    //~ to start motivation
+    if(context.read<DnaCubit>().durationOfSet >= 30){
+      if(time % 20 == 0 && time.toDouble() != context.read<DnaCubit>().durationOfSet && (context.read<DnaCubit>().durationOfSet - time) > 10 && int.parse(secondsStr) > 6){
+        context.read<DnaCubit>().playHoldMotivation();
+      }
+    }
+
+    // //~ to start 3_2_1 voice
+    // if(secondsStr == "06"){
+    //   context.read<DnaCubit>().playHoldCountdown();
+    // }
     
     return "$minutesStr:$secondsStr";
   }
@@ -434,21 +547,32 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
     }
   }
 
-  void navigate(DnaCubit cubit) {
+  void navigate(DnaCubit cubit) async{
     context.read<DnaCubit>().stopJerry();
     if(cubit.holdingPeriod){
+      context.read<DnaCubit>().playTimeToHold();
+
       if(cubit.choiceOfBreathHold == "Both"){
-        cubit.breathHoldIndex = 0;
-        context.read<DnaCubit>().playHold();
+        await Future.delayed(const Duration(seconds: 2),() {
+          cubit.breathHoldIndex = 0;
+          context.read<DnaCubit>().playHold();
+          context.goNamed(RoutesName.dnaHoldScreen);
+        },);
       }
       else{
-        context.read<DnaCubit>().playHold();
+        await Future.delayed(const Duration(seconds: 2),() {
+          context.read<DnaCubit>().playHold();
+          context.goNamed(RoutesName.dnaHoldScreen);
+        },);
       }
-      context.goNamed(RoutesName.dnaHoldScreen);
     } 
     else if(cubit.recoveryBreath){
-      context.read<DnaCubit>().playRecovery();
-      context.goNamed(RoutesName.dnaRecoveryScreen);
+      context.read<DnaCubit>().playTimeToRecover();
+      
+      await Future.delayed(const Duration(seconds: 2),() {
+        context.read<DnaCubit>().playRecovery();
+        context.goNamed(RoutesName.dnaRecoveryScreen);
+      },);
     }
     else{
       if(cubit.noOfSets == cubit.currentSet){
@@ -456,9 +580,15 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
         context.goNamed(RoutesName.dnaSuccessScreen);
       }
       else{
-        cubit.currentSet = cubit.currentSet+1;
-        context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
-        context.goNamed(RoutesName.dnaBreathingScreen);
+        context.read<DnaCubit>().playTimeToNextSet();
+      
+        await Future.delayed(const Duration(seconds: 2),() {
+          cubit.currentSet = cubit.currentSet+1;
+          // if(context.read<DnaCubit>().isTimeBreathingApproch){
+          //   context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
+          // }
+          context.pushReplacementNamed(RoutesName.dnaBreathingScreen);
+        },);
       }
     }
   }

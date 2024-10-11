@@ -16,12 +16,12 @@ class PyramidCubit extends Cubit<PyramidState> {
   String? speed ; //Standard, Fast, Slow
   bool jerryVoice = true;
   bool music = false;
-  bool chimes = false;
+  bool chimes = true;
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn);
   String choiceOfBreathHold = 'Breath in';
   int breathHoldIndex = 0;
   List<String> breathHoldList = ['Breath in', 'Breath out', 'Both'] ; 
-  int holdDuration = 10;
+  int holdDuration = 20;
   List<int> holdDurationList = [10, 20, 30, 40, 50, 60, -1] ;
 
   bool isReatartEnable = false;
@@ -33,9 +33,9 @@ class PyramidCubit extends Cubit<PyramidState> {
     speed = speedd;
     jerryVoice = true;
     music = false;
-    chimes = false;
+    chimes = true;
     // isReatartEnable = true ;
-    holdDuration = 10;
+    holdDuration = 20;
     saveInputCont.clear();
   
     emit(PyramidInitial());
@@ -83,12 +83,12 @@ class PyramidCubit extends Cubit<PyramidState> {
 
 
   void resetSettings(String stepp, String speedd){
-    jerryVoice = false;
+    jerryVoice = true;
     music = false;
-    chimes = false;
+    chimes = true;
 
     currentRound = 0;
-    holdDuration = 10;
+    holdDuration = 20;
     breathingTimeList.clear();
     holdBreathoutTimeList.clear();
     holdInbreathTimeList.clear();
@@ -143,7 +143,12 @@ class PyramidCubit extends Cubit<PyramidState> {
   void playCloseEyes() async {
     try {
       if(jerryVoice){
-        await closeEyePlayer.play(AssetSource('audio/close_eyes.mp3'), );
+        if(step == "4"){
+          await closeEyePlayer.play(AssetSource('audio/four_step_start.mp3'), );
+        }else{
+          await closeEyePlayer.play(AssetSource('audio/two_step_start.mp3'), );
+        }
+        
         Duration? duration = await closeEyePlayer.getDuration();
         waitingTime = duration!.inSeconds;
         emit(NavigateToWaitingScreen());
@@ -243,22 +248,39 @@ class PyramidCubit extends Cubit<PyramidState> {
     }
   }
 
-  void playJerry() async {
+  // void playJerry() async {
+  //   try {
+  //     if(jerryVoice){
+  //       //~ for speed purpose
+  //       jerryVoiceAssetFile = speed == "Standard" ? "audio/breath_standard.mp3" : (speed == "Fast" ? "audio/breath_fast.mp3" : "audio/breath_slow.mp3");
+      
+  //       await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
+
+  //       jerryVoicePlayer.onPlayerComplete.listen((event) {
+  //         // jerryVoicePlayer.seek(Duration.zero);
+  //         jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
+  //       });
+  //     }
+  //   } on Exception catch (e) {
+  //     if (kDebugMode) {
+  //       print("playJerry>> ${e.toString()}");
+  //     }
+  //   }
+  // }
+
+  playBreathing(String voice) async{
+    // jerryVoiceAssetFile = speed == "Standard" ? "audio/breath_standard.mp3" : (speed == "Fast" ? "audio/breath_fast.mp3" : "audio/breath_slow.mp3");
     try {
       if(jerryVoice){
-        //~ for speed purpose
-        jerryVoiceAssetFile = speed == "Standard" ? "audio/breath_standard.mp3" : (speed == "Fast" ? "audio/breath_fast.mp3" : "audio/breath_slow.mp3");
-      
-        await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
-
-        jerryVoicePlayer.onPlayerComplete.listen((event) {
-          // jerryVoicePlayer.seek(Duration.zero);
-          jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
-        });
+        //~ check motivation is playing or not
+        if(breathHoldPlayer.state != PlayerState.playing){
+          await jerryVoicePlayer.stop();
+          await jerryVoicePlayer.play(AssetSource(voice));
+        }
       }
-    } on Exception catch (e) {
+    } catch (e) {
       if (kDebugMode) {
-        print("playJerry>> ${e.toString()}");
+        print("playJerryBreathing>> ${e.toString()}");
       }
     }
   }
@@ -279,12 +301,12 @@ class PyramidCubit extends Cubit<PyramidState> {
   void resetJerryVoiceAndPLayAgain() async {
     try {
       if(jerryVoice){
-        //~ for speed purpose
-        jerryVoiceAssetFile = speed == "Standard" ? "audio/breath_standard.mp3" : (speed == "Fast" ? "audio/breath_fast.mp3" : "audio/breath_slow.mp3");
+        // //~ for speed purpose
+        // jerryVoiceAssetFile = speed == "Standard" ? "audio/breath_standard.mp3" : (speed == "Fast" ? "audio/breath_fast.mp3" : "audio/breath_slow.mp3");
       
-        // jerryVoicePlayer.seek(Duration.zero);
-        jerryVoicePlayer.stop();
-        await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
+        // // jerryVoicePlayer.seek(Duration.zero);
+        // jerryVoicePlayer.stop();
+        // await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -310,6 +332,34 @@ class PyramidCubit extends Cubit<PyramidState> {
     } on Exception catch (e) {
       if (kDebugMode) {
         print("playHold>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playHoldCountdown() async {
+    try {
+      if(jerryVoice){
+        breathHoldPlayer.stop();
+        await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playHoldCountdown>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playHoldMotivation() async {
+    try {
+      if(jerryVoice){
+        if(jerryVoicePlayer.state != PlayerState.playing) jerryVoicePlayer.stop();
+
+        breathHoldPlayer.stop();
+        await breathHoldPlayer.play(AssetSource('audio/motivation.mp3'));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playHoldMotivation>> ${e.toString()}");
       }
     }
   }

@@ -17,7 +17,7 @@ class PinealWaitingScreen extends StatelessWidget {
         context.read<PinealCubit>().currentSet = 1 ;
         context.read<PinealCubit>().stopCloseEyes();
         context.read<PinealCubit>().playChime();
-        context.read<PinealCubit>().playJerry();
+        // context.read<PinealCubit>().playJerry();
 
         context.pushReplacementNamed(RoutesName.pinealScreen);
       },

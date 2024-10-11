@@ -77,7 +77,7 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
   }
 
   void storeScreenTime() {
-    context.read<DnaCubit>().recoveryTimeList.add(_startTime);
+    context.read<DnaCubit>().recoveryTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
 
     if (kDebugMode) {
       print("Dna breath recovery Time: $getScreenTiming");
@@ -254,7 +254,7 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
     return "$minutesStr:$secondsStr";
   }
 
-  void navigate(DnaCubit cubit) {
+  void navigate(DnaCubit cubit) async{
     context.read<DnaCubit>().stopRecovery();
     
     if (cubit.currentSet == cubit.noOfSets) {
@@ -265,9 +265,15 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
 
       context.goNamed(RoutesName.dnaSuccessScreen);
     }else {
-      context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
-      cubit.currentSet = cubit.currentSet+1;
-      context.goNamed(RoutesName.dnaBreathingScreen);
+      context.read<DnaCubit>().playTimeToNextSet();
+      
+      await Future.delayed(const Duration(seconds: 2),() {
+        cubit.currentSet = cubit.currentSet+1;
+        // if(context.read<DnaCubit>().isTimeBreathingApproch){
+        //   context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
+        // }
+        context.goNamed(RoutesName.dnaBreathingScreen);
+      },);
     }
   }
 }

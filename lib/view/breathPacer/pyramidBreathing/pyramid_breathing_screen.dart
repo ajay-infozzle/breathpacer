@@ -71,12 +71,13 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
 
     _controller.addListener(() {
       if(_controller.status == AnimationStatus.forward && _animation.value > 0.98  && !hasIncreased){
-        if (kDebugMode) {
-          setState(() {
+        setState(() {
+          if(breathCount != 0 && breathCount != -1){
             breathOption = 'Breath In' ;
-          });
-          hasIncreased = true;
-        }
+            context.read<PyramidCubit>().playBreathing("audio/single_breath_in_standard.mp3");
+          }
+        });
+        hasIncreased = true;
       }
 
       // Check if the animation is shrinking and has passed a threshold (close to the minimum)
@@ -86,16 +87,19 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
         }
         
         // Decrease the breath count only once during the shrink phase
-        if (breathCount > 0) {
+        if (breathCount > -1) {
           setState(() {
             breathCount--;
             breathOption = 'Breath Out';
+            if(breathCount != -1){
+              context.read<PyramidCubit>().playBreathing("audio/single_breath_out_standard.mp3");
+            }
           });
           hasDecreased = true; 
         }
 
         // Stop the animation if the breath count reaches 0
-        if (breathCount == 0) {
+        if (breathCount == -1) {
           _controller.stop();
 
           storeScreenTime();
@@ -125,6 +129,11 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
         _startTime++;
+        if(_startTime % 15 == 0 && _startTime != checkBreathnumber(context) && breathCount!=3 && breathCount!=2 && breathCount!=1 && _startTime!=0 && _startTime!=1){
+          if(context.read<PyramidCubit>().speed == "Slow"){
+            context.read<PyramidCubit>().playHoldMotivation();
+          }
+        }
       });
     });
   }
@@ -166,8 +175,7 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
   }
 
   void storeScreenTime() {
-    context.read<PyramidCubit>().breathingTimeList.add(_startTime);
-
+    context.read<PyramidCubit>().breathingTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
     if (kDebugMode) {
       print("Stored Screen Time: $getScreenTiming");
     }
@@ -288,7 +296,7 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
             
                       SizedBox(height: height*0.05,),
                       
-                      breathCount == 0 ?
+                      breathCount == -1 ?
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: size*0.12),
                         height: size-2*(size*0.12),

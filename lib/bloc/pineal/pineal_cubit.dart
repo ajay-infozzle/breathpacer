@@ -18,10 +18,10 @@ class PinealCubit extends Cubit<PinealState> {
   bool recoveryBreath = false;
   bool jerryVoice = true;
   bool music = false;
-  bool chimes = false;
+  bool chimes = true;
   int recoveryBreathDuration = 20;
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.pinealSqeez);
-  int holdDuration = 10;
+  int holdDuration = 20;
   int breathingPeriod = 60;
   List<int> breathingDurationList = [30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600] ;
   List<int> holdDurationList = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 75, 90, 120, -1] ;
@@ -94,9 +94,9 @@ class PinealCubit extends Cubit<PinealState> {
 
 
   void resetSettings(){
-    jerryVoice = false;
+    jerryVoice = true;
     music = false;
-    chimes = false;
+    chimes = true;
     isFirstSet = true;
     durationOfSet = 120;
 
@@ -107,6 +107,11 @@ class PinealCubit extends Cubit<PinealState> {
 
     // Reset music player if active
     try {
+
+      if (closeEyePlayer.state == PlayerState.playing ) {
+        closeEyePlayer.stop();
+      }
+      
       if (musicPlayer.state == PlayerState.playing || musicPlayer.state == PlayerState.paused) {
         musicPlayer.stop();
       }
@@ -162,7 +167,7 @@ class PinealCubit extends Cubit<PinealState> {
   void playCloseEyes() async {
     try {
       if(jerryVoice){
-        await closeEyePlayer.play(AssetSource('audio/close_eyes_pineal.mp3'), );
+        await closeEyePlayer.play(AssetSource('audio/pineal_start.mp3'), );
         Duration? duration = await closeEyePlayer.getDuration();
         waitingTime = duration!.inSeconds;
         emit(NavigateToWaitingScreen());
@@ -283,6 +288,19 @@ class PinealCubit extends Cubit<PinealState> {
     }
   }
 
+  void playTimeToNextSet() async {
+    try {
+      if(jerryVoice){
+        jerryVoicePlayer.stop();
+        await jerryVoicePlayer.play(AssetSource('audio/pineal_start_next_set.mp3'));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playTimeToNextSet>> ${e.toString()}");
+      }
+    }
+  }
+
   void resetJerryVoiceAndPLayAgain() async {
     try {
       if(jerryVoice){
@@ -333,8 +351,8 @@ class PinealCubit extends Cubit<PinealState> {
         jerryVoicePlayer.pause();
         Duration? jerryCurrentVoiceDur = await jerryVoicePlayer.getCurrentPosition(); 
         int jerryCurrentVoice = jerryCurrentVoiceDur!.inSeconds ;
-        print("cntDown%6>>${cntDown%6}");
-        print("current_jerry>>$jerryCurrentVoice");
+        // print("cntDown%6>>${cntDown%6}");
+        // print("current_jerry>>$jerryCurrentVoice");
         
         // Duration? jerryTotalDur = await jerryVoicePlayer.getDuration(); 
         // int jerryTotalVoice = jerryTotalDur!.inSeconds ;
@@ -345,7 +363,7 @@ class PinealCubit extends Cubit<PinealState> {
         print("total_motivation>>$motivationVoice");
 
         motivationPlayer.onPlayerComplete.listen((event) {
-          print("jerry_seek>>${jerryCurrentVoice+motivationVoice+2}");
+          // print("jerry_seek>>${jerryCurrentVoice+motivationVoice+2}");
           jerryVoicePlayer.seek(Duration(seconds: (jerryCurrentVoice+motivationVoice+2) )); //move forward
           jerryVoicePlayer.resume();
         });
@@ -383,6 +401,34 @@ class PinealCubit extends Cubit<PinealState> {
     }
   }
 
+  void playHoldCountdown() async {
+    try {
+      if(jerryVoice){
+        breathHoldPlayer.stop();
+        await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playHoldCountdown>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playHoldMotivation() async {
+    try {
+      if(jerryVoice){
+        // if(jerryVoicePlayer.state != PlayerState.playing) jerryVoicePlayer.stop();
+
+        breathHoldPlayer.stop();
+        await breathHoldPlayer.play(AssetSource('audio/motivation.mp3'));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playHoldMotivation>> ${e.toString()}");
+      }
+    }
+  }
+
   void stopHold() async {
     try {
       if(jerryVoice){
@@ -403,6 +449,19 @@ class PinealCubit extends Cubit<PinealState> {
     } on Exception catch (e) {
       if (kDebugMode) {
         print("playRecovery>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playTimeToRecover() async {
+    try {
+      if(jerryVoice){
+        recoveryPlayer.stop();
+        await recoveryPlayer.play(AssetSource('audio/time_to_recover.mp3'));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playTimeToRecover>> ${e.toString()}");
       }
     }
   }

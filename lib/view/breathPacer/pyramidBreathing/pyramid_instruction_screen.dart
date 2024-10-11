@@ -111,7 +111,7 @@ class PyramidInstructionScreen extends StatelessWidget {
                           context.pushReplacementNamed(
                             RoutesName.pyramidSettingScreen,
                             extra:{
-                              "step" : subTitle.split(" ").first
+                              "step" : subTitle.split("-").first
                             }
                           );
                         }

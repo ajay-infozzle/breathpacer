@@ -77,7 +77,7 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
   }
 
   void storeScreenTime() {
-    context.read<FirebreathingCubit>().recoveryTimeList.add(_startTime);
+    context.read<FirebreathingCubit>().recoveryTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
 
     if (kDebugMode) {
       print("breath recovery Time: $getScreenTiming");
@@ -239,7 +239,7 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
     }
   }
 
-  void navigate(FirebreathingCubit cubit) {
+  void navigate(FirebreathingCubit cubit) async{
     if (cubit.currentSet == cubit.noOfSets) {
       context.read<FirebreathingCubit>().stopJerry();
       context.read<FirebreathingCubit>().stopRecovery();
@@ -250,9 +250,13 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
     }else {
       context.read<FirebreathingCubit>().stopJerry();
       context.read<FirebreathingCubit>().stopRecovery();
-      context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
-      cubit.currentSet = cubit.currentSet+1;
-      context.goNamed(RoutesName.fireBreathingScreen);
+      context.read<FirebreathingCubit>().playTimeToNextSet();
+
+      await Future.delayed(const Duration(seconds: 2), () {
+        context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
+        cubit.currentSet = cubit.currentSet+1;
+        context.goNamed(RoutesName.fireBreathingScreen);
+      },);
     }
   }
 

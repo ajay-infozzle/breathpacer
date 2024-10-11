@@ -59,7 +59,8 @@ class CustomDropDown extends StatelessWidget {
                 SizedBox(
                   width: size*0.15,
                   child: Text(
-                    isTime! ? (selected==-1 ? "Infinite" :getFormattedTime(selected)) :(isnumber!? '$selected' : '$selected set'),
+                    // isTime! ? (selected==-1 ? "Infinite" :getFormattedTime(selected)) :(isnumber!? '$selected' : '$selected set'),
+                    isTime! ? (selected==-1 ? "Infinite" :getFormattedTime(selected)) :(isnumber!? '$selected' : '$selected ${selected>1?"sets":"set"}'),
                     style: const TextStyle(color: Colors.white,),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -151,8 +152,10 @@ class CustomDropDown extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     isTime!
+                        // ? (value == -1 ? "Infinite" : getFormattedTime(value))
+                        // : (isnumber! ? '$value' : '$value set'),
                         ? (value == -1 ? "Infinite" : getFormattedTime(value))
-                        : (isnumber! ? '$value' : '$value set'),
+                        : (isnumber! ? '$value' : '$value ${value>1?"sets":"set"}'),
                     style: TextStyle(
                       color: AppTheme.colors.blueSlider,
                       fontWeight: value == selected ? FontWeight.bold : FontWeight.normal,

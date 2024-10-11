@@ -38,6 +38,13 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
         _startTime++;
+
+        //~ to start motivation
+        if(context.read<FirebreathingCubit>().holdDuration == -1){
+          if(_startTime % 10 == 0 && _startTime > 10){
+            context.read<FirebreathingCubit>().playHoldMotivation();
+          }
+        }
       });
     });
   }
@@ -80,7 +87,7 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
   }
 
   void storeScreenTime() {
-    context.read<FirebreathingCubit>().holdTimeList.add(_startTime);
+    context.read<FirebreathingCubit>().holdTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
 
     if (kDebugMode) {
       print("breath hold Time: $getScreenTiming");
@@ -276,13 +283,16 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
     }
   }
 
-  void navigate(FirebreathingCubit cubit) {
+  void navigate(FirebreathingCubit cubit) async{
     if (cubit.currentSet == cubit.noOfSets) {
       if (cubit.recoveryBreath){
         context.read<FirebreathingCubit>().stopJerry();
         context.read<FirebreathingCubit>().stopHold();
-        context.read<FirebreathingCubit>().playRecovery();
-        context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+        
+        await Future.delayed(const Duration(seconds: 2), () {
+          context.read<FirebreathingCubit>().playRecovery();
+          context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+        },);
       }
       else{
         context.read<FirebreathingCubit>().stopJerry();
@@ -294,13 +304,21 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
       }
     }else if (cubit.recoveryBreath) {
       context.read<FirebreathingCubit>().stopHold();
-      context.read<FirebreathingCubit>().playRecovery();
-      context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+      context.read<FirebreathingCubit>().playTimeToRecover();
+
+      await Future.delayed(const Duration(seconds: 2), () {
+        context.read<FirebreathingCubit>().playRecovery();
+        context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+      },);
     } else {
       context.read<FirebreathingCubit>().stopHold();
-      context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
-      cubit.currentSet = cubit.currentSet+1;
-      context.goNamed(RoutesName.fireBreathingScreen);
+      context.read<FirebreathingCubit>().playTimeToNextSet();
+
+      await Future.delayed(const Duration(seconds: 2), () {
+        context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
+        cubit.currentSet = cubit.currentSet+1;
+        context.goNamed(RoutesName.fireBreathingScreen);
+      },);
     }
   }
   
@@ -310,6 +328,18 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
     
     String minutesStr = minutes.toString().padLeft(2, '0'); 
     String secondsStr = seconds.toString().padLeft(2, '0'); 
+
+    //~ to start motivation
+    if(context.read<FirebreathingCubit>().holdDuration >= 30){
+      if(time % 15 == 0 && time.toDouble() != context.read<FirebreathingCubit>().holdDuration && (context.read<FirebreathingCubit>().holdDuration - time) > 10 && int.parse(secondsStr) > 6){
+        context.read<FirebreathingCubit>().playHoldMotivation();
+      }
+    }
+
+    //~ to start 3_2_1 voice
+    if(secondsStr == "06"){
+      context.read<FirebreathingCubit>().playHoldCountdown();
+    }
     
     return "$minutesStr:$secondsStr";
   }

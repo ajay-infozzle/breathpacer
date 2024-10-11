@@ -63,11 +63,13 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
       if (_isPaused) {
         cubit.pauseAudio(cubit.musicPlayer, cubit.music);
         cubit.pauseAudio(cubit.recoveryPlayer, cubit.jerryVoice);
+        cubit.pauseAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
 
         recoverCountdownController.pause();        
       } else {
         cubit.resumeAudio(cubit.musicPlayer, cubit.music);
         cubit.resumeAudio(cubit.recoveryPlayer, cubit.jerryVoice);
+        cubit.resumeAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
 
         recoverCountdownController.resume();         
       }
@@ -304,17 +306,21 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
     }
   }
   
-  void navigate(PinealCubit cubit) {
+  void navigate(PinealCubit cubit) async{
     context.read<PinealCubit>().stopRecovery();
     if(cubit.remainingBreathTime > 0){
-      context.read<PinealCubit>().resetJerryVoiceAndPLayAgain();
-      cubit.currentSet = cubit.currentSet+1;
-      context.goNamed(RoutesName.pinealScreen);
+      context.read<PinealCubit>().playTimeToNextSet();
+
+      await Future.delayed(Duration(seconds: cubit.jerryVoice?9:0), () {
+        // context.read<PinealCubit>().resetJerryVoiceAndPLayAgain();
+        cubit.currentSet = cubit.currentSet+1;
+        context.goNamed(RoutesName.pinealScreen);
+      },);
     }else{
-      context.read<PinealCubit>().stopMusic();
-      context.read<PinealCubit>().stopJerry();
-      context.read<PinealCubit>().playRelax();
-      context.read<PinealCubit>().playChime();
+      cubit.stopMusic();
+      cubit.stopJerry();
+      cubit.playRelax();
+      cubit.playChime();
       context.goNamed(RoutesName.pinealSuccessScreen);
     }
   }

@@ -18,14 +18,14 @@ class DnaCubit extends Cubit<DnaState> {
 
   bool isTimeBreathingApproch = false;
   int noOfBreath = 10;
-  int durationOfSet = 60;
+  int durationOfSet = 30;
   int recoveryBreathDuration = 10;
-  int holdDuration = 10;
+  int holdDuration = 20;
   bool recoveryBreath = false;
   bool holdingPeriod = false;
   bool jerryVoice = true;
   bool music = false;
-  bool chimes = false;
+  bool chimes = true;
   bool pineal = false;
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn); //~ temporary
   String choiceOfBreathHold = 'Breath in';
@@ -48,9 +48,9 @@ class DnaCubit extends Cubit<DnaState> {
     currentSet = 0;
     breathHoldIndex = 0;
     durationOfSet = 60;
-    jerryVoice = false;
+    jerryVoice = true;
     music = false;
-    chimes = false;
+    chimes = true;
     pineal = false;
     recoveryBreath = false;
     isReatartEnable = true ;
@@ -150,10 +150,10 @@ class DnaCubit extends Cubit<DnaState> {
 
 
   void resetSettings(){
-    jerryVoice = false;
+    jerryVoice = true;
     pineal = false;
     music = false;
-    chimes = false;
+    chimes = true;
     durationOfSet = 60;
 
     currentSet = 0;
@@ -165,6 +165,11 @@ class DnaCubit extends Cubit<DnaState> {
 
     // Reset music player if active
     try {
+
+      if (closeEyePlayer.state == PlayerState.playing ) {
+        closeEyePlayer.stop();
+      }
+
       if (musicPlayer.state == PlayerState.playing || musicPlayer.state == PlayerState.paused) {
         musicPlayer.stop();
       }
@@ -217,7 +222,7 @@ class DnaCubit extends Cubit<DnaState> {
   void playCloseEyes() async {
     try {
       if(jerryVoice){
-        await closeEyePlayer.play(AssetSource('audio/close_eyes.mp3'), );
+        await closeEyePlayer.play(AssetSource('audio/dna_start.mp3'), );
         Duration? duration = await closeEyePlayer.getDuration();
         waitingTime = duration!.inSeconds;
         emit(NavigateToWaitingScreen());
@@ -301,7 +306,8 @@ class DnaCubit extends Cubit<DnaState> {
     try {
       if(jerryVoice){
         //~ for pineal purpose if selected
-        jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.pineal) : (speed == "Standard" ? "audio/breath_standard.mp3" : (speed == "Fast" ? "audio/breath_fast.mp3" : "audio/breath_slow.mp3"));
+        // jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.pineal) : (speed == "Standard" ? "audio/breath_standard.mp3" : (speed == "Fast" ? "audio/breath_fast.mp3" : "audio/breath_slow.mp3"));
+        jerryVoiceAssetFile = "audio/dna_breathing.mp3";
       
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
 
@@ -312,6 +318,22 @@ class DnaCubit extends Cubit<DnaState> {
     } on Exception catch (e) {
       if (kDebugMode) {
         print("playJerry>> ${e.toString()}");
+      }
+    }
+  }
+
+  playBreathing(String voice) async{
+    try {
+      if(jerryVoice){
+        //~ check motivation is playing or not
+        if(breathHoldPlayer.state != PlayerState.playing){
+          // await jerryVoicePlayer.stop();
+          await jerryVoicePlayer.play(AssetSource(voice));
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("playJerryBreathing>> ${e.toString()}");
       }
     }
   }
@@ -328,12 +350,26 @@ class DnaCubit extends Cubit<DnaState> {
     }
   }
 
+  void playTimeToNextSet() async {
+    try {
+      if(jerryVoice){
+        jerryVoicePlayer.stop();
+        await jerryVoicePlayer.play(AssetSource('audio/time_to_next_set.mp3'));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playTimeToNextSet>> ${e.toString()}");
+      }
+    }
+  }
+
   void resetJerryVoiceAndPLayAgain() async {
     try {
       if(jerryVoice){
         //~ for pineal purpose if enable
-        jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.pineal) : (speed == "Standard" ? "audio/breath_standard.mp3" : (speed == "Fast" ? "audio/breath_fast.mp3" : "audio/breath_slow.mp3")) ;
-  
+        // jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.pineal) : (speed == "Standard" ? "audio/breath_standard.mp3" : (speed == "Fast" ? "audio/breath_fast.mp3" : "audio/breath_slow.mp3")) ;
+        jerryVoiceAssetFile = "audio/dna_breathing.mp3";
+        
         jerryVoicePlayer.stop();
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
       }
@@ -365,6 +401,60 @@ class DnaCubit extends Cubit<DnaState> {
     }
   }
 
+  void playHoldCountdown() async {
+    try {
+      if(jerryVoice){
+        breathHoldPlayer.stop();
+        await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playHoldCountdown>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playTimeToHold() async {
+    try {
+      if(jerryVoice){
+        breathHoldPlayer.stop();
+        await breathHoldPlayer.play(AssetSource('audio/time_to_hold.mp3'));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playTimeToHold>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playHoldMotivation() async {
+    try {
+      if(jerryVoice){
+        if(jerryVoicePlayer.state == PlayerState.playing) {
+          if(!isTimeBreathingApproch){
+            jerryVoicePlayer.stop();
+          }
+          else{
+            jerryVoicePlayer.pause();
+          }
+        }
+
+        breathHoldPlayer.stop();
+        await breathHoldPlayer.play(AssetSource('audio/motivation.mp3'));
+
+        breathHoldPlayer.onPlayerComplete.listen((event) {
+          if(isTimeBreathingApproch){
+            jerryVoicePlayer.resume();
+          }
+        });
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playHoldMotivation>> ${e.toString()}");
+      }
+    }
+  }
+
   void stopHold() async {
     try {
       if(jerryVoice){
@@ -385,6 +475,19 @@ class DnaCubit extends Cubit<DnaState> {
     } on Exception catch (e) {
       if (kDebugMode) {
         print("playRecovery>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playTimeToRecover() async {
+    try {
+      if(jerryVoice){
+        recoveryPlayer.stop();
+        await recoveryPlayer.play(AssetSource('audio/time_to_recover.mp3'));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playTimeToRecover>> ${e.toString()}");
       }
     }
   }

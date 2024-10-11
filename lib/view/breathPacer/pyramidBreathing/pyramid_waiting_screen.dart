@@ -22,7 +22,7 @@ class _PyramidWaitingScreenState extends State<PyramidWaitingScreen> {
         context.read<PyramidCubit>().currentRound = 1 ;
         context.read<PyramidCubit>().stopCloseEyes();
         context.read<PyramidCubit>().playChime();
-        context.read<PyramidCubit>().playJerry();
+        // context.read<PyramidCubit>().playJerry();
 
         context.pushReplacementNamed(RoutesName.pyramidBreathingScreen);
       },

@@ -134,7 +134,7 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
   }
 
   void storeScreenTime() {
-    context.read<FirebreathingCubit>().breathingTimeList.add(_startTime);
+    context.read<FirebreathingCubit>().breathingTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
 
     if (kDebugMode) {
       print("Stored breathing Screen Time: $getScreenTiming");
@@ -349,31 +349,53 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
     }
   }
 
-  void navigate(FirebreathingCubit cubit) {
+  void navigate(FirebreathingCubit cubit) async{
     if (cubit.currentSet == cubit.noOfSets) {
-      if(cubit.holdingPeriod){
-        context.read<FirebreathingCubit>().playHold();
-        context.goNamed(RoutesName.fireBreathingHoldScreen);
+      if(cubit.holdingPeriod){        
+        context.read<FirebreathingCubit>().playTimeToHold();
+
+        await Future.delayed(const Duration(seconds: 2), () {
+          context.read<FirebreathingCubit>().playHold();
+          context.goNamed(RoutesName.fireBreathingHoldScreen);
+        },);
       }
       else if (cubit.recoveryBreath){
-        context.read<FirebreathingCubit>().playRecovery();
-        context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+        context.read<FirebreathingCubit>().playTimeToRecover();
+        
+        await Future.delayed(const Duration(seconds: 2), () {
+          context.read<FirebreathingCubit>().playRecovery();
+          context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+        },);
       }
-      else{
-        context.read<FirebreathingCubit>().playChime();
-        context.read<FirebreathingCubit>().playRelax();
-        context.goNamed(RoutesName.fireBreathingSuccessScreen);
+      else{        
+        await Future.delayed(const Duration(seconds: 2), () {
+          context.read<FirebreathingCubit>().playChime();
+          context.read<FirebreathingCubit>().playRelax();
+          context.goNamed(RoutesName.fireBreathingSuccessScreen);
+        },);
       }
     } else if (cubit.holdingPeriod) {
-      context.read<FirebreathingCubit>().playHold();
-      context.goNamed(RoutesName.fireBreathingHoldScreen);
+      context.read<FirebreathingCubit>().playTimeToHold();
+        
+      await Future.delayed(const Duration(seconds: 2), () {
+        context.read<FirebreathingCubit>().playHold();
+        context.goNamed(RoutesName.fireBreathingHoldScreen);
+      },);
     } else if (cubit.recoveryBreath) {
-      context.read<FirebreathingCubit>().playRecovery();
-      context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+      context.read<FirebreathingCubit>().playTimeToRecover();
+        
+      await Future.delayed(const Duration(seconds: 2), () {
+        context.read<FirebreathingCubit>().playRecovery();
+        context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+      },);
     } else {
-      context.read<FirebreathingCubit>().playJerry();
-      cubit.currentSet = cubit.currentSet+1;
-      context.pushReplacementNamed(RoutesName.fireBreathingScreen);
+      context.read<FirebreathingCubit>().playTimeToNextSet();
+
+      await Future.delayed(const Duration(seconds: 2), () {
+        context.read<FirebreathingCubit>().playJerry();
+        cubit.currentSet = cubit.currentSet+1;
+        context.pushReplacementNamed(RoutesName.fireBreathingScreen);
+      },);
     }
   }
 }

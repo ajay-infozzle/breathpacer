@@ -79,10 +79,10 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
 
   void storeScreenTime() {
     if(context.read<DnaCubit>().breathHoldIndex == 0 || context.read<DnaCubit>().breathHoldIndex == 2){
-      context.read<DnaCubit>().holdInbreathTimeList.add(_startTime);
+      context.read<DnaCubit>().holdInbreathTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
     }
     else{
-      context.read<DnaCubit>().holdBreathoutTimeList.add(_startTime);
+      context.read<DnaCubit>().holdBreathoutTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
     }
 
     if (kDebugMode) {
@@ -277,6 +277,18 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
     
     String minutesStr = minutes.toString().padLeft(2, '0'); 
     String secondsStr = seconds.toString().padLeft(2, '0'); 
+
+    //~ to start motivation
+    if(context.read<DnaCubit>().holdDuration >= 30){
+      if(time % 15 == 0 && time.toDouble() != context.read<DnaCubit>().holdDuration && (context.read<DnaCubit>().holdDuration - time) > 10 && int.parse(secondsStr) > 6){
+        context.read<DnaCubit>().playHoldMotivation();
+      }
+    }
+
+    //~ to start 3_2_1 voice
+    if(secondsStr == "06"){
+      context.read<DnaCubit>().playHoldCountdown();
+    }
     
     return "$minutesStr:$secondsStr";
   }
@@ -298,7 +310,7 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
     }
   }
 
-  void navigate(DnaCubit cubit) {
+  void navigate(DnaCubit cubit) async{
     if(cubit.choiceOfBreathHold == "Both" && cubit.breathHoldIndex == 0){
       cubit.breathHoldIndex = 1;
       context.read<DnaCubit>().stopHold();
@@ -309,16 +321,26 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
     else{
       context.read<DnaCubit>().stopHold();
       if(cubit.recoveryBreath){
-        context.read<DnaCubit>().playRecovery();
-        context.goNamed(RoutesName.dnaRecoveryScreen);
+        context.read<DnaCubit>().playTimeToRecover();
+      
+        await Future.delayed(const Duration(seconds: 2),() {
+          context.read<DnaCubit>().playRecovery();
+          context.goNamed(RoutesName.dnaRecoveryScreen);
+        },);
       }else{
         if(cubit.noOfSets == cubit.currentSet ){
           context.read<DnaCubit>().playRelax();
           context.goNamed(RoutesName.dnaSuccessScreen);
         }else{
-          context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
-          cubit.currentSet = cubit.currentSet+1 ;
-          context.goNamed(RoutesName.dnaBreathingScreen);
+          context.read<DnaCubit>().playTimeToNextSet();
+      
+          await Future.delayed(const Duration(seconds: 2),() {
+            cubit.currentSet = cubit.currentSet+1;
+            // if(context.read<DnaCubit>().isTimeBreathingApproch){
+            //   context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
+            // }
+            context.goNamed(RoutesName.dnaBreathingScreen);
+          },);
         }
       }
     }

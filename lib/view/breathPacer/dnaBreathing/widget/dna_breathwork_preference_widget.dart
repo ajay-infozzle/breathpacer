@@ -145,18 +145,18 @@ class DnaBreathWorkPreferenceWidget extends StatelessWidget {
         divider(),
 
 
-        ResultContainerSectionWidget(
-          title: "Pineal Gland:",
-          content: context.read<DnaCubit>().pineal ?"Yes" : "No",
-          iconPath: "assets/images/pineal_1.png",
-          iconSize: 25.0,
-          showIcon: true,
-          showContent: true,
-          containerColor: Colors.white,
-          textColor: Colors.black.withOpacity(.7),
-          iconColor: const Color(0xffFE60D4),
-        ),
-        divider(),
+        // ResultContainerSectionWidget(
+        //   title: "Pineal Gland:",
+        //   content: context.read<DnaCubit>().pineal ?"Yes" : "No",
+        //   iconPath: "assets/images/pineal_1.png",
+        //   iconSize: 25.0,
+        //   showIcon: true,
+        //   showContent: true,
+        //   containerColor: Colors.white,
+        //   textColor: Colors.black.withOpacity(.7),
+        //   iconColor: const Color(0xffFE60D4),
+        // ),
+        // divider(),
 
       ],
     );
