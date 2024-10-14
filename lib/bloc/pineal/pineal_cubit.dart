@@ -508,6 +508,11 @@ class PinealCubit extends Cubit<PinealState> {
   List<PinealBreathworkModel> savedBreathwork = [];
 
   void onSaveClick() async{
+    if(saveInputCont.text.isEmpty){
+      emit(PinealToggleSave());
+      return ;
+    }
+
     var box = await Hive.openBox('pinealBreathworkBox');
 
     PinealBreathworkModel breathwork = PinealBreathworkModel(

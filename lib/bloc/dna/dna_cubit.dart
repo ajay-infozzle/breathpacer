@@ -534,6 +534,12 @@ class DnaCubit extends Cubit<DnaState> {
   List<DnaBreathworkModel> savedBreathwork = [];
 
   void onSaveClick() async{
+    if(saveInputCont.text.isEmpty){
+      emit(DnaToggleSave());
+      return ;
+    }
+
+
     var box = await Hive.openBox('DnaBreathworkBox');
 
     DnaBreathworkModel breathwork = DnaBreathworkModel(

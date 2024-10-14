@@ -492,6 +492,12 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   List<FireBreathworkModel> savedBreathwork = [];
 
   void onSaveClick() async{
+    if(saveInputCont.text.isEmpty){
+      emit(FirebreathingToggleSave());
+      return ;
+    }
+
+
     var box = await Hive.openBox('fireBreathworkBox');
 
     FireBreathworkModel breathwork = FireBreathworkModel(
@@ -514,6 +520,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
    
     savedBreathwork.add(breathwork);
     isSaveDialogOn = false;
+    saveInputCont.clear();
 
     emit(FirebreathingToggleSave());
   }

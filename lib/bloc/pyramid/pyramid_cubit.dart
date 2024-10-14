@@ -402,6 +402,12 @@ class PyramidCubit extends Cubit<PyramidState> {
   List<PyramidBreathworkModel> savedBreathwork = [];
 
   void onSaveClick() async{
+    if(saveInputCont.text.isEmpty){
+      emit(PyramidToggleSave());
+      return ;
+    }
+
+
     var box = await Hive.openBox('pyramidBreathworkBox');
 
     PyramidBreathworkModel breathwork = PyramidBreathworkModel(
@@ -421,6 +427,7 @@ class PyramidCubit extends Cubit<PyramidState> {
    
     savedBreathwork.add(breathwork);
     isSaveDialogOn = false;
+    saveInputCont.clear();
 
     emit(PyramidToggleSave());
   }
