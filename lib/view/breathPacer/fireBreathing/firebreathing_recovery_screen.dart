@@ -23,6 +23,7 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
   late Timer _timer;
   int _startTime = 0;
   bool _isPaused = false;
+  bool isAlreadyTapped = false;
 
   @override
   void initState() {
@@ -106,8 +107,11 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
           ),
           child: GestureDetector(
             onTap: () {
-              storeScreenTime();
-              navigate(context.read<FirebreathingCubit>());
+              if(!isAlreadyTapped) {
+                isAlreadyTapped = true;
+                storeScreenTime();
+                navigate(context.read<FirebreathingCubit>());
+              }
             },
             child: Column(
               children: [
@@ -118,6 +122,7 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
+                      togglePauseResume();
                       context.read<FirebreathingCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);

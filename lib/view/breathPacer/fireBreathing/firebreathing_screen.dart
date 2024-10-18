@@ -27,6 +27,7 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
   int _startTime = 0;
 
   bool _isPaused = false;
+  bool isAlreadyTapped = false;
 
   @override
   void initState() {
@@ -164,12 +165,15 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
           ),
           child: GestureDetector(
             onTap: () {
-              countdownController.pause();
-              context.read<FirebreathingCubit>().stopJerry();
+              if(!isAlreadyTapped){
+                isAlreadyTapped = true;
+                countdownController.pause();
+                context.read<FirebreathingCubit>().stopJerry();
 
-              storeScreenTime();
+                storeScreenTime();
 
-              navigate(context.read<FirebreathingCubit>());
+                navigate(context.read<FirebreathingCubit>());
+              }
             },
             child: Column(
               children: [
@@ -180,6 +184,7 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
+                      togglePauseResume();
                       context.read<FirebreathingCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);

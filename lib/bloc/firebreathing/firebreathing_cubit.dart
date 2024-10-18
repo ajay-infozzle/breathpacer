@@ -20,7 +20,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   bool holdingPeriod = false;
   int holdDuration = 20;
   bool jerryVoice = true;
-  bool music = false;
+  bool music = true;
   bool chimes = true;
   bool pineal = false;
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.fireBreathing); //~ temporary
@@ -42,7 +42,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     currentSet = 0;
     durationOfSets = 30;
     jerryVoice = false;
-    music = false;
+    music = true;
     chimes = true;
     pineal = false;
     recoveryBreath = false;
@@ -134,7 +134,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   void resetSettings(){
     jerryVoice = true;
     pineal = false;
-    music = false;
+    music = true;
     chimes = true;
 
     currentSet = 0;
@@ -296,9 +296,9 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
       
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
 
-        jerryVoicePlayer.onPlayerComplete.listen((event) {
-          jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
-        });
+        // jerryVoicePlayer.onPlayerComplete.listen((event) {
+        //   jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
+        // });
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -324,6 +324,9 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
       if(jerryVoice){
         jerryVoicePlayer.stop();
         await jerryVoicePlayer.play(AssetSource('audio/time_to_next_set.mp3'));
+      }
+      else{
+        playChime();
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -387,7 +390,11 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     try {
       if(jerryVoice){
         breathHoldPlayer.stop();
-        await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+        if(holdDuration == 10){
+          await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
+        }else{
+          await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+        }
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -401,6 +408,9 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
       if(jerryVoice){
         breathHoldPlayer.stop();
         await breathHoldPlayer.play(AssetSource('audio/time_to_hold.mp3'));
+      }
+      else{
+        playChime();
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -442,6 +452,9 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
       if(jerryVoice){
         recoveryPlayer.stop();
         await recoveryPlayer.play(AssetSource('audio/time_to_recover.mp3'));
+      }
+      else{
+        playChime();
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -510,7 +523,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
       music: music,
       chimes: chimes,
       pineal: pineal,
-      choiceOfBreathHold: breathHoldList[breathHoldIndex],
+      choiceOfBreathHold: choiceOfBreathHold,
       breathingTimeList: breathingTimeList,
       holdTimeList: holdTimeList,
       recoveryTimeList: recoveryTimeList

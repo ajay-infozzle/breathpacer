@@ -15,12 +15,12 @@ class PyramidCubit extends Cubit<PyramidState> {
   String? step ;
   String? speed ; //Standard, Fast, Slow
   bool jerryVoice = true;
-  bool music = false;
+  bool music = true;
   bool chimes = true;
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn);
-  String choiceOfBreathHold = 'Breath in';
+  String choiceOfBreathHold = 'Breathe in';
   int breathHoldIndex = 0;
-  List<String> breathHoldList = ['Breath in', 'Breath out', 'Both'] ; 
+  List<String> breathHoldList = ['Breathe in', 'Breathe out', 'Both'] ; 
   int holdDuration = 20;
   List<int> holdDurationList = [10, 20, 30, 40, 50, 60, -1] ;
 
@@ -32,7 +32,7 @@ class PyramidCubit extends Cubit<PyramidState> {
     step = stepp;
     speed = speedd;
     jerryVoice = true;
-    music = false;
+    music = true;
     chimes = true;
     // isReatartEnable = true ;
     holdDuration = 20;
@@ -84,7 +84,7 @@ class PyramidCubit extends Cubit<PyramidState> {
 
   void resetSettings(String stepp, String speedd){
     jerryVoice = true;
-    music = false;
+    music = true;
     chimes = true;
 
     currentRound = 0;
@@ -298,6 +298,22 @@ class PyramidCubit extends Cubit<PyramidState> {
     }
   }
 
+  void playTimeToNextSet() async {
+    try {
+      if(jerryVoice){
+        jerryVoicePlayer.stop();
+        await jerryVoicePlayer.play(AssetSource('audio/time_to_next_set.mp3'));
+      }
+      else{
+        playChime();
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playTimeToNextSet>> ${e.toString()}");
+      }
+    }
+  }
+
   void resetJerryVoiceAndPLayAgain() async {
     try {
       if(jerryVoice){
@@ -340,11 +356,31 @@ class PyramidCubit extends Cubit<PyramidState> {
     try {
       if(jerryVoice){
         breathHoldPlayer.stop();
-        await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+        if(holdDuration == 10){
+          await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
+        }else{
+          await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+        }
       }
     } on Exception catch (e) {
       if (kDebugMode) {
         print("playHoldCountdown>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playTimeToHold() async {
+    try {
+      if(jerryVoice){
+        breathHoldPlayer.stop();
+        await breathHoldPlayer.play(AssetSource('audio/time_to_hold.mp3'));
+      }
+      else{
+        playChime();
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playTimeToHold>> ${e.toString()}");
       }
     }
   }
@@ -417,7 +453,7 @@ class PyramidCubit extends Cubit<PyramidState> {
       jerryVoice: jerryVoice,
       music: music,
       chimes: chimes,
-      choiceOfBreathHold: breathHoldList[breathHoldIndex],
+      choiceOfBreathHold: choiceOfBreathHold,
       breathingTimeList: breathingTimeList,
       holdBreathInTimeList: holdInbreathTimeList,
       holdBreathOutTimeList: holdBreathoutTimeList

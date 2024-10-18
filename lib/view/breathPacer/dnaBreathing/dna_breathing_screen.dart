@@ -33,6 +33,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
   int _startTime = 0;
   String breathOption = 'Breath In' ;
   bool _isPaused = false;
+  bool isAlreadyTapped = false;
 
   @override
   void initState() {
@@ -87,7 +88,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
         if(isTimeBreathingApproch){
           setState(() {
             if(!countdownController.isCompleted!){
-              breathOption = 'Breath In' ;
+              breathOption = 'Breathe In' ;
               context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
             }
           });
@@ -96,7 +97,14 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
         else{
           setState(() {
             if(breathCount != 0 && breathCount != -1){
-              breathOption = 'Breath In' ;
+              breathOption = 'Breathe In' ;
+
+              // if(_startTime % 15 == 0 && (_startTime != context.read<DnaCubit>().noOfBreath) && breathCount!=3 && breathCount!=2 && breathCount!=1 && _startTime!=0 && _startTime!=1){
+              //   context.read<DnaCubit>().playHoldMotivation();
+              // }else{
+              //   context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
+              // }
+
               context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
             }
           });
@@ -118,7 +126,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
             navigate(context.read<DnaCubit>());
           }else{
             setState(() {
-              breathOption = 'Breath Out';
+              breathOption = 'Breathe Out';
               context.read<DnaCubit>().playBreathing("audio/single_breath_out_standard.mp3");
             });
             hasDecreased = true;
@@ -127,8 +135,14 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
           if (breathCount > -1) {
             setState(() {
               breathCount--;
-              breathOption = 'Breath Out';
+              breathOption = 'Breathe Out';
               if(breathCount != -1){
+                // if(_startTime % 15 == 0 && (_startTime != context.read<DnaCubit>().noOfBreath) && breathCount!=3 && breathCount!=2 && breathCount!=1 && _startTime!=0 && _startTime!=1){
+                //   context.read<DnaCubit>().playHoldMotivation();
+                // }else{
+                //   context.read<DnaCubit>().playBreathing("audio/single_breath_out_standard.mp3");
+                // }
+
                 context.read<DnaCubit>().playBreathing("audio/single_breath_out_standard.mp3");
               }
             });
@@ -168,11 +182,11 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
       setState(() {
         _startTime++;
 
-        if(_startTime % 15 == 0 && (_startTime != context.read<DnaCubit>().noOfBreath || _startTime!=context.read<DnaCubit>().durationOfSet) && breathCount!=3 && breathCount!=2 && breathCount!=1 && _startTime!=0 && _startTime!=1){
-          if(!context.read<DnaCubit>().isTimeBreathingApproch){
-            context.read<DnaCubit>().playHoldMotivation();
-          }
-        }
+        // if(_startTime % 15 == 0 && (_startTime != context.read<DnaCubit>().noOfBreath || _startTime!=context.read<DnaCubit>().durationOfSet) && breathCount!=3 && breathCount!=2 && breathCount!=1 && _startTime!=0 && _startTime!=1){
+        //   if(!context.read<DnaCubit>().isTimeBreathingApproch){
+        //     context.read<DnaCubit>().playHoldMotivation();
+        //   }
+        // }
       });
     });
   }
@@ -262,12 +276,15 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
           ),
           child: GestureDetector(
             onTap: () {
-              storeScreenTime();
-              if(context.read<DnaCubit>().isTimeBreathingApproch){
-                countdownController.pause();
-              }
+              if(!isAlreadyTapped){
+                isAlreadyTapped = true;
+                storeScreenTime();
+                if(context.read<DnaCubit>().isTimeBreathingApproch){
+                  countdownController.pause();
+                }
 
-              navigate(context.read<DnaCubit>());
+                navigate(context.read<DnaCubit>());
+              }
             },
             child: Column(
               children: [
@@ -278,6 +295,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
+                      togglePauseResume();
                       context.read<DnaCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);
@@ -577,6 +595,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
     else{
       if(cubit.noOfSets == cubit.currentSet){
         context.read<DnaCubit>().playChime();
+        context.read<DnaCubit>().stopMusic();
         context.goNamed(RoutesName.dnaSuccessScreen);
       }
       else{

@@ -22,6 +22,7 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
   late CountdownController countdownController;
   int _startTime = 0;
   bool _isPaused = false;
+  bool isAlreadyTapped = false;
 
   @override
   void initState() {
@@ -112,12 +113,16 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
           ),
           child: GestureDetector(
             onTap: () {
-              storeScreenTime();
+              if(!isAlreadyTapped){
+                isAlreadyTapped = true;
+              
+                storeScreenTime();
 
-              if(context.read<DnaCubit>().holdDuration != -1){
-                countdownController.pause();
+                if(context.read<DnaCubit>().holdDuration != -1){
+                  countdownController.pause();
+                }
+                navigate(context.read<DnaCubit>());
               }
-              navigate(context.read<DnaCubit>());
             },
             child: Column(
               children: [
@@ -128,6 +133,7 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
+                      togglePauseResume();
                       context.read<DnaCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);
@@ -286,7 +292,10 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
     }
 
     //~ to start 3_2_1 voice
-    if(secondsStr == "06"){
+    if(secondsStr == "06" && context.read<DnaCubit>().holdDuration != 10){
+      context.read<DnaCubit>().playHoldCountdown();
+    }
+    if(secondsStr == "03" && context.read<DnaCubit>().holdDuration == 10){
       context.read<DnaCubit>().playHoldCountdown();
     }
     

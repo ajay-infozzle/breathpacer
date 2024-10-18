@@ -23,6 +23,7 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
   late Timer _timer;
   int _startTime = 0;
   bool _isPaused = false;
+  bool isAlreadyTapped = false;
 
   @override
   void initState() {
@@ -116,9 +117,11 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
           ),
           child: GestureDetector(
             onTap: () {
-              storeScreenTime();
-
-              navigate(context.read<FirebreathingCubit>());
+              if(!isAlreadyTapped) {
+                isAlreadyTapped = true;
+                storeScreenTime();
+                navigate(context.read<FirebreathingCubit>());
+              }
             },
             child: Column(
               children: [
@@ -129,6 +132,7 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
+                      togglePauseResume();
                       context.read<FirebreathingCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);
@@ -337,7 +341,10 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
     }
 
     //~ to start 3_2_1 voice
-    if(secondsStr == "06"){
+    if(secondsStr == "06" && context.read<FirebreathingCubit>().holdDuration != 10){
+      context.read<FirebreathingCubit>().playHoldCountdown();
+    }
+    if(secondsStr == "03" && context.read<FirebreathingCubit>().holdDuration == 10){
       context.read<FirebreathingCubit>().playHoldCountdown();
     }
     

@@ -214,9 +214,7 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen>
                                   choicesList:
                                       context.read<PyramidCubit>().breathHoldList,
                                   onUpdateChoiceIndex: (int index) {
-                                    context
-                                        .read<PyramidCubit>()
-                                        .toggleBreathHold(index);
+                                    context.read<PyramidCubit>().toggleBreathHold(index);
                                   },
                                   onUpdateVoiceOver: (JerryVoiceEnum audio) {
                                     context

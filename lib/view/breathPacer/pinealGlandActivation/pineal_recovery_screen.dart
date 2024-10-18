@@ -23,6 +23,7 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
   // late Timer _timer;
   int _startTime = 0;
   bool _isPaused = false;
+  bool isAlreadyTapped = false;
 
   @override
   void initState() {
@@ -105,15 +106,12 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
           ),
           child: GestureDetector(
             onTap: () {
-              storeScreenTime();
-
-              // if(context.read<PinealCubit>().holdDuration == -1){
-              //   if(!remainingCountdownController.isCompleted!){
-              //     remainingCountdownController.pause();
-              //   }
-              //   navigate(context.read<PinealCubit>());
-              // }
-              
+              if(!isAlreadyTapped){
+                isAlreadyTapped = true;
+                recoverCountdownController.pause();
+                storeScreenTime();
+                navigate(context.read<PinealCubit>());
+              }
             },
             child: Column(
               children: [
@@ -125,6 +123,7 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
+                      togglePauseResume();
                       context.read<PinealCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);

@@ -24,7 +24,7 @@ class DnaCubit extends Cubit<DnaState> {
   bool recoveryBreath = false;
   bool holdingPeriod = false;
   bool jerryVoice = true;
-  bool music = false;
+  bool music = true;
   bool chimes = true;
   bool pineal = false;
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn); //~ temporary
@@ -49,7 +49,7 @@ class DnaCubit extends Cubit<DnaState> {
     breathHoldIndex = 0;
     durationOfSet = 60;
     jerryVoice = true;
-    music = false;
+    music = true;
     chimes = true;
     pineal = false;
     recoveryBreath = false;
@@ -152,7 +152,7 @@ class DnaCubit extends Cubit<DnaState> {
   void resetSettings(){
     jerryVoice = true;
     pineal = false;
-    music = false;
+    music = true;
     chimes = true;
     durationOfSet = 60;
 
@@ -356,6 +356,9 @@ class DnaCubit extends Cubit<DnaState> {
         jerryVoicePlayer.stop();
         await jerryVoicePlayer.play(AssetSource('audio/time_to_next_set.mp3'));
       }
+      else{
+        playChime();
+      }
     } on Exception catch (e) {
       if (kDebugMode) {
         print("playTimeToNextSet>> ${e.toString()}");
@@ -405,7 +408,11 @@ class DnaCubit extends Cubit<DnaState> {
     try {
       if(jerryVoice){
         breathHoldPlayer.stop();
-        await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+        if(holdDuration == 10){
+          await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
+        }else{
+          await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+        }
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -419,6 +426,9 @@ class DnaCubit extends Cubit<DnaState> {
       if(jerryVoice){
         breathHoldPlayer.stop();
         await breathHoldPlayer.play(AssetSource('audio/time_to_hold.mp3'));
+      }
+      else{
+        playChime();
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -484,6 +494,9 @@ class DnaCubit extends Cubit<DnaState> {
       if(jerryVoice){
         recoveryPlayer.stop();
         await recoveryPlayer.play(AssetSource('audio/time_to_recover.mp3'));
+      }
+      else{
+        playChime();
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -552,7 +565,7 @@ class DnaCubit extends Cubit<DnaState> {
       music: music,
       chimes: chimes,
       pineal: pineal,
-      choiceOfBreathHold: breathHoldList[breathHoldIndex],
+      choiceOfBreathHold: choiceOfBreathHold,
       breathingTimeList: breathingTimeList,
       breathInholdTimeList: holdInbreathTimeList,
       breathOutholdTimeList: holdBreathoutTimeList,

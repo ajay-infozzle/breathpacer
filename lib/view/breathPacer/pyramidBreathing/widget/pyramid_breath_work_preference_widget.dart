@@ -75,7 +75,7 @@ class PyramidBreathWorkPreferenceWidget extends StatelessWidget {
 
         ResultContainerSectionWidget(
           title: "Choice of breath hold:",
-          content: context.read<PyramidCubit>().breathHoldList[context.read<PyramidCubit>().breathHoldIndex],
+          content: context.read<PyramidCubit>().choiceOfBreathHold,
           iconPath: context.read<PyramidCubit>().breathHoldIndex == 0 ? "assets/images/breath_hold.png" : "assets/images/breath_hold.png",
           iconSize: 25.0,
           showIcon: true,

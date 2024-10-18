@@ -24,6 +24,7 @@ class _PinealScreenState extends State<PinealScreen> {
   late Timer _timer;
   int _startTime = 0;
   bool _isPaused = false;
+  bool isAlreadyTapped = false;
 
   @override
   void initState() {
@@ -140,15 +141,17 @@ class _PinealScreenState extends State<PinealScreen> {
           ),
           child: GestureDetector(
             onTap: () {
-              storeScreenTime();
+              if(!isAlreadyTapped){
+                isAlreadyTapped = true;
 
-              if(context.read<PinealCubit>().holdDuration == -1){
-                if(!remainingCountdownController.isCompleted!){
-                  remainingCountdownController.pause();
+                if(context.read<PinealCubit>().holdDuration == -1){
+                  storeScreenTime();
+                  if(!remainingCountdownController.isCompleted!){
+                    remainingCountdownController.pause();
+                  }
+                  navigate(context.read<PinealCubit>());
                 }
-                navigate(context.read<PinealCubit>());
-              }
-              
+              }              
             },
             child: Column(
               children: [
@@ -160,6 +163,7 @@ class _PinealScreenState extends State<PinealScreen> {
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
+                      togglePauseResume();
                       context.read<PinealCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);
@@ -388,7 +392,10 @@ class _PinealScreenState extends State<PinealScreen> {
       }
 
       //~ to start 3_2_1 voice
-      if(secondsStr == "06"){
+      if(secondsStr == "06" && context.read<PinealCubit>().holdDuration != 10){
+        context.read<PinealCubit>().playHoldCountdown();
+      }
+      if(secondsStr == "03" && context.read<PinealCubit>().holdDuration == 10){
         context.read<PinealCubit>().playHoldCountdown();
       }
     }

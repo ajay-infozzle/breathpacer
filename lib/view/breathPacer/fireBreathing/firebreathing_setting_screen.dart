@@ -243,7 +243,7 @@ class FirebreathingSettingScreen extends StatelessWidget {
                                         .read<FirebreathingCubit>()
                                         .updateHold(selected);
                                   },
-                                  title: "Breath hold duration:",
+                                  title: "Holding period duration:",
                                   selected: context
                                       .read<FirebreathingCubit>()
                                       .holdDuration,

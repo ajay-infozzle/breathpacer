@@ -23,6 +23,7 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
   late Timer _timer;
   int _startTime = 0;
   bool _isPaused = false;
+  bool isAlreadyTapped = false;
 
   @override
   void initState() {
@@ -106,10 +107,14 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
           ),
           child: GestureDetector(
             onTap: () {
-              storeScreenTime();
+              if(!isAlreadyTapped){
+                isAlreadyTapped = true;
               
-              countdownController.pause();
-              navigate(context.read<DnaCubit>());
+                storeScreenTime();
+                
+                countdownController.pause();
+                navigate(context.read<DnaCubit>());
+              }
             },
             child: Column(
               children: [
@@ -120,6 +125,7 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
+                      togglePauseResume();
                       context.read<DnaCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);

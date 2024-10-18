@@ -24,8 +24,9 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
   int _startTime = 0; // Time in seconds
 
   int breathCount = 0;
-  String breathOption = 'Breath In' ;
+  String breathOption = 'Breathe In' ;
   bool _isPaused = false;
+  bool isAlreadyTapped = false;
   
   @override
   void initState() {
@@ -34,6 +35,10 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
     breathCount = checkBreathnumber(context);
     startTimer();
     setUpAnimation();
+
+    if(context.read<PyramidCubit>().choiceOfBreathHold == "Both" && context.read<PyramidCubit>().breathHoldIndex == 2){
+      context.read<PyramidCubit>().breathHoldIndex = 0;
+    } 
   }
 
 
@@ -69,11 +74,11 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
     bool hasDecreased = false; // Flag to ensure we only decrease once per cycle
     bool hasIncreased = false; // Flag to ensure we only decrease once per cycle
 
-    _controller.addListener(() {
+    _controller.addListener(() async{
       if(_controller.status == AnimationStatus.forward && _animation.value > 0.98  && !hasIncreased){
         setState(() {
           if(breathCount != 0 && breathCount != -1){
-            breathOption = 'Breath In' ;
+            breathOption = 'Breathe In' ;
             context.read<PyramidCubit>().playBreathing("audio/single_breath_in_standard.mp3");
           }
         });
@@ -90,7 +95,7 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
         if (breathCount > -1) {
           setState(() {
             breathCount--;
-            breathOption = 'Breath Out';
+            breathOption = 'Breathe Out';
             if(breathCount != -1){
               context.read<PyramidCubit>().playBreathing("audio/single_breath_out_standard.mp3");
             }
@@ -103,12 +108,17 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
           _controller.stop();
 
           storeScreenTime();
-          context.read<PyramidCubit>().playHold();
           context.read<PyramidCubit>().stopJerry();
+
           if(context.read<PyramidCubit>().choiceOfBreathHold == "Both"){
             context.read<PyramidCubit>().breathHoldIndex = 0;
           }
-          context.goNamed(RoutesName.pyramidBreathHoldScreen);
+
+          context.read<PyramidCubit>().playTimeToHold();
+          await Future.delayed(const Duration(seconds: 2), () {
+            context.read<PyramidCubit>().playHold();
+            context.goNamed(RoutesName.pyramidBreathHoldScreen);
+          },);
         }
       }
 
@@ -130,9 +140,9 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
       setState(() {
         _startTime++;
         if(_startTime % 15 == 0 && _startTime != checkBreathnumber(context) && breathCount!=3 && breathCount!=2 && breathCount!=1 && _startTime!=0 && _startTime!=1){
-          if(context.read<PyramidCubit>().speed == "Slow"){
-            context.read<PyramidCubit>().playHoldMotivation();
-          }
+          // if(context.read<PyramidCubit>().speed == "Slow"){
+          //   context.read<PyramidCubit>().playHoldMotivation();
+          // }
         }
       });
     });
@@ -153,12 +163,14 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
       if (_isPaused) {
         cubit.pauseAudio(cubit.musicPlayer, cubit.music);
         cubit.pauseAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+        cubit.pauseAudio(cubit.breathHoldPlayer, cubit.jerryVoice);
 
         _controller.stop(); 
         stopTimer();        
       } else {
         cubit.resumeAudio(cubit.musicPlayer, cubit.music);
         cubit.resumeAudio(cubit.jerryVoicePlayer, cubit.jerryVoice);
+        cubit.resumeAudio(cubit.breathHoldPlayer, cubit.jerryVoice);
 
         _controller.repeat(reverse: true); 
         resumeTimer();         
@@ -204,15 +216,23 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
             gradient: AppTheme.colors.linearGradient,
           ),
           child: GestureDetector(
-            onTap: () {
-              storeScreenTime();
+            onTap: () async{
+              if(!isAlreadyTapped){
+                isAlreadyTapped = true;
+                storeScreenTime();
               
-              if(context.read<PyramidCubit>().choiceOfBreathHold == "Both"){
-                context.read<PyramidCubit>().breathHoldIndex = 0;
-              } 
-              context.read<PyramidCubit>().playHold();
-              context.read<PyramidCubit>().stopJerry();
-              context.goNamed(RoutesName.pyramidBreathHoldScreen);
+                if(context.read<PyramidCubit>().choiceOfBreathHold == "Both"){
+                  context.read<PyramidCubit>().breathHoldIndex = 0;
+                } 
+
+                context.read<PyramidCubit>().stopJerry();
+
+                context.read<PyramidCubit>().playTimeToHold();
+                await Future.delayed(const Duration(seconds: 2), () {
+                  context.read<PyramidCubit>().playHold();
+                  context.goNamed(RoutesName.pyramidBreathHoldScreen);
+                },);
+              }
             },
             child: Column(
               children: [
@@ -223,11 +243,12 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
+                      togglePauseResume();
                       context.read<PyramidCubit>().resetSettings(
                         context.read<PyramidCubit>().step ?? '', 
                         context.read<PyramidCubit>().speed ?? ''
                       );
-
+                      
                       context.goNamed(RoutesName.homeScreen,);
                     },
                     child: const Icon(Icons.close,color: Colors.white,),
@@ -354,7 +375,7 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Tap to hold ${context.read<PyramidCubit>().choiceOfBreathHold}",
+                              "Tap to hold ${context.read<PyramidCubit>().breathHoldList[context.read<PyramidCubit>().breathHoldIndex]}",
                               style: TextStyle(color: Colors.white, fontSize: size*0.045),
                             ),
                             const SizedBox(width: 10),

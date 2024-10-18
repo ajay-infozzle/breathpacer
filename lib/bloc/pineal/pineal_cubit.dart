@@ -17,7 +17,7 @@ class PinealCubit extends Cubit<PinealState> {
   int durationOfSet = 120;
   bool recoveryBreath = false;
   bool jerryVoice = true;
-  bool music = false;
+  bool music = true;
   bool chimes = true;
   int recoveryBreathDuration = 20;
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.pinealSqeez);
@@ -95,7 +95,7 @@ class PinealCubit extends Cubit<PinealState> {
 
   void resetSettings(){
     jerryVoice = true;
-    music = false;
+    music = true;
     chimes = true;
     isFirstSet = true;
     durationOfSet = 120;
@@ -294,6 +294,9 @@ class PinealCubit extends Cubit<PinealState> {
         jerryVoicePlayer.stop();
         await jerryVoicePlayer.play(AssetSource('audio/pineal_start_next_set.mp3'));
       }
+      else{
+        playChime();
+      }
     } on Exception catch (e) {
       if (kDebugMode) {
         print("playTimeToNextSet>> ${e.toString()}");
@@ -405,7 +408,11 @@ class PinealCubit extends Cubit<PinealState> {
     try {
       if(jerryVoice){
         breathHoldPlayer.stop();
-        await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+        if(holdDuration == 10){
+          await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
+        }else{
+          await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+        }
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -458,6 +465,9 @@ class PinealCubit extends Cubit<PinealState> {
       if(jerryVoice){
         recoveryPlayer.stop();
         await recoveryPlayer.play(AssetSource('audio/time_to_recover.mp3'));
+      }
+      else{
+        playChime();
       }
     } on Exception catch (e) {
       if (kDebugMode) {
