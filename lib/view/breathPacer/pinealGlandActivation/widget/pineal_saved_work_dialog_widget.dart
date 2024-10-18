@@ -237,7 +237,7 @@ class _PinealSavedWorkDialogWidgetState extends State<PinealSavedWorkDialogWidge
                                 buttonColor: Colors.transparent,
                                 textColor: const Color(0xffFE60D4),
                                 onPress: (){
-                                  context.read<PinealCubit>().deleteSavedPyramidBreathwork(i);
+                                  context.read<PinealCubit>().deleteSavedPinealBreathwork(i);
                                 }
                               ),
                             ),

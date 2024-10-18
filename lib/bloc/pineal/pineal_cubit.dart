@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:breathpacer/config/model/pineal_breathwork_model.dart';
 import 'package:breathpacer/utils/constant/jerry_voice.dart';
+import 'package:breathpacer/utils/toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -79,6 +80,14 @@ class PinealCubit extends Cubit<PinealState> {
     emit(PinealToggleChimes());
   }
 
+  bool checkBreathingPeriod(){
+    if(breathingPeriod % holdDuration == 0){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 
   // ..
   List<int> breathingTimeList = []; //sec
@@ -544,19 +553,22 @@ class PinealCubit extends Cubit<PinealState> {
     isSaveDialogOn = false;
     saveInputCont.clear();
 
+    updateSavedPinealBreathwork();
+    
+    showToast("Saved Successfuly");
     emit(PinealToggleSave());
   }
 
-  void getAllSavedPyramidBreathwork() async{
+  void getAllSavedPinealBreathwork() async{
     var box = await Hive.openBox('pinealBreathworkBox');
 
-    savedBreathwork.clear();
-
-    if(box.values.isEmpty){
+    
+    if(box.values.isEmpty || savedBreathwork.isNotEmpty){
       emit(PinealBreathworkFetched());
       return ;
     }
 
+    savedBreathwork.clear();
     for (var item in box.values) {
       PinealBreathworkModel breathworks = PinealBreathworkModel.fromJson(Map<String, dynamic>.from(item));
       
@@ -565,7 +577,26 @@ class PinealCubit extends Cubit<PinealState> {
     }
   }
 
-  void deleteSavedPyramidBreathwork(int index) async{
+  void updateSavedPinealBreathwork() async{
+    var box = await Hive.openBox('pinealBreathworkBox');
+
+    
+    if(box.values.isEmpty){
+      emit(PinealBreathworkFetched());
+      return ;
+    }
+
+    savedBreathwork.clear();
+    for (var item in box.values) {
+      PinealBreathworkModel breathworks = PinealBreathworkModel.fromJson(Map<String, dynamic>.from(item));
+      
+      savedBreathwork.add(breathworks);
+      emit(PinealBreathworkFetched());
+    }
+  }
+
+
+  void deleteSavedPinealBreathwork(int index) async{
     var box = await Hive.openBox('pinealBreathworkBox');
 
     if(box.values.isEmpty){

@@ -24,9 +24,9 @@ class _InteractiveBreathingScreenState extends State<InteractiveBreathingScreen>
     super.initState();
 
     context.read<PyramidCubit>().getAllSavedPyramidBreathwork();
-    context.read<FirebreathingCubit>().getAllSavedPyramidBreathwork();
-    context.read<DnaCubit>().getAllSavedPyramidBreathwork();
-    context.read<PinealCubit>().getAllSavedPyramidBreathwork();
+    context.read<FirebreathingCubit>().getAllSavedFireBreathwork();
+    context.read<DnaCubit>().getAllSavedDnaBreathwork();
+    context.read<PinealCubit>().getAllSavedPinealBreathwork();
   }
 
   @override

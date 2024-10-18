@@ -276,7 +276,7 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
                                 buttonColor: Colors.transparent,
                                 textColor: const Color(0xffFE60D4),
                                 onPress: (){
-                                  context.read<DnaCubit>().deleteSavedPyramidBreathwork(i);
+                                  context.read<DnaCubit>().deleteSavedDnaBreathwork(i);
                                 }
                               ),
                             ),

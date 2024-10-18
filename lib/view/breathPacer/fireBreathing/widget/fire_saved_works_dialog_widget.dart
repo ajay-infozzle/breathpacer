@@ -251,7 +251,7 @@ class _FirebreathingSavedWorksDialogWidgetState extends State<FirebreathingSaved
                                 buttonColor: Colors.transparent,
                                 textColor: const Color(0xffFE60D4),
                                 onPress: (){
-                                  context.read<FirebreathingCubit>().deleteSavedPyramidBreathwork(i);
+                                  context.read<FirebreathingCubit>().deleteSavedFireBreathwork(i);
                                 }
                               ),
                             ),

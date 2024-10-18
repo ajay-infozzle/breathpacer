@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:breathpacer/config/model/dna_breathwork_model.dart';
 import 'package:breathpacer/utils/constant/jerry_voice.dart';
+import 'package:breathpacer/utils/toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -578,28 +579,46 @@ class DnaCubit extends Cubit<DnaState> {
     isSaveDialogOn = false;
     saveInputCont.clear();
 
+    updateSavedDnaBreathwork();
+
+    showToast("Saved Successfuly");
     emit(DnaToggleSave());
   }
 
-  void getAllSavedPyramidBreathwork() async{
+  void getAllSavedDnaBreathwork() async{
+    
     var box = await Hive.openBox('dnaBreathworkBox');
-
-    savedBreathwork.clear();
-
-    if(box.values.isEmpty){
+  
+    if(box.values.isEmpty || savedBreathwork.isNotEmpty){
       emit(DnaBreathworkFetched());
       return ;
     }
-
+    
+    savedBreathwork.clear();
     for (var item in box.values) {
       DnaBreathworkModel breathworks = DnaBreathworkModel.fromJson(Map<String, dynamic>.from(item));
-      
       savedBreathwork.add(breathworks);
       emit(DnaBreathworkFetched());
     }
   }
 
-  void deleteSavedPyramidBreathwork(int index) async{
+  void updateSavedDnaBreathwork() async{
+    var box = await Hive.openBox('dnaBreathworkBox');
+  
+    if(box.values.isEmpty){
+      emit(DnaBreathworkFetched());
+      return ;
+    }
+    
+    savedBreathwork.clear();
+    for (var item in box.values) {
+      DnaBreathworkModel breathworks = DnaBreathworkModel.fromJson(Map<String, dynamic>.from(item));
+      savedBreathwork.add(breathworks);
+      emit(DnaBreathworkFetched());
+    }
+  }
+
+  void deleteSavedDnaBreathwork(int index) async{
     var box = await Hive.openBox('dnaBreathworkBox');
 
     if(box.values.isEmpty){

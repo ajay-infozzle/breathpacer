@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:breathpacer/config/model/fire_breathwork_model.dart';
 import 'package:breathpacer/utils/constant/jerry_voice.dart';
+import 'package:breathpacer/utils/toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -535,19 +536,21 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     isSaveDialogOn = false;
     saveInputCont.clear();
 
+    updateSavedFireBreathwork();
+    
+    showToast("Saved Successfuly");
     emit(FirebreathingToggleSave());
   }
 
-  void getAllSavedPyramidBreathwork() async{
+  void getAllSavedFireBreathwork() async{
     var box = await Hive.openBox('fireBreathworkBox');
 
-    savedBreathwork.clear();
-
-    if(box.values.isEmpty){
+    if(box.values.isEmpty || savedBreathwork.isNotEmpty){
       emit(FireBreathworkFetched());
       return ;
     }
 
+    savedBreathwork.clear();
     for (var item in box.values) {
       FireBreathworkModel breathworks = FireBreathworkModel.fromJson(Map<String, dynamic>.from(item));
       
@@ -556,7 +559,24 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     }
   }
 
-  void deleteSavedPyramidBreathwork(int index) async{
+  void updateSavedFireBreathwork() async{
+    var box = await Hive.openBox('fireBreathworkBox');
+
+    if(box.values.isEmpty){
+      emit(FireBreathworkFetched());
+      return ;
+    }
+
+    savedBreathwork.clear();
+    for (var item in box.values) {
+      FireBreathworkModel breathworks = FireBreathworkModel.fromJson(Map<String, dynamic>.from(item));
+      
+      savedBreathwork.add(breathworks);
+      emit(FireBreathworkFetched());
+    }
+  }
+
+  void deleteSavedFireBreathwork(int index) async{
     var box = await Hive.openBox('fireBreathworkBox');
 
     if(box.values.isEmpty){

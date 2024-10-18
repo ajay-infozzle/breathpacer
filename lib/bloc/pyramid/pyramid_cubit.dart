@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:breathpacer/config/model/pyramid_breathwork_model.dart';
 import 'package:breathpacer/utils/constant/jerry_voice.dart';
+import 'package:breathpacer/utils/toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -465,19 +466,21 @@ class PyramidCubit extends Cubit<PyramidState> {
     isSaveDialogOn = false;
     saveInputCont.clear();
 
+    updateSavedPyramidBreathwork();
+    
+    showToast("Saved Successfuly");
     emit(PyramidToggleSave());
   }
 
   void getAllSavedPyramidBreathwork() async{
     var box = await Hive.openBox('pyramidBreathworkBox');
 
-    savedBreathwork.clear();
-
-    if(box.values.isEmpty){
+    if(box.values.isEmpty || savedBreathwork.isNotEmpty){
       emit(PyramidBreathworkFetched());
       return ;
     }
-
+    
+    savedBreathwork.clear();
     for (var item in box.values) {
       PyramidBreathworkModel breathworks = PyramidBreathworkModel.fromJson(Map<String, dynamic>.from(item));
       
@@ -486,6 +489,24 @@ class PyramidCubit extends Cubit<PyramidState> {
     }
   }
 
+  void updateSavedPyramidBreathwork() async{
+    var box = await Hive.openBox('pyramidBreathworkBox');
+
+    if(box.values.isEmpty){
+      emit(PyramidBreathworkFetched());
+      return ;
+    }
+    
+    savedBreathwork.clear();
+    for (var item in box.values) {
+      PyramidBreathworkModel breathworks = PyramidBreathworkModel.fromJson(Map<String, dynamic>.from(item));
+      
+      savedBreathwork.add(breathworks);
+      emit(PyramidBreathworkFetched());
+    }
+  }
+
+ 
   void deleteSavedPyramidBreathwork(int index) async{
     var box = await Hive.openBox('pyramidBreathworkBox');
 

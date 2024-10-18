@@ -2,11 +2,13 @@ import 'package:breathpacer/bloc/pineal/pineal_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
 import 'package:breathpacer/utils/custom_button.dart';
+import 'package:breathpacer/utils/toast.dart';
 import 'package:breathpacer/view/breathPacer/widget/custom_modal_dropdown.dart';
 import 'package:breathpacer/view/breathPacer/widget/settings_toggle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 
 class PinealSettingScreen extends StatelessWidget {
   const PinealSettingScreen({super.key, required this.subTitle});
@@ -259,9 +261,14 @@ class PinealSettingScreen extends StatelessWidget {
                                   spacing: .7,
                                   radius: 0,
                                   onPress: () {
-                                    context.read<PinealCubit>().playMusic();
-                                    context.read<PinealCubit>().playCloseEyes();
-                                  });
+                                    if(!context.read<PinealCubit>().checkBreathingPeriod()){
+                                      showToast("Breathing period should be multiple of hold time!");
+                                    }else{
+                                      context.read<PinealCubit>().playMusic();
+                                      context.read<PinealCubit>().playCloseEyes();
+                                    }
+                                  }
+                              );
                             },
                           )),
                     )
