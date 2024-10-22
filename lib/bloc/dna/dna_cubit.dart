@@ -48,7 +48,7 @@ class DnaCubit extends Cubit<DnaState> {
     noOfSets = 1;
     currentSet = 0;
     breathHoldIndex = 0;
-    durationOfSet = 60;
+    durationOfSet = 30;
     jerryVoice = true;
     music = true;
     chimes = true;
@@ -155,7 +155,13 @@ class DnaCubit extends Cubit<DnaState> {
     pineal = false;
     music = true;
     chimes = true;
-    durationOfSet = 60;
+    durationOfSet = 30;
+    isReatartEnable = false;
+    holdingPeriod = false;
+    recoveryBreath = false;
+    noOfBreath = 10;
+    noOfSets = 1;
+
 
     currentSet = 0;
     breathHoldIndex = 0;
@@ -562,11 +568,15 @@ class DnaCubit extends Cubit<DnaState> {
       breathingApproach: breathingApproachGroupValue,
       durationOfEachSet: durationOfSet,
       recoveryEnabled: recoveryBreath,
+      holdEnabled: holdingPeriod,
       jerryVoice: jerryVoice,
       music: music,
       chimes: chimes,
       pineal: pineal,
       choiceOfBreathHold: choiceOfBreathHold,
+      numberOfBreath: noOfBreath,
+      holdDuration: holdDuration,
+      recoveryDuration: recoveryBreathDuration,
       breathingTimeList: breathingTimeList,
       breathInholdTimeList: holdInbreathTimeList,
       breathOutholdTimeList: holdBreathoutTimeList,

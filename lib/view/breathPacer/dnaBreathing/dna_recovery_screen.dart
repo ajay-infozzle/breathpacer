@@ -78,7 +78,7 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
   }
 
   void storeScreenTime() {
-    context.read<DnaCubit>().recoveryTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
+    context.read<DnaCubit>().recoveryTimeList.add(_startTime-1 < 0 ? 0 : _startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
 
     if (kDebugMode) {
       print("Dna breath recovery Time: $getScreenTiming");

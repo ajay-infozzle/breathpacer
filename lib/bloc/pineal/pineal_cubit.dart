@@ -108,6 +108,9 @@ class PinealCubit extends Cubit<PinealState> {
     chimes = true;
     isFirstSet = true;
     durationOfSet = 120;
+    isReatartEnable = false;
+    holdDuration = 20;
+    recoveryBreathDuration = 20;
 
     currentSet = 0;
     remainingBreathTime = 0;

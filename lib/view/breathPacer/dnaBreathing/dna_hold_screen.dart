@@ -80,10 +80,10 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
 
   void storeScreenTime() {
     if(context.read<DnaCubit>().breathHoldIndex == 0 || context.read<DnaCubit>().breathHoldIndex == 2){
-      context.read<DnaCubit>().holdInbreathTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
+      context.read<DnaCubit>().holdInbreathTimeList.add(_startTime-1 < 0 ? 0 : _startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
     }
     else{
-      context.read<DnaCubit>().holdBreathoutTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
+      context.read<DnaCubit>().holdBreathoutTimeList.add(_startTime-1 < 0 ? 0 : _startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
     }
 
     if (kDebugMode) {

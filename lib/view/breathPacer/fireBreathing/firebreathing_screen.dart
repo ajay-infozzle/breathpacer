@@ -135,7 +135,7 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
   }
 
   void storeScreenTime() {
-    context.read<FirebreathingCubit>().breathingTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
+    context.read<FirebreathingCubit>().breathingTimeList.add(_startTime-1 < 0 ? 0 : _startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
 
     if (kDebugMode) {
       print("Stored breathing Screen Time: $getScreenTiming");
@@ -376,6 +376,7 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
         await Future.delayed(const Duration(seconds: 2), () {
           context.read<FirebreathingCubit>().playChime();
           context.read<FirebreathingCubit>().playRelax();
+          cubit.stopMusic();
           context.goNamed(RoutesName.fireBreathingSuccessScreen);
         },);
       }

@@ -47,7 +47,8 @@ class AppRoutes {
             name: RoutesName.homeScreen,
             pageBuilder: (context, state) {
               return customPageRouteBuilder(
-                const HomeScreen(), 
+                // const HomeScreen(),  //~ bypass to InteractiveBreathingScreen for testing
+                const InteractiveBreathingScreen(),  
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );

@@ -57,14 +57,15 @@ class _DnaSettingScreenState extends State<DnaSettingScreen>
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: context.read<DnaCubit>().isReatartEnable?false:true,
       onPopInvoked: (didPop) {
         if (context.read<DnaCubit>().isReatartEnable) {
+          context.read<DnaCubit>().resetSettings();
           context.goNamed(RoutesName.homeScreen);
         }
-        // else{
-        //   context.pop();
-        // }
+        else{
+          context.read<DnaCubit>().resetSettings();
+        }
       },
       child: Scaffold(
         body: Container(
@@ -79,8 +80,10 @@ class _DnaSettingScreenState extends State<DnaSettingScreen>
                 leading: GestureDetector(
                   onTap: () {
                     if (context.read<DnaCubit>().isReatartEnable) {
+                      context.read<DnaCubit>().resetSettings();
                       context.goNamed(RoutesName.homeScreen);
                     } else {
+                      context.read<DnaCubit>().resetSettings();
                       context.pop();
                     }
                   },

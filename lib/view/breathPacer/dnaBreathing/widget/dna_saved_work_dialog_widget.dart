@@ -98,15 +98,20 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              context.read<DnaCubit>().savedBreathwork[i].title!,
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(.7),
-                                fontWeight: FontWeight.bold,
-                                fontSize: size*0.045
+                            Expanded(
+                              child: Text(
+                                context.read<DnaCubit>().savedBreathwork[i].title!,
+                                style: TextStyle(
+                                  color: Colors.black.withOpacity(.7),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: size*0.045
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const Spacer(),
+                            
+                            SizedBox(width: size*0.02,),
+
                             IconButton(
                               onPressed: () {
                                 setState(() {
@@ -296,7 +301,11 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
                                   final savedWork = context.read<DnaCubit>().savedBreathwork[i] ;
                                   context.read<DnaCubit>().noOfSets = int.parse(savedWork.numberOfSets!) ;
                                   context.read<DnaCubit>().durationOfSet = savedWork.durationOfEachSet! ;
-                                  // context.read<DnaCubit>().holdDuration = savedWork.! ; //todo: also in model
+                                  context.read<DnaCubit>().noOfBreath = savedWork.numberOfBreath! ;
+                                  context.read<DnaCubit>().holdDuration = savedWork.holdDuration! ; 
+                                  context.read<DnaCubit>().recoveryBreathDuration = savedWork.recoveryDuration! ; 
+                                  context.read<DnaCubit>().recoveryBreath = savedWork.recoveryEnabled! ;
+                                  context.read<DnaCubit>().holdingPeriod = savedWork.holdEnabled! ;
                                   context.read<DnaCubit>().pineal = savedWork.pineal! ;
                                   context.read<DnaCubit>().jerryVoice = savedWork.jerryVoice! ;
                                   context.read<DnaCubit>().music = savedWork.music! ;
@@ -304,7 +313,12 @@ class _DnaSavedWorkDialogWidgetState extends State<DnaSavedWorkDialogWidget> {
                                   context.read<DnaCubit>().choiceOfBreathHold = savedWork.choiceOfBreathHold! ;
                                   
                                   context.pop();
-                                  context.pushNamed(RoutesName.dnaWaitingScreen);
+                                  context.pushNamed(
+                                    RoutesName.dnaSettingScreen,
+                                    extra:{
+                                      "subTitle" : "DNA breathing"
+                                    }
+                                  );
                                 }
                               ),
                             ),                    

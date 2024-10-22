@@ -87,6 +87,7 @@ class PyramidCubit extends Cubit<PyramidState> {
     jerryVoice = true;
     music = true;
     chimes = true;
+    isReatartEnable = false;
 
     currentRound = 0;
     holdDuration = 20;
@@ -455,6 +456,7 @@ class PyramidCubit extends Cubit<PyramidState> {
       music: music,
       chimes: chimes,
       choiceOfBreathHold: choiceOfBreathHold,
+      holdDuration: holdDuration,
       breathingTimeList: breathingTimeList,
       holdBreathInTimeList: holdInbreathTimeList,
       holdBreathOutTimeList: holdBreathoutTimeList

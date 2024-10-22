@@ -245,7 +245,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
   }
 
   void storeScreenTime() {
-    context.read<DnaCubit>().breathingTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
+    context.read<DnaCubit>().breathingTimeList.add(_startTime-1 < 0 ? 0 : _startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
 
     if (kDebugMode) {
       print("dna breathing Stored Screen Time: $getScreenTiming");

@@ -177,9 +177,10 @@ class _FirebreathingSuccessScreenState extends State<FirebreathingSuccessScreen>
                           margin: EdgeInsets.symmetric(horizontal: size*0.05),
                           child: RestartBreathingWidget(
                             onTap: () {
-                              context.read<FirebreathingCubit>().isReatartEnable = true ;
                               context.read<FirebreathingCubit>().resetSettings();
-                    
+                              context.read<FirebreathingCubit>().isReatartEnable = true ;
+                              
+                              
                               context.goNamed(
                                 RoutesName.fireSettingScreen,
                                 extra:{

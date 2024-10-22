@@ -177,12 +177,12 @@ class _PyramidSuccessScreenState extends State<PyramidSuccessScreen> {
                           margin: EdgeInsets.symmetric(horizontal: size*0.05),
                           child: RestartBreathingWidget(
                             onTap: () {
-                              context.read<PyramidCubit>().isReatartEnable = true ;
-                    
                               context.read<PyramidCubit>().resetSettings(
                                 context.read<PyramidCubit>().step!, 
                                 context.read<PyramidCubit>().speed!
                               );
+
+                              context.read<PyramidCubit>().isReatartEnable = true ;
                     
                               context.goNamed(
                                 RoutesName.pyramidSettingScreen,

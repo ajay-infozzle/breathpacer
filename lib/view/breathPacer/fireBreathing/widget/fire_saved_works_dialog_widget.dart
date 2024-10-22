@@ -98,15 +98,20 @@ class _FirebreathingSavedWorksDialogWidgetState extends State<FirebreathingSaved
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              context.read<FirebreathingCubit>().savedBreathwork[i].title!,
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(.7),
-                                fontWeight: FontWeight.bold,
-                                fontSize: size*0.045
+                            Expanded(
+                              child: Text(
+                                context.read<FirebreathingCubit>().savedBreathwork[i].title!,
+                                style: TextStyle(
+                                  color: Colors.black.withOpacity(.7),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: size*0.045
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const Spacer(),
+                            
+                            SizedBox(width: size*0.02,),
+
                             IconButton(
                               onPressed: () {
                                 setState(() {
@@ -271,6 +276,7 @@ class _FirebreathingSavedWorksDialogWidgetState extends State<FirebreathingSaved
                                   context.read<FirebreathingCubit>().noOfSets = int.parse(savedWork.numberOfSets!) ;
                                   context.read<FirebreathingCubit>().durationOfSets = savedWork.durationOfEachSet! ;
                                   context.read<FirebreathingCubit>().holdingPeriod = savedWork.holdPeriodEnabled! ;
+                                  context.read<FirebreathingCubit>().recoveryBreath = savedWork.recoveryEnabled! ;
                                   context.read<FirebreathingCubit>().pineal = savedWork.pineal! ;
                                   context.read<FirebreathingCubit>().jerryVoice = savedWork.jerryVoice! ;
                                   context.read<FirebreathingCubit>().music = savedWork.music! ;
@@ -278,7 +284,12 @@ class _FirebreathingSavedWorksDialogWidgetState extends State<FirebreathingSaved
                                   context.read<FirebreathingCubit>().choiceOfBreathHold = savedWork.choiceOfBreathHold! ;
                                   
                                   context.pop();
-                                  context.pushNamed(RoutesName.fireBreathingWaitingScreen);
+                                  context.pushNamed(
+                                    RoutesName.fireSettingScreen, 
+                                    extra:{
+                                      "subTitle" : "TYPE 2: Fire breathing"
+                                    }
+                                  );
                                 }
                               ),
                             ),                    

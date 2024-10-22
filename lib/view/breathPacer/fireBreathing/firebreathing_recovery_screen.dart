@@ -78,7 +78,7 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
   }
 
   void storeScreenTime() {
-    context.read<FirebreathingCubit>().recoveryTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
+    context.read<FirebreathingCubit>().recoveryTimeList.add(_startTime-1 < 0 ? 0 : _startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
 
     if (kDebugMode) {
       print("breath recovery Time: $getScreenTiming");

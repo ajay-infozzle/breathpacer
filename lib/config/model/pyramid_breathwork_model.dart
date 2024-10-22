@@ -7,6 +7,7 @@ class PyramidBreathworkModel {
   bool? music;
   bool? chimes;
   String? choiceOfBreathHold;
+  int? holdDuration;
   List<int>? breathingTimeList;
   List<int>? holdBreathInTimeList;
   List<int>? holdBreathOutTimeList;
@@ -19,6 +20,7 @@ class PyramidBreathworkModel {
     required this.music,
     required this.chimes,
     required this.choiceOfBreathHold,
+    required this.holdDuration,
     required this.breathingTimeList,
     required this.holdBreathInTimeList,
     required this.holdBreathOutTimeList,
@@ -34,6 +36,7 @@ class PyramidBreathworkModel {
       'music': music,
       'chimes': chimes,
       'choiceOfBreathHold': choiceOfBreathHold,
+      'holdDuration': holdDuration,
       'breathingTimeList': breathingTimeList,
       'holdBreathInTimeList': holdBreathInTimeList,
       'holdBreathOutTimeList': holdBreathOutTimeList,
@@ -50,6 +53,7 @@ class PyramidBreathworkModel {
       music: json['music'],
       chimes: json['chimes'],
       choiceOfBreathHold: json['choiceOfBreathHold'],
+      holdDuration: json['holdDuration'],
       breathingTimeList: List<int>.from(json['breathingTimeList']),
       holdBreathInTimeList: List<int>.from(json['holdBreathInTimeList']),
       holdBreathOutTimeList: List<int>.from(json['holdBreathOutTimeList']),

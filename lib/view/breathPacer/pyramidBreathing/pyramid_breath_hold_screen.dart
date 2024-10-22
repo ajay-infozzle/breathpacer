@@ -98,10 +98,10 @@ class _PyramidBreathHoldScreenState extends State<PyramidBreathHoldScreen> {
 
   void storeScreenTime() {
     if(context.read<PyramidCubit>().breathHoldIndex == 0 || context.read<PyramidCubit>().breathHoldIndex == 2){
-      context.read<PyramidCubit>().holdInbreathTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
+      context.read<PyramidCubit>().holdInbreathTimeList.add(_startTime-1 < 0 ? 0 : _startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
     }
     else{
-      context.read<PyramidCubit>().holdBreathoutTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
+      context.read<PyramidCubit>().holdBreathoutTimeList.add(_startTime-1 < 0 ? 0 : _startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
     }
 
     if (kDebugMode) {

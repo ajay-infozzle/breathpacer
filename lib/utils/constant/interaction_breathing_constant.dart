@@ -7,7 +7,7 @@ const interactionOptions = [
   {
     "title": "Fire Breathing",
     "image": "assets/images/fire_icon.png",
-    "description": "This exercise is a powerful technique that involves a three-step cycle: Fire Breathing, Rest, and Recovery Breathing. In the Fire Breathing phase, users perform a series of forceful exhalations...",
+    "description": "This exercise is a powerful technique that involves a three-step cycle: Fire Breathing, Hold, and Recovery Breathing. In the Fire Breathing phase, users perform a series of forceful exhalations...",
   },
   {
     "title": "DNA Breathing",
@@ -17,7 +17,7 @@ const interactionOptions = [
   {
     "title": "Pineal Gland Activation",
     "image": "assets/images/pineal_icon.png",
-    "description": "This exercise is a powerful technique that involves a three-step cycle: Fire Breathing, Rest, and Recovery Breathing. In the Fire Breathing phase, users perform a series of forceful exhalations",
+    "description": "This exercise is a powerful technique that involves a three-step cycle: squeeze and hold of your buttocks and genitals, tip of the tongue on the roof of the mouth and breathe, Hold, and Recovery Breathing.",
   },
 ];
 

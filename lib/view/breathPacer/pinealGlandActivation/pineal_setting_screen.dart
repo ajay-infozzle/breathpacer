@@ -21,14 +21,15 @@ class PinealSettingScreen extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
 
     return PopScope(
-      canPop: false,
+      canPop: context.read<PinealCubit>().isReatartEnable?false:true,
       onPopInvoked: (didPop) {
         if (context.read<PinealCubit>().isReatartEnable) {
+          context.read<PinealCubit>().resetSettings();
           context.goNamed(RoutesName.homeScreen);
         }
-        // else{
-        //   context.pop();
-        // }
+        else{
+          context.read<PinealCubit>().resetSettings();
+        }
       },
       child: Scaffold(
         body: Container(
@@ -43,8 +44,10 @@ class PinealSettingScreen extends StatelessWidget {
                 leading: GestureDetector(
                   onTap: () {
                     if (context.read<PinealCubit>().isReatartEnable) {
+                      context.read<PinealCubit>().resetSettings();
                       context.goNamed(RoutesName.homeScreen);
                     } else {
+                      context.read<PinealCubit>().resetSettings();
                       context.pop();
                     }
                   },

@@ -137,6 +137,9 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     pineal = false;
     music = true;
     chimes = true;
+    isReatartEnable = false;
+    recoveryBreath = false;
+    holdingPeriod = false;
 
     currentSet = 0;
     breathingTimeList.clear();
@@ -525,6 +528,8 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
       chimes: chimes,
       pineal: pineal,
       choiceOfBreathHold: choiceOfBreathHold,
+      holdDuration: holdDuration,
+      recoveryDuration: recoveryBreathDuration,
       breathingTimeList: breathingTimeList,
       holdTimeList: holdTimeList,
       recoveryTimeList: recoveryTimeList

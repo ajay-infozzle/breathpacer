@@ -177,8 +177,8 @@ class _DnaSuccessScreenState extends State<DnaSuccessScreen> {
                           margin: EdgeInsets.symmetric(horizontal: size*0.05),
                           child: RestartBreathingWidget(
                             onTap: () {
-                              context.read<DnaCubit>().isReatartEnable = true ;
                               context.read<DnaCubit>().resetSettings();
+                              context.read<DnaCubit>().isReatartEnable = true ;
                     
                               context.goNamed(
                                 RoutesName.dnaSettingScreen,

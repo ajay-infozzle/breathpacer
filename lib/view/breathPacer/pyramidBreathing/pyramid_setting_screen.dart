@@ -56,14 +56,15 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen>
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: context.read<PyramidCubit>().isReatartEnable?false:true,
       onPopInvoked: (didPop) {
         if (context.read<PyramidCubit>().isReatartEnable) {
+          context.read<PyramidCubit>().resetSettings(widget.step, "Standard");
           context.goNamed(RoutesName.homeScreen);
         }
-        // else{
-        //   context.pop();
-        // }
+        else{
+          context.read<PyramidCubit>().resetSettings(widget.step, "Standard");
+        }
       },
       child: Scaffold(
         body: Container(
@@ -76,7 +77,16 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen>
                 backgroundColor: Colors.transparent,
                 centerTitle: true,
                 leading: GestureDetector(
-                  onTap: () => context.pop(),
+                  onTap: () {
+                    if (context.read<PyramidCubit>().isReatartEnable) {
+                      context.read<PyramidCubit>().resetSettings(widget.step, "Standard");
+                      context.goNamed(RoutesName.homeScreen);
+                    }
+                    else{
+                      context.read<PyramidCubit>().resetSettings(widget.step, "Standard");
+                      context.pop();
+                    }
+                  },
                   child: const Icon(Icons.arrow_back_ios),
                 ),
                 title: const Text(

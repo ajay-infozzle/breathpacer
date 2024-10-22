@@ -21,14 +21,15 @@ class FirebreathingSettingScreen extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
 
     return PopScope(
-      canPop: false,
+      canPop: context.read<FirebreathingCubit>().isReatartEnable?false:true,
       onPopInvoked: (didPop) {
         if (context.read<FirebreathingCubit>().isReatartEnable) {
+          context.read<FirebreathingCubit>().resetSettings();
           context.goNamed(RoutesName.homeScreen);
         }
-        // else{
-        //   context.pop();
-        // }
+        else{
+          context.read<FirebreathingCubit>().resetSettings();
+        }
       },
       child: Scaffold(
         body: Container(
@@ -41,7 +42,16 @@ class FirebreathingSettingScreen extends StatelessWidget {
                 centerTitle: true,
                 scrolledUnderElevation: 0,
                 leading: GestureDetector(
-                  onTap: () => context.pop(),
+                  onTap: () {
+                    if (context.read<FirebreathingCubit>().isReatartEnable) {
+                      context.read<FirebreathingCubit>().resetSettings();
+                      context.goNamed(RoutesName.homeScreen);
+                    }
+                    else{
+                      context.read<FirebreathingCubit>().resetSettings();
+                      context.pop();
+                    }
+                  },
                   child: const Icon(Icons.arrow_back_ios),
                 ),
                 title: const Text(

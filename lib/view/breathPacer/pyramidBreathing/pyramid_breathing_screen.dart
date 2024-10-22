@@ -187,7 +187,7 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
   }
 
   void storeScreenTime() {
-    context.read<PyramidCubit>().breathingTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
+    context.read<PyramidCubit>().breathingTimeList.add(_startTime-1 < 0 ? 0 : _startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
     if (kDebugMode) {
       print("Stored Screen Time: $getScreenTiming");
     }

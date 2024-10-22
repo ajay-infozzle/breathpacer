@@ -155,8 +155,8 @@ class _PinealSuccessScreenState extends State<PinealSuccessScreen> {
                           margin: EdgeInsets.symmetric(horizontal: size*0.05),
                           child: RestartBreathingWidget(
                             onTap: () {
-                              context.read<PinealCubit>().isReatartEnable = true ;
                               context.read<PinealCubit>().resetSettings();
+                              context.read<PinealCubit>().isReatartEnable = true ;
                     
                               context.goNamed(
                                 RoutesName.pinealSettingScreen,

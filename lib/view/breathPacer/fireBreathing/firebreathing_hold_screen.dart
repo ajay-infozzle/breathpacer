@@ -88,7 +88,7 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
   }
 
   void storeScreenTime() {
-    context.read<FirebreathingCubit>().holdTimeList.add(_startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
+    context.read<FirebreathingCubit>().holdTimeList.add(_startTime-1 < 0 ? 0 : _startTime-1); //~ -1 is added due to starttime auto increased 1 sec more
 
     if (kDebugMode) {
       print("breath hold Time: $getScreenTiming");

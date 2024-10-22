@@ -98,15 +98,20 @@ class _PinealSavedWorkDialogWidgetState extends State<PinealSavedWorkDialogWidge
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              context.read<PinealCubit>().savedBreathwork[i].title!,
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(.7),
-                                fontWeight: FontWeight.bold,
-                                fontSize: size*0.045
+                            Expanded(
+                              child: Text(
+                                context.read<PinealCubit>().savedBreathwork[i].title!,
+                                style: TextStyle(
+                                  color: Colors.black.withOpacity(.7),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: size*0.045
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const Spacer(),
+                            
+                            SizedBox(width: size*0.02,),
+
                             IconButton(
                               onPressed: () {
                                 setState(() {
@@ -256,14 +261,20 @@ class _PinealSavedWorkDialogWidgetState extends State<PinealSavedWorkDialogWidge
                                   context.read<PinealCubit>().noOfSets = int.parse(savedWork.numberOfSets!) ;
                                   context.read<PinealCubit>().currentSet = 0 ;
                                   context.read<PinealCubit>().breathingPeriod = savedWork.breathingPeriod! ;
-                                  // context.read<PinealCubit>().holdDuration = savedWork.! ; //todo: also in model
+                                  context.read<PinealCubit>().holdDuration = savedWork.holdTimePerSet! ; 
+                                  context.read<PinealCubit>().recoveryBreathDuration = savedWork.recoveryTimePerSet! ; 
                                   context.read<PinealCubit>().jerryVoice = savedWork.jerryVoice! ;
                                   context.read<PinealCubit>().music = savedWork.music! ;
                                   context.read<PinealCubit>().chimes = savedWork.chimes! ;
                                   
                                   
                                   context.pop();
-                                  context.pushNamed(RoutesName.pinealWaitingScreen);
+                                  context.pushNamed(
+                                    RoutesName.pinealSettingScreen,
+                                    extra: {
+                                      "subTitle" : "Pineal Gland Activation"
+                                    }
+                                  );
                                 }
                               ),
                             ),                    

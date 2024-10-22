@@ -98,15 +98,20 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              context.read<PyramidCubit>().savedBreathwork[i].title!,
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(.7),
-                                fontWeight: FontWeight.bold,
-                                fontSize: size*0.045
+                            Expanded(
+                              child: Text(
+                                context.read<PyramidCubit>().savedBreathwork[i].title!,
+                                style: TextStyle(
+                                  color: Colors.black.withOpacity(.7),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: size*0.045
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const Spacer(),
+                            
+                            SizedBox(width: size*0.02,),
+
                             IconButton(
                               onPressed: () {
                                 setState(() {
@@ -185,6 +190,18 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                           textColor: Colors.black.withOpacity(.7),
                           iconColor: const Color(0xffFE60D4),
                         ),
+
+                        // ResultContainerSectionWidget(
+                        //   title: 'Each hold duration:',
+                        //   content: getFormattedTime(context.read<PyramidCubit>().holdDuration),
+                        //   iconPath: "assets/images/time.png",
+                        //   iconSize: 25.0,
+                        //   showIcon: true,
+                        //   showContent: true,
+                        //   containerColor: Colors.white,
+                        //   textColor: Colors.black.withOpacity(.7),
+                        //   iconColor: const Color(0xffFE60D4),
+                        // ),
               
                         ResultContainerSectionWidget(
                           title: 'Total breathing time:',
@@ -259,9 +276,10 @@ class _PyramidSavedWorksDialogWidgetState extends State<PyramidSavedWorksDialogW
                                   context.read<PyramidCubit>().music = savedWork.music! ;
                                   context.read<PyramidCubit>().chimes = savedWork.chimes! ;
                                   context.read<PyramidCubit>().choiceOfBreathHold = savedWork.choiceOfBreathHold! ;
+                                  context.read<PyramidCubit>().holdDuration = savedWork.holdDuration! ;
                                   
                                   context.pop();
-                                  context.pushNamed(RoutesName.pyramidWaitingScreen);
+                                  context.pushNamed(RoutesName.pyramidSettingScreen, extra: {"step": savedWork.step});
                                 }
                               ),
                             ),                    
