@@ -7,7 +7,7 @@ const interactionOptions = [
   {
     "title": "Fire Breathing",
     "image": "assets/images/fire_icon.png",
-    "description": "This exercise is a powerful technique that involves a three-step cycle: Fire Breathing, Hold, and Recovery Breathing. In the Fire Breathing phase, users perform a series of forceful exhalations...",
+    "description": "This exercise is a powerful technique that involves a three-step cycle: Fire Breathing, Hold, and Recovery Breathing. In the Fire Breathing phase, users perform a series of forceful exhalations.",
   },
   {
     "title": "DNA Breathing",
