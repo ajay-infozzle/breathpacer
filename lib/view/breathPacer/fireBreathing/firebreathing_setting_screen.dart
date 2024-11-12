@@ -1,10 +1,12 @@
 import 'package:breathpacer/bloc/firebreathing/firebreathing_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
+import 'package:breathpacer/utils/constant/interaction_breathing_constant.dart';
 import 'package:breathpacer/utils/constant/jerry_voice.dart';
 import 'package:breathpacer/utils/custom_button.dart';
 import 'package:breathpacer/view/breathPacer/widget/breathing_choices_widget.dart';
 import 'package:breathpacer/view/breathPacer/widget/custom_modal_dropdown.dart';
+import 'package:breathpacer/view/breathPacer/widget/modal_dropdown.dart';
 import 'package:breathpacer/view/breathPacer/widget/settings_toggle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -355,24 +357,42 @@ class FirebreathingSettingScreen extends StatelessWidget {
                           ),
 
 
+                          // SizedBox(height: size * 0.05,),
+                          // SizedBox(
+                          //   width: size,
+                          //   child:
+                          //       BlocBuilder<FirebreathingCubit, FirebreathingState>(
+                          //     buildWhen: (previous, current) =>
+                          //         current is FirebreathingInitial ||
+                          //         current is FirebreathingToggleMusic,
+                          //     builder: (context, state) {
+                          //       return SettingsToggleButton(
+                          //           onToggle: () {
+                          //             context
+                          //                 .read<FirebreathingCubit>()
+                          //                 .toggleMusic();
+                          //           },
+                          //           title: "Music :",
+                          //           isOn: context.read<FirebreathingCubit>().music);
+                          //     },
+                          //   ),
+                          // ),
+
                           SizedBox(height: size * 0.05,),
                           SizedBox(
                             width: size,
-                            child:
-                                BlocBuilder<FirebreathingCubit, FirebreathingState>(
+                            child: BlocBuilder<FirebreathingCubit, FirebreathingState>(
                               buildWhen: (previous, current) =>
                                   current is FirebreathingInitial ||
                                   current is FirebreathingToggleMusic,
-                              builder: (context, state) {
-                                return SettingsToggleButton(
-                                    onToggle: () {
-                                      context
-                                          .read<FirebreathingCubit>()
-                                          .toggleMusic();
-                                    },
-                                    title: "Music :",
-                                    isOn: context.read<FirebreathingCubit>().music);
-                              },
+                              builder: (context, state) => ModalDropDown(
+                                onSelected: (String selected) {
+                                  context.read<FirebreathingCubit>().updateMusic(selected);
+                                },
+                                title: "Music :",
+                                selected:context.read<FirebreathingCubit>().selectedMusic,
+                                options: musicList,
+                              ),
                             ),
                           ),
 

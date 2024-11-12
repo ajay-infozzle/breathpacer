@@ -1,11 +1,13 @@
 import 'package:breathpacer/bloc/dna/dna_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
+import 'package:breathpacer/utils/constant/interaction_breathing_constant.dart';
 import 'package:breathpacer/utils/constant/jerry_voice.dart';
 import 'package:breathpacer/utils/custom_button.dart';
 import 'package:breathpacer/view/breathPacer/widget/breathing_choices_widget.dart';
 import 'package:breathpacer/view/breathPacer/widget/custom_modal_dropdown.dart';
 import 'package:breathpacer/view/breathPacer/widget/custom_radio_buttom.dart';
+import 'package:breathpacer/view/breathPacer/widget/modal_dropdown.dart';
 import 'package:breathpacer/view/breathPacer/widget/settings_toggle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -444,6 +446,24 @@ class _DnaSettingScreenState extends State<DnaSettingScreen>
                           //   ),
                           // ),
                                       
+                          // SizedBox(height: size * 0.05,),
+                          // SizedBox(
+                          //   width: size,
+                          //   child: BlocBuilder<DnaCubit, DnaState>(
+                          //     buildWhen: (previous, current) =>
+                          //         current is DnaInitial ||
+                          //         current is DnaToggleMusic,
+                          //     builder: (context, state) {
+                          //       return SettingsToggleButton(
+                          //           onToggle: () {
+                          //             context.read<DnaCubit>().toggleMusic();
+                          //           },
+                          //           title: "Music :",
+                          //           isOn: context.read<DnaCubit>().music);
+                          //     },
+                          //   ),
+                          // ),
+
                           SizedBox(height: size * 0.05,),
                           SizedBox(
                             width: size,
@@ -451,14 +471,14 @@ class _DnaSettingScreenState extends State<DnaSettingScreen>
                               buildWhen: (previous, current) =>
                                   current is DnaInitial ||
                                   current is DnaToggleMusic,
-                              builder: (context, state) {
-                                return SettingsToggleButton(
-                                    onToggle: () {
-                                      context.read<DnaCubit>().toggleMusic();
-                                    },
-                                    title: "Music :",
-                                    isOn: context.read<DnaCubit>().music);
-                              },
+                              builder: (context, state) => ModalDropDown(
+                                onSelected: (String selected) {
+                                  context.read<DnaCubit>().updateMusic(selected);
+                                },
+                                title: "Music :",
+                                selected:context.read<DnaCubit>().selectedMusic,
+                                options: musicList,
+                              ),
                             ),
                           ),
                                       

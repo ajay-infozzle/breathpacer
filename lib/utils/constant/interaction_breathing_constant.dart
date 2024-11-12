@@ -36,6 +36,7 @@ const breathingStepGuide = [
   }
 ];
 
+List<String> musicList = ['None','Music 1', 'Music 2'] ;
 
 String getTotalTimeString(List<int> timeList) {
   if (timeList.isEmpty) return '0 secs';

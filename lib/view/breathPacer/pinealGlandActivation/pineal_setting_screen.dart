@@ -1,9 +1,11 @@
 import 'package:breathpacer/bloc/pineal/pineal_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
+import 'package:breathpacer/utils/constant/interaction_breathing_constant.dart';
 import 'package:breathpacer/utils/custom_button.dart';
 import 'package:breathpacer/utils/toast.dart';
 import 'package:breathpacer/view/breathPacer/widget/custom_modal_dropdown.dart';
+import 'package:breathpacer/view/breathPacer/widget/modal_dropdown.dart';
 import 'package:breathpacer/view/breathPacer/widget/settings_toggle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -180,6 +182,44 @@ class PinealSettingScreen extends StatelessWidget {
                           ),
 
 
+                          
+                          // SizedBox(height: size * 0.05,),
+                          // SizedBox(
+                          //   width: size,
+                          //   child: BlocBuilder<PinealCubit, PinealState>(
+                          //     buildWhen: (previous, current) =>
+                          //         current is PinealInitial ||
+                          //         current is PinealToggleMusic,
+                          //     builder: (context, state) {
+                          //       return SettingsToggleButton(
+                          //           onToggle: () {
+                          //             context.read<PinealCubit>().toggleMusic();
+                          //           },
+                          //           title: "Music :",
+                          //           isOn: context.read<PinealCubit>().music);
+                          //     },
+                          //   ),
+                          // ),
+
+                          SizedBox(height: size * 0.05,),
+                          SizedBox(
+                            width: size,
+                            child: BlocBuilder<PinealCubit, PinealState>(
+                              buildWhen: (previous, current) =>
+                                  current is PinealInitial ||
+                                  current is PinealToggleMusic,
+                              builder: (context, state) => ModalDropDown(
+                                onSelected: (String selected) {
+                                  context.read<PinealCubit>().updateMusic(selected);
+                                },
+                                title: "Music :",
+                                selected:context.read<PinealCubit>().selectedMusic,
+                                options: musicList,
+                              ),
+                            ),
+                          ),
+
+
                           SizedBox(height: size * 0.05,),
                           SizedBox(
                             width: size,
@@ -196,25 +236,6 @@ class PinealSettingScreen extends StatelessWidget {
                                     },
                                     title: "Jerry's voice :",
                                     isOn: context.read<PinealCubit>().jerryVoice);
-                              },
-                            ),
-                          ),
-
-
-                          SizedBox(height: size * 0.05,),
-                          SizedBox(
-                            width: size,
-                            child: BlocBuilder<PinealCubit, PinealState>(
-                              buildWhen: (previous, current) =>
-                                  current is PinealInitial ||
-                                  current is PinealToggleMusic,
-                              builder: (context, state) {
-                                return SettingsToggleButton(
-                                    onToggle: () {
-                                      context.read<PinealCubit>().toggleMusic();
-                                    },
-                                    title: "Music :",
-                                    isOn: context.read<PinealCubit>().music);
                               },
                             ),
                           ),

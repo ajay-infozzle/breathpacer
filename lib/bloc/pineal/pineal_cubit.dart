@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:breathpacer/config/model/pineal_breathwork_model.dart';
+import 'package:breathpacer/utils/constant/interaction_breathing_constant.dart';
 import 'package:breathpacer/utils/constant/jerry_voice.dart';
 import 'package:breathpacer/utils/toast.dart';
 import 'package:flutter/foundation.dart';
@@ -27,6 +28,9 @@ class PinealCubit extends Cubit<PinealState> {
   List<int> breathingDurationList = [30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600] ;
   List<int> holdDurationList = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 75, 90, 120, -1] ;
   List<int> recoveryDurationList = [10, 20, 30, 60, 120] ;
+
+  int selectedMusic = 1; 
+  String musicPath = "audio/music_1.mp3";
   
   int remainingBreathTime = 0;
   bool isReatartEnable = false;
@@ -72,6 +76,27 @@ class PinealCubit extends Cubit<PinealState> {
 
   void toggleMusic(){
     music = !music ;
+    emit(PinealToggleMusic());
+  }
+
+  void updateMusic(String selected){
+    selectedMusic = musicList.indexOf(selected);
+    switch (selectedMusic) {
+      case 0:
+        music = false;
+        break;
+      case 1:
+        music = true;
+        musicPath = "audio/music_1.mp3";
+        break;
+      case 2:
+        music = true;
+        musicPath = "audio/music_2.mp3";
+        break;
+      default: 
+        music = true;
+        musicPath = "audio/music_1.mp3";
+    }
     emit(PinealToggleMusic());
   }
 
@@ -202,14 +227,27 @@ class PinealCubit extends Cubit<PinealState> {
 
   void playMusic() async {
     try {
-      if(music){
-        await musicPlayer.play(AssetSource('audio/music.mp3'), );
+        switch (selectedMusic) {
+          case 0:
+            break;
+          case 1:
+            await musicPlayer.play(AssetSource(musicPath), );
+            break;
+          case 2:
+            await musicPlayer.play(AssetSource(musicPath), );
+            break;
+          default: 
+            await musicPlayer.play(AssetSource(musicPath), );
+        }
+
+        // await musicPlayer.play(AssetSource('audio/music.mp3'), );
       
         //~ Listen for when the music is completed
         musicPlayer.onPlayerComplete.listen((event) {
-          musicPlayer.play(AssetSource('audio/music.mp3'));
+          // Restart the music once it's completed
+          // musicPlayer.seek(Duration.zero);
+          musicPlayer.play(AssetSource(musicPath));
         });
-      }
     } on Exception catch (e) {
       if (kDebugMode) {
         print("playMusic>> ${e.toString()}");
