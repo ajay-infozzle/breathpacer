@@ -36,11 +36,18 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => DnaCubit()),
         BlocProvider(create: (context) => PinealCubit()),
       ],
-      child: MaterialApp.router(
-        title: 'Breath Pacer',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.define(),
-        routerConfig: AppRoutes.router,
+      child: Builder(
+        builder: (context){
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+            child: MaterialApp.router(
+              title: 'Breath Pacer',
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.define(),
+              routerConfig: AppRoutes.router,
+            ),
+          );
+        },
       ),
     );
   }

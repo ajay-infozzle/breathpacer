@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:info_popup/info_popup.dart';
 
 class SettingsToggleButton extends StatelessWidget {
-  const SettingsToggleButton({super.key, required this.onToggle, required this.title, required this.isOn, this.showPopup = false});
+  const SettingsToggleButton({super.key, required this.onToggle, required this.title, required this.isOn, this.showPopup = false, this.showIcon = false});
 
   final String title;
   final bool isOn;
   final bool showPopup;
+  final bool showIcon;
   final Function() onToggle;
 
   @override
@@ -20,14 +21,25 @@ class SettingsToggleButton extends StatelessWidget {
         Expanded(
           child: Row(
             children: [
-              Text(
-                title, 
-                style: TextStyle(
-                  fontSize: size*0.047, 
-                  color: Colors.white
+              !showIcon ?
+              Expanded(
+                child: Text(
+                  title, 
+                  style: TextStyle(
+                    fontSize: size*0.047, 
+                    color: Colors.white
+                  ),
+                  // overflow: TextOverflow.ellipsis,
                 ),
-                // overflow: TextOverflow.ellipsis,
-              ),
+              )
+              :Text(
+                  title, 
+                  style: TextStyle(
+                    fontSize: size*0.047, 
+                    color: Colors.white
+                  ),
+                  // overflow: TextOverflow.ellipsis,
+                ),
 
               showPopup ?
               Container(

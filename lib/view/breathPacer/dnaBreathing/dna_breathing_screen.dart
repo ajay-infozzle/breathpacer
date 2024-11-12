@@ -75,7 +75,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
     )..repeat(reverse: true);  // Repeat the animation in both directions
 
     
-    _animation = Tween<double>(begin: 1, end: 0.1).animate(CurvedAnimation(
+    _animation = Tween<double>(begin: 0.1, end: 1).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
     ));
@@ -84,41 +84,16 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
     bool hasIncreased = false;
 
     _controller.addListener(() {
-      if(_controller.status == AnimationStatus.forward && _animation.value > 0.98  && !hasIncreased){
+      if(_controller.status == AnimationStatus.reverse && _animation.value > 0.98  && !hasDecreased){
         if(isTimeBreathingApproch){
-          setState(() {
-            if(!countdownController.isCompleted!){
-              breathOption = 'Breathe In' ;
-              context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
-            }
-          });
-          hasIncreased = true;
-        }
-        else{
-          setState(() {
-            if(breathCount != 0 && breathCount != -1){
-              breathOption = 'Breathe In' ;
+          // setState(() {
+          //   if(!countdownController.isCompleted!){
+          //     breathOption = 'Breathe In' ;
+          //     context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
+          //   }
+          // });
+          // hasIncreased = true;
 
-              // if(_startTime % 15 == 0 && (_startTime != context.read<DnaCubit>().noOfBreath) && breathCount!=3 && breathCount!=2 && breathCount!=1 && _startTime!=0 && _startTime!=1){
-              //   context.read<DnaCubit>().playHoldMotivation();
-              // }else{
-              //   context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
-              // }
-
-              context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
-            }
-          });
-          hasIncreased = true;
-        }
-      }
-
-      // Check if the animation is shrinking and has passed a threshold (close to the minimum)
-      if (_controller.status == AnimationStatus.reverse && _animation.value < 0.2 && !hasDecreased) {
-        if (kDebugMode) {
-          print("Dna Breath count: $breathCount");
-        }
-        
-        if(isTimeBreathingApproch) {
           if(countdownController.isCompleted!){
             _controller.stop();
             
@@ -131,7 +106,23 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
             });
             hasDecreased = true;
           } 
-        }else{
+        }
+        else{
+          // setState(() {
+          //   if(breathCount != 0 && breathCount != -1){
+          //     breathOption = 'Breathe In' ;
+
+          //     // if(_startTime % 15 == 0 && (_startTime != context.read<DnaCubit>().noOfBreath) && breathCount!=3 && breathCount!=2 && breathCount!=1 && _startTime!=0 && _startTime!=1){
+          //     //   context.read<DnaCubit>().playHoldMotivation();
+          //     // }else{
+          //     //   context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
+          //     // }
+
+          //     context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
+          //   }
+          // });
+          // hasIncreased = true;
+          
           if (breathCount > -1) {
             setState(() {
               breathCount--;
@@ -159,11 +150,83 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
         }
       }
 
+      // Check if the animation is shrinking and has passed a threshold (close to the minimum)
+      if (_controller.status == AnimationStatus.forward && _animation.value < 0.2 && !hasIncreased) {
+        if (kDebugMode) {
+          print("Dna Breath count: $breathCount");
+        }
+        
+        if(isTimeBreathingApproch) {
+          // if(countdownController.isCompleted!){
+          //   _controller.stop();
+            
+          //   storeScreenTime();
+          //   navigate(context.read<DnaCubit>());
+          // }else{
+          //   setState(() {
+          //     breathOption = 'Breathe Out';
+          //     context.read<DnaCubit>().playBreathing("audio/single_breath_out_standard.mp3");
+          //   });
+          //   hasDecreased = true;
+          // } 
+
+          setState(() {
+            if(!countdownController.isCompleted!){
+              breathOption = 'Breathe In' ;
+              context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
+            }
+          });
+          hasIncreased = true;
+        }else{
+          // if (breathCount > -1) {
+          //   setState(() {
+          //     breathCount--;
+          //     breathOption = 'Breathe Out';
+          //     if(breathCount != -1){
+          //       // if(_startTime % 15 == 0 && (_startTime != context.read<DnaCubit>().noOfBreath) && breathCount!=3 && breathCount!=2 && breathCount!=1 && _startTime!=0 && _startTime!=1){
+          //       //   context.read<DnaCubit>().playHoldMotivation();
+          //       // }else{
+          //       //   context.read<DnaCubit>().playBreathing("audio/single_breath_out_standard.mp3");
+          //       // }
+
+          //       context.read<DnaCubit>().playBreathing("audio/single_breath_out_standard.mp3");
+          //     }
+          //   });
+          //   hasDecreased = true; // Set the flag to true to prevent further decrements during this cycle
+          // }
+
+          // // Stop the animation if the breath count reaches 0
+          // if (breathCount == -1) {
+          //   _controller.stop();
+
+          //   storeScreenTime();
+          //   navigate(context.read<DnaCubit>());
+          // }
+
+
+          setState(() {
+            if(breathCount != 0 && breathCount != -1){
+              breathOption = 'Breathe In' ;
+
+              // if(_startTime % 15 == 0 && (_startTime != context.read<DnaCubit>().noOfBreath) && breathCount!=3 && breathCount!=2 && breathCount!=1 && _startTime!=0 && _startTime!=1){
+              //   context.read<DnaCubit>().playHoldMotivation();
+              // }else{
+              //   context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
+              // }
+
+              context.read<DnaCubit>().playBreathing("audio/single_breath_in_standard.mp3");
+            }
+          });
+          hasIncreased = true;
+        }
+      }
+
       // Reset the flag when the animation is expanding again
       if (_controller.status == AnimationStatus.forward && hasDecreased) {
         hasDecreased = false;
       }
 
+      // Reset the flag when the animation is shrinking again
       if (_controller.status == AnimationStatus.reverse && hasIncreased) {
         hasIncreased = false;
       }
@@ -346,7 +409,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
                         ),
                       ),
 
-                      if(!context.read<DnaCubit>().isTimeBreathingApproch) 
+                      // if(!context.read<DnaCubit>().isTimeBreathingApproch) 
                       Container(
                         width: size*0.4,
                         margin: EdgeInsets.symmetric(horizontal: size*0.05, vertical: size*0.05),

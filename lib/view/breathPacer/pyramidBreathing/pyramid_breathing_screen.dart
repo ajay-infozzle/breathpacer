@@ -66,7 +66,7 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
     )..repeat(reverse: true);  // Repeat the animation in both directions
 
     
-    _animation = Tween<double>(begin: 1, end: 0.1).animate(CurvedAnimation(
+    _animation = Tween<double>(begin: 0.1, end: 1).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
     ));
@@ -75,18 +75,24 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
     bool hasIncreased = false; // Flag to ensure we only decrease once per cycle
 
     _controller.addListener(() async{
-      if(_controller.status == AnimationStatus.forward && _animation.value > 0.98  && !hasIncreased){
+      if(_controller.status == AnimationStatus.reverse && _animation.value > 0.98  && !hasDecreased){
         setState(() {
-          if(breathCount != 0 && breathCount != -1){
-            breathOption = 'Breathe In' ;
-            context.read<PyramidCubit>().playBreathing("audio/single_breath_in_standard.mp3");
+          // if(breathCount != 0 && breathCount != -1){
+          //   breathOption = 'Breathe In' ;
+          //   context.read<PyramidCubit>().playBreathing("audio/single_breath_in_standard.mp3");
+          // }
+
+          breathCount--;
+          if(breathCount != -1){
+            breathOption = 'Breathe Out' ;
+            context.read<PyramidCubit>().playBreathing("audio/single_breath_out_standard.mp3");
           }
         });
-        hasIncreased = true;
+        hasDecreased = true;
       }
 
       // Check if the animation is shrinking and has passed a threshold (close to the minimum)
-      if (_controller.status == AnimationStatus.reverse && _animation.value < 0.2 && !hasDecreased) {
+      if (_controller.status == AnimationStatus.forward && _animation.value < 0.2 && !hasIncreased) {
         if (kDebugMode) {
           print("Breath count: $breathCount");
         }
@@ -94,13 +100,18 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
         // Decrease the breath count only once during the shrink phase
         if (breathCount > -1) {
           setState(() {
-            breathCount--;
-            breathOption = 'Breathe Out';
-            if(breathCount != -1){
-              context.read<PyramidCubit>().playBreathing("audio/single_breath_out_standard.mp3");
+            // breathCount--;
+            // breathOption = 'Breathe Out';
+            // if(breathCount != -1){
+            //   context.read<PyramidCubit>().playBreathing("audio/single_breath_out_standard.mp3");
+            // }
+            
+            breathOption = 'Breathe In';
+            if(breathCount != 0 && breathCount != -1){
+              context.read<PyramidCubit>().playBreathing("audio/single_breath_in_standard.mp3");
             }
           });
-          hasDecreased = true; 
+          hasIncreased = true; 
         }
 
         // Stop the animation if the breath count reaches 0

@@ -348,6 +348,7 @@ class FirebreathingSettingScreen extends StatelessWidget {
                                   title: "Pineal Gland :",
                                   isOn: context.read<FirebreathingCubit>().pineal,
                                   showPopup: true,
+                                  showIcon: true,
                                 );
                               },
                             ),
