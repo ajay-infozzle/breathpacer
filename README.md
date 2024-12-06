@@ -1,5 +1,10 @@
 # breathpacer
 
+This project was built using the following versions:
+
+- **Flutter**: 3.22.3
+- **Dart**: 3.4.4
+
 A new Flutter project.
 
 ## Getting Started

@@ -1,5 +1,6 @@
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
+import 'package:breathpacer/utils/constant/interaction_breathing_constant.dart';
 import 'package:breathpacer/utils/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -70,7 +71,7 @@ class FirebreathingInstructionScreen extends StatelessWidget {
                     Container(
                       margin: EdgeInsets.only(top: size*0.05,bottom: size*0.08),
                       child: Text(
-                        "Ensure you’re in a safe, quiet space away from areas with water. If new, consider supervision. Start comfortably seated or lying down. Maintain a steady pace - don’t rush. Consult a healthcare professional if you have medical conditions, are pregnant, or feel discomfort. Regular practice yields results, but don’t force yourself if unwell. Enjoy your practice and listen to your body.",
+                        fireBeforeYourSessionText,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: size*0.04,
