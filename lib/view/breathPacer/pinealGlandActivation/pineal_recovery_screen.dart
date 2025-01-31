@@ -23,7 +23,7 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
   // late Timer _timer;
   int _startTime = 0;
   bool _isPaused = false;
-  bool isAlreadyTapped = false;
+  // bool isAlreadyTapped = false;
 
   @override
   void initState() {
@@ -106,12 +106,12 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
           ),
           child: GestureDetector(
             onTap: () {
-              if(!isAlreadyTapped){
-                isAlreadyTapped = true;
-                recoverCountdownController.pause();
-                storeScreenTime();
-                navigate(context.read<PinealCubit>());
-              }
+              // if(!isAlreadyTapped){
+              //   isAlreadyTapped = true;
+              //   recoverCountdownController.pause();
+              //   storeScreenTime();
+              //   navigate(context.read<PinealCubit>());
+              // }
             },
             child: Column(
               children: [
@@ -123,7 +123,8 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
-                      togglePauseResume();
+                      // togglePauseResume();
+                      recoverCountdownController.pause();   
                       context.read<PinealCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);
@@ -208,13 +209,21 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
                           child: Countdown(
                             controller: recoverCountdownController,
                             seconds: context.read<PinealCubit>().recoveryBreathDuration,
-                            build: (BuildContext context, double time) => Text(
-                              formatTimer(time),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: size*0.2
-                              ),
-                            ),
+                            build: (BuildContext context, double time) {
+                              // if(formatTimer(time) == "00:00"){
+                              //   storeScreenTime();
+                              //   context.read<PinealCubit>().stopRecovery();
+                              // }
+                              
+                              return Text(
+                                formatTimer(time),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: size*0.2
+                                ),
+                              );
+                            }
+                            ,
                             interval: const Duration(seconds: 1),
                             onFinished: (){
                               storeScreenTime();
@@ -310,11 +319,14 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
     if(cubit.remainingBreathTime > 0){
       context.read<PinealCubit>().playTimeToNextSet();
 
-      await Future.delayed(Duration(seconds: cubit.jerryVoice?9:0), () {
-        // context.read<PinealCubit>().resetJerryVoiceAndPLayAgain();
-        cubit.currentSet = cubit.currentSet+1;
-        context.goNamed(RoutesName.pinealScreen);
-      },);
+      if(context.mounted){
+        // await Future.delayed(Duration(seconds: cubit.jerryVoice?9:0), () {
+        await Future.delayed(Duration(seconds: cubit.jerryVoice?2:0), () {
+          // context.read<PinealCubit>().resetJerryVoiceAndPLayAgain();
+          cubit.currentSet = cubit.currentSet+1;
+          context.goNamed(RoutesName.pinealScreen);
+        },);
+      }
     }else{
       cubit.stopMusic();
       cubit.stopJerry();

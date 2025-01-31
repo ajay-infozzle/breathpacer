@@ -27,7 +27,6 @@ import 'package:breathpacer/view/breathPacer/pyramidBreathing/pyramid_instructio
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/pyramid_setting_screen.dart';
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/pyramid_success_screen.dart';
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/pyramid_waiting_screen.dart';
-import 'package:breathpacer/view/home/home_screen.dart';
 import 'package:breathpacer/view/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

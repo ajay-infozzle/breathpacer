@@ -312,20 +312,15 @@ class FirebreathingSettingScreen extends StatelessWidget {
                             width: size,
                             child:
                                 BlocBuilder<FirebreathingCubit, FirebreathingState>(
-                              buildWhen: (previous, current) =>
-                                  current is FirebreathingInitial ||
+                              buildWhen: (previous, current) => current is FirebreathingInitial ||
                                   current is FirebreathingToggleJerryVoice,
                               builder: (context, state) {
                                 return SettingsToggleButton(
                                     onToggle: () {
-                                      context
-                                          .read<FirebreathingCubit>()
-                                          .toggleJerryVoice();
+                                      context.read<FirebreathingCubit>().toggleJerryVoice();
                                     },
                                     title: "Jerry's voice :",
-                                    isOn: context
-                                        .read<FirebreathingCubit>()
-                                        .jerryVoice);
+                                    isOn: context.read<FirebreathingCubit>().jerryVoice);
                               },
                             ),
                           ),
@@ -418,6 +413,25 @@ class FirebreathingSettingScreen extends StatelessWidget {
                               },
                             ),
                           ),
+                          
+                          SizedBox(height: size * 0.05,),
+                          SizedBox(
+                            width: size,
+                            child:
+                                BlocBuilder<FirebreathingCubit, FirebreathingState>(
+                              buildWhen: (previous, current) => current is FirebreathingInitial ||
+                                  current is FirebreathingToggleSkipIntro,
+                              builder: (context, state) {
+                                return SettingsToggleButton(
+                                    onToggle: () {
+                                      context.read<FirebreathingCubit>().toggleSkipIntro();
+                                    },
+                                    title: "Skip intro",
+                                    isOn: context.read<FirebreathingCubit>().skipIntro);
+                              },
+                            ),
+                          ),
+
                           Container(
                             margin: EdgeInsets.only(
                                 top: size * 0.09,

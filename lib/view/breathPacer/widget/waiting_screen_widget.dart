@@ -7,14 +7,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
-class WaitingScreenWidget extends StatelessWidget {
-  const WaitingScreenWidget({super.key, required this.title, required this.onTimerFinished, this.countdownTime = 10});
+class WaitingScreenWidget extends StatefulWidget {
+  const WaitingScreenWidget({super.key, required this.title, required this.onTimerFinished, this.countdownTime = 10, required this.onSkip});
 
   final int countdownTime;
   final String title;
   final Function onTimerFinished ;
+  final Function onSkip ;
+
+  @override
+  State<WaitingScreenWidget> createState() => _WaitingScreenWidgetState();
+}
+
+class _WaitingScreenWidgetState extends State<WaitingScreenWidget> {
+  CountdownController countdownController = CountdownController(autoStart: true);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +68,7 @@ class WaitingScreenWidget extends StatelessWidget {
                   child: const Icon(Icons.arrow_back_ios),
                 ),
                 title: Text(
-                  title,
+                  widget.title,
                   style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -101,7 +110,8 @@ class WaitingScreenWidget extends StatelessWidget {
                           color: AppTheme.colors.blueNotChosen.withOpacity(.3),
                           child: Center(
                             child: Countdown(
-                              seconds: countdownTime,
+                              controller: countdownController,
+                              seconds: widget.countdownTime,
                               build: (BuildContext context, double time) => Text(
                                 formatTimer(time),
                                 style: TextStyle(
@@ -110,12 +120,26 @@ class WaitingScreenWidget extends StatelessWidget {
                                 ),
                               ),
                               interval: const Duration(seconds: 1),
-                              onFinished: onTimerFinished,
+                              onFinished: widget.onTimerFinished,
                             ),
                           ),
                         ),
                       ),
                     ),
+
+                    // const Spacer(),
+                    // CustomButton(
+                    //   title: "Skip",
+                    //   textsize: size * 0.043,
+                    //   height: height * 0.062,
+                    //   width: size,
+                    //   spacing: .7,
+                    //   radius: 0,
+                    //   onPress: () {
+                    //     countdownController.pause();
+                    //     widget.onSkip();
+                    //   }
+                    // )
                   ],
                 ) 
               ),
@@ -125,7 +149,7 @@ class WaitingScreenWidget extends StatelessWidget {
       ),
     );
   }
-  
+
   String formatTimer(double time) {
     if(time < 10){
       return "00:0${time.toString().split(".").first}" ;

@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:breathpacer/bloc/pineal/pineal_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
@@ -34,13 +36,16 @@ class _PinealScreenState extends State<PinealScreen> {
     if(context.read<PinealCubit>().currentSet == 1){
       context.read<PinealCubit>().updateRemainingBreathTime(context.read<PinealCubit>().breathingPeriod);
     }
+
+    context.read<PinealCubit>().playHold();
+
     holdCountdownController = CountdownController(autoStart: true);
     remainingCountdownController = CountdownController(autoStart: true);
   }
 
   void startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      // todo : dummy for getting motivation start 
+      
       if(_startTime%10 == 0 && _startTime > 9){
         if(context.read<PinealCubit>().holdDuration == -1 && context.read<PinealCubit>().breathingPeriod - _startTime > 10){
           // context.read<PinealCubit>().playMotivation(0.0);
@@ -55,7 +60,11 @@ class _PinealScreenState extends State<PinealScreen> {
   }
 
   void stopTimer() {
-    _timer.cancel();
+    try {
+      _timer.cancel();
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   void resumeTimer() {
@@ -141,17 +150,17 @@ class _PinealScreenState extends State<PinealScreen> {
           ),
           child: GestureDetector(
             onTap: () {
-              if(!isAlreadyTapped){
-                isAlreadyTapped = true;
+              // if(!isAlreadyTapped){
+              //   isAlreadyTapped = true;
 
-                if(context.read<PinealCubit>().holdDuration == -1){
-                  storeScreenTime();
-                  if(!remainingCountdownController.isCompleted!){
-                    remainingCountdownController.pause();
-                  }
-                  navigate(context.read<PinealCubit>());
-                }
-              }              
+              //   if(context.read<PinealCubit>().holdDuration == -1){
+              //     storeScreenTime();
+              //     if(!remainingCountdownController.isCompleted!){
+              //       remainingCountdownController.pause();
+              //     }
+              //     navigate(context.read<PinealCubit>());
+              //   }
+              // }              
             },
             child: Column(
               children: [
@@ -163,7 +172,12 @@ class _PinealScreenState extends State<PinealScreen> {
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
-                      togglePauseResume();
+                      if(context.read<PinealCubit>().holdDuration != -1 ){
+                        holdCountdownController.pause();
+                      }
+                      remainingCountdownController.pause();
+                      stopTimer(); 
+                      
                       context.read<PinealCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);
@@ -204,7 +218,8 @@ class _PinealScreenState extends State<PinealScreen> {
                         margin: EdgeInsets.symmetric(horizontal: size*0.05),
                         alignment: Alignment.center,
                         child: Text(
-                          "Squeeze & Breathe in",
+                          "Squeeze & Hold on Breathe in",
+                          // "Squeeze & Breathe in",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: size*0.05,
@@ -276,8 +291,6 @@ class _PinealScreenState extends State<PinealScreen> {
                             controller: holdCountdownController,
                             seconds: context.read<PinealCubit>().holdDuration,
                             build: (BuildContext cnt, double time) {
-                              // context.read<PinealCubit>().playMotivation(time);
-                              
                               return Text(
                                 formatTimer(time, isForHold: true),
                                 style: TextStyle(
@@ -323,21 +336,27 @@ class _PinealScreenState extends State<PinealScreen> {
                           child: Countdown(
                             controller: remainingCountdownController,
                             seconds: context.read<PinealCubit>().remainingBreathTime,
-                            build: (BuildContext context, double time) => Text(
-                              formatTimer(time),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: size*0.2
-                              ),
-                            ),
+                            build: (BuildContext context, double time) {
+                              return Text(
+                                formatTimer(time),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: size*0.2
+                                ),
+                              );
+                            },
                             interval: const Duration(seconds: 1),
                             onFinished: (){
                               storeScreenTime();
                               context.read<PinealCubit>().stopJerry();
 
                               if(context.read<PinealCubit>().holdDuration != -1){
-                                if(!holdCountdownController.isCompleted!){
-                                  holdCountdownController.pause();
+                                try {
+                                  if(!holdCountdownController.isCompleted!){
+                                    holdCountdownController.pause();
+                                  }
+                                } catch (e) {
+                                  log(e.toString());
                                 }
                               }
 
@@ -349,21 +368,37 @@ class _PinealScreenState extends State<PinealScreen> {
      
 
                       if(context.read<PinealCubit>().holdDuration == -1)
-                      Container(
-                        alignment: Alignment.center,
-                        color: Colors.transparent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Tap to go to recovery",
-                              style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                            ),
-                            const SizedBox(width: 10),
-                            const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                          ],
+                      GestureDetector(
+                        onTap: () {
+                          if(!isAlreadyTapped){
+                            isAlreadyTapped = true;
+
+                            if(context.read<PinealCubit>().holdDuration == -1){
+                              storeScreenTime();
+                              if(!remainingCountdownController.isCompleted!){
+                                remainingCountdownController.pause();
+                              }
+                              navigate(context.read<PinealCubit>());
+                            }
+                          } 
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          color: Colors.transparent,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Tap to go to recovery",
+                                style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                              ),
+                              const SizedBox(width: 10),
+                              const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                            ],
+                          ),
                         ),
                       ),
+
                       SizedBox(height: height*0.08,),
                     ],
                   ) 
@@ -385,8 +420,14 @@ class _PinealScreenState extends State<PinealScreen> {
 
     if(isForHold){
       //~ to start motivation
-      if(context.read<PinealCubit>().holdDuration > 15){
-        if(time % 12 == 0 && time.toDouble() != context.read<PinealCubit>().holdDuration && (context.read<PinealCubit>().holdDuration - time) > 7 && int.parse(secondsStr) > 6){
+      if(context.read<PinealCubit>().holdDuration >= 15 && context.read<PinealCubit>().holdDuration < 30){
+        if(time % 8 == 0 && time.toDouble() != context.read<PinealCubit>().holdDuration && (context.read<PinealCubit>().holdDuration - time) > 6 && int.parse(secondsStr) > 6){
+          context.read<PinealCubit>().playHoldMotivation();
+        }
+      }
+
+      if(context.read<PinealCubit>().holdDuration >= 30 && context.read<PinealCubit>().jerryVoicePlayer.state != PlayerState.playing){
+        if(time % 12 == 0 && time.toDouble() != context.read<PinealCubit>().holdDuration && (context.read<PinealCubit>().holdDuration - time) > 6 && int.parse(secondsStr) > 6){
           context.read<PinealCubit>().playHoldMotivation();
         }
       }
@@ -396,7 +437,7 @@ class _PinealScreenState extends State<PinealScreen> {
         context.read<PinealCubit>().playHoldCountdown();
       }
       if(secondsStr == "03" && context.read<PinealCubit>().holdDuration == 10){
-        context.read<PinealCubit>().playHoldCountdown();
+        context.read<PinealCubit>().playHoldCountdown(isVeryShort: true);
       }
     }
     
@@ -408,10 +449,12 @@ class _PinealScreenState extends State<PinealScreen> {
     cubit.stopJerry();
     cubit.playTimeToRecover();
 
-    await Future.delayed(Duration(seconds: cubit.jerryVoice?2:0), () {
-      cubit.playRecovery();
-      context.goNamed(RoutesName.pinealRecoveryScreen);
-    },);
+    if(context.mounted){
+      await Future.delayed(Duration(seconds: cubit.jerryVoice?2:0), () {
+        cubit.playRecovery();
+        context.goNamed(RoutesName.pinealRecoveryScreen);
+      },);
+    }
   }
 
 }

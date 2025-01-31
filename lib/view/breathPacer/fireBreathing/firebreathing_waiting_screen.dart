@@ -21,6 +21,14 @@ class FirebreathingWaitingScreen extends StatelessWidget {
 
         context.pushReplacementNamed(RoutesName.fireBreathingScreen);
       },
+      onSkip: (){
+        context.read<FirebreathingCubit>().currentSet = 1 ;
+        context.read<FirebreathingCubit>().stopCloseEyes();
+        context.read<FirebreathingCubit>().playChime();
+        context.read<FirebreathingCubit>().playJerry();
+
+        context.pushReplacementNamed(RoutesName.fireBreathingScreen);
+      },
     );
   }
 }

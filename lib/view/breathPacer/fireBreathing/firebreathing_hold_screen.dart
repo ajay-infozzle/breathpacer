@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:breathpacer/bloc/firebreathing/firebreathing_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
@@ -52,7 +53,11 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
 
 
   void stopTimer() {
-    _timer.cancel();
+    try {
+       _timer.cancel();
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   void resumeTimer() {
@@ -117,11 +122,11 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
           ),
           child: GestureDetector(
             onTap: () {
-              if(!isAlreadyTapped) {
-                isAlreadyTapped = true;
-                storeScreenTime();
-                navigate(context.read<FirebreathingCubit>());
-              }
+              // if(!isAlreadyTapped) {
+              //   isAlreadyTapped = true;
+              //   storeScreenTime();
+              //   navigate(context.read<FirebreathingCubit>());
+              // }
             },
             child: Column(
               children: [
@@ -132,7 +137,10 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
-                      togglePauseResume();
+                      // togglePauseResume();
+
+                      countdownController.pause();
+                      stopTimer();
                       context.read<FirebreathingCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);
@@ -237,21 +245,36 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
                       ),
 
                       const Spacer(),
-                      Container(
-                        alignment: Alignment.center,
-                        color: Colors.transparent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              generateTapText(context.read<FirebreathingCubit>()),
-                              style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                            ),
-                            const SizedBox(width: 10),
-                            const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                          ],
+
+                      GestureDetector(
+                        onTap: () {
+                          if(!isAlreadyTapped) {
+                            isAlreadyTapped = true;
+                            if(context.read<FirebreathingCubit>().holdDuration != -1){
+                              countdownController.pause();
+                            }
+                            
+                            storeScreenTime();
+                            navigate(context.read<FirebreathingCubit>());
+                          }
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          color: Colors.transparent,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                generateTapText(context.read<FirebreathingCubit>()),
+                                style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                              ),
+                              const SizedBox(width: 10),
+                              const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                            ],
+                          ),
                         ),
                       ),
+
                       SizedBox(height: height*0.08,),
                     ],
                   ) 
@@ -344,7 +367,7 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
     if(secondsStr == "06" && context.read<FirebreathingCubit>().holdDuration != 10){
       context.read<FirebreathingCubit>().playHoldCountdown();
     }
-    if(secondsStr == "03" && context.read<FirebreathingCubit>().holdDuration == 10){
+    if(secondsStr == "06" && context.read<FirebreathingCubit>().holdDuration == 10){
       context.read<FirebreathingCubit>().playHoldCountdown();
     }
     

@@ -21,6 +21,13 @@ class PinealWaitingScreen extends StatelessWidget {
 
         context.pushReplacementNamed(RoutesName.pinealScreen);
       },
+      onSkip: (){
+        context.read<PinealCubit>().currentSet = 1 ;
+        context.read<PinealCubit>().stopCloseEyes();
+        context.read<PinealCubit>().playChime();
+
+        context.pushReplacementNamed(RoutesName.pinealScreen);
+      },
     );
   }
 }

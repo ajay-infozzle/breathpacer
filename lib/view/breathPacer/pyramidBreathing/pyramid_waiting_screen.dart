@@ -26,6 +26,13 @@ class _PyramidWaitingScreenState extends State<PyramidWaitingScreen> {
 
         context.pushReplacementNamed(RoutesName.pyramidBreathingScreen);
       },
+      onSkip: (){
+        // context.read<PyramidCubit>().currentRound = 1 ;
+        // context.read<PyramidCubit>().stopCloseEyes();
+        // context.read<PyramidCubit>().playChime();
+
+        // context.pushReplacementNamed(RoutesName.pyramidBreathingScreen);
+      },
     );
   }
 }

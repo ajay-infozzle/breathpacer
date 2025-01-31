@@ -499,6 +499,24 @@ class _DnaSettingScreenState extends State<DnaSettingScreen>
                               },
                             ),
                           ),
+
+                          SizedBox(height: size * 0.05,),
+                          SizedBox(
+                            width: size,
+                            child: BlocBuilder<DnaCubit, DnaState>(
+                              buildWhen: (previous, current) =>
+                                  current is DnaInitial ||
+                                  current is DnaToggleSkipIntro,
+                              builder: (context, state) {
+                                return SettingsToggleButton(
+                                    onToggle: () {
+                                      context.read<DnaCubit>().toggleSkipIntro();
+                                    },
+                                    title: "Skip intro :",
+                                    isOn: context.read<DnaCubit>().skipIntro);
+                              },
+                            ),
+                          ),
                                       
                           // SizedBox(height: size*0.03,),
                           // Container(

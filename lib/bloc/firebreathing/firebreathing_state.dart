@@ -15,6 +15,7 @@ final class FirebreathingToggleJerryVoice extends FirebreathingState {}
 final class FirebreathingTogglePineal extends FirebreathingState {}
 final class FirebreathingToggleBreathHoldChoice extends FirebreathingState {}
 final class FirebreathingToggleMusic extends FirebreathingState {}
+final class FirebreathingToggleSkipIntro extends FirebreathingState {}
 final class FirebreathingToggleChimes extends FirebreathingState {}
 
 final class FirebreathingToggleSave extends FirebreathingState {}

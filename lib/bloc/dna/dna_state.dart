@@ -18,6 +18,7 @@ final class DnaHoldDurationUpdate extends DnaState {}
 final class DnaToggleJerryVoice extends DnaState {}
 final class DnaTogglePineal extends DnaState {}
 final class DnaToggleMusic extends DnaState {}
+final class DnaToggleSkipIntro extends DnaState {}
 final class DnaToggleChimes extends DnaState {}
 final class DnaToggleBreathHoldChoice extends DnaState {}
 final class DnaToggleSave extends DnaState {}

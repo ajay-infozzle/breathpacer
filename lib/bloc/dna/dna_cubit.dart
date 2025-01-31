@@ -29,6 +29,7 @@ class DnaCubit extends Cubit<DnaState> {
   bool music = true;
   bool chimes = true;
   bool pineal = false;
+  bool skipIntro = false;
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn); //~ temporary
   String choiceOfBreathHold = 'Breath in';
   int breathHoldIndex = 0;
@@ -122,6 +123,11 @@ class DnaCubit extends Cubit<DnaState> {
   void toggleMusic(){
     music = !music ;
     emit(DnaToggleMusic());
+  }
+
+  void toggleSkipIntro(){
+    skipIntro = !skipIntro ;
+    emit(DnaToggleSkipIntro());
   }
 
   void updateMusic(String selected){
@@ -254,7 +260,13 @@ class DnaCubit extends Cubit<DnaState> {
   void playCloseEyes() async {
     try {
       if(jerryVoice){
-        await closeEyePlayer.play(AssetSource('audio/dna_start.mp3'), );
+        if(skipIntro){
+          await closeEyePlayer.play(AssetSource('audio/skip_intro.mp3'), );
+        }
+        else{
+          await closeEyePlayer.play(AssetSource('audio/dna_start.mp3'), );
+        }
+
         Duration? duration = await closeEyePlayer.getDuration();
         waitingTime = duration!.inSeconds;
         emit(NavigateToWaitingScreen());
@@ -454,9 +466,34 @@ class DnaCubit extends Cubit<DnaState> {
       if(jerryVoice){
         breathHoldPlayer.stop();
         if(holdDuration == 10){
-          await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
+          // await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
+          
+          if(breathHoldIndex == 0){
+            if(choiceOfBreathHold == 'Both'){
+              await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3'));
+              return ;
+            }
+
+            recoveryBreath 
+            ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
+            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_out_countdown.mp3'));
+          }else{
+            recoveryBreath 
+            ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
+            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_in_countdown.mp3'));
+          }
         }else{
-          await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+          // await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+          
+          if(breathHoldIndex == 0){
+            recoveryBreath 
+            ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
+            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_out_countdown.mp3'));
+          }else{
+            recoveryBreath 
+            ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
+            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_in_countdown.mp3'));
+          }
         }
       }
     } on Exception catch (e) {
@@ -494,6 +531,7 @@ class DnaCubit extends Cubit<DnaState> {
           }
         }
 
+        jerryVoicePlayer.stop();//
         breathHoldPlayer.stop();
         await breathHoldPlayer.play(AssetSource('audio/motivation.mp3'));
 

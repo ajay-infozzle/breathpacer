@@ -25,6 +25,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   bool music = true;
   bool chimes = true;
   bool pineal = false;
+  bool skipIntro = false;
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.fireBreathing); //~ temporary
   String choiceOfBreathHold = 'Breath in';
   int breathHoldIndex = 0;
@@ -106,6 +107,11 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   void toggleMusic(){
     music = !music ;
     emit(FirebreathingToggleMusic());
+  }
+
+  void toggleSkipIntro(){
+    skipIntro = !skipIntro ;
+    emit(FirebreathingToggleSkipIntro());
   }
 
   void updateMusic(String selected){
@@ -230,7 +236,10 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   void playCloseEyes() async {
     try {
       if(jerryVoice){
-        if(pineal){
+        if(skipIntro){
+          await closeEyePlayer.play(AssetSource('audio/skip_intro.mp3'), );
+        }
+        else if(pineal){
           await closeEyePlayer.play(AssetSource('audio/firebreathing_pineal_start.mp3'), );
         }
         else{
@@ -435,9 +444,29 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
       if(jerryVoice){
         breathHoldPlayer.stop();
         if(holdDuration == 10){
-          await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
+          // await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
+          
+          if(breathHoldIndex == 0){
+            recoveryBreath 
+            ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
+            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_out_countdown.mp3'));
+          }else{
+            recoveryBreath 
+            ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
+            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_in_countdown.mp3'));
+          }
         }else{
-          await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+          // await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+          
+          if(breathHoldIndex == 0){
+            recoveryBreath 
+            ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
+            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_out_countdown.mp3'));
+          }else{
+            recoveryBreath 
+            ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
+            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_in_countdown.mp3'));
+          }
         }
       }
     } on Exception catch (e) {

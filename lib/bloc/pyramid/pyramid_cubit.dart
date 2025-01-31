@@ -7,7 +7,7 @@ import 'package:breathpacer/utils/toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:meta/meta.dart';
+// import 'package:meta/meta.dart';
 
 part 'pyramid_state.dart';
 
@@ -19,6 +19,7 @@ class PyramidCubit extends Cubit<PyramidState> {
   bool jerryVoice = true;
   bool music = true;
   bool chimes = true;
+  bool skipIntro = false;
   String jerryVoiceAssetFile = jerryVoiceOver(JerryVoiceEnum.breatheIn);
   String choiceOfBreathHold = 'Breathe in';
   int breathHoldIndex = 0;
@@ -55,6 +56,11 @@ class PyramidCubit extends Cubit<PyramidState> {
   void toggleMusic(){
     music = !music ;
     emit(PyramidToggleMusic());
+  }
+
+  void toggleSkipIntro(){
+    skipIntro = !skipIntro;
+    emit(PyramidToggleIntro());
   }
 
   void updateMusic(String selected){
@@ -173,9 +179,12 @@ class PyramidCubit extends Cubit<PyramidState> {
   void playCloseEyes() async {
     try {
       if(jerryVoice){
-        if(step == "4"){
+        if(skipIntro){
+          await closeEyePlayer.play(AssetSource('audio/skip_intro.mp3'), );
+        }
+        else if(step == "4"){
           await closeEyePlayer.play(AssetSource('audio/four_step_start.mp3'), );
-        }else{
+        }else if(step == "2"){
           await closeEyePlayer.play(AssetSource('audio/two_step_start.mp3'), );
         }
         
@@ -183,7 +192,7 @@ class PyramidCubit extends Cubit<PyramidState> {
         waitingTime = duration!.inSeconds;
         emit(NavigateToWaitingScreen());
       }else{
-        waitingTime = 10;
+        waitingTime = 5;
         emit(NavigateToWaitingScreen());
       }
     } on Exception catch (e) {
@@ -400,9 +409,19 @@ class PyramidCubit extends Cubit<PyramidState> {
       if(jerryVoice){
         breathHoldPlayer.stop();
         if(holdDuration == 10){
-          await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
+          // await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
+          if(breathHoldIndex == 0){
+            await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3'));
+          }else{
+            await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_in_countdown.mp3'));
+          }
         }else{
-          await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+          // await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+          if(breathHoldIndex == 0){
+            await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3'));
+          }else{
+            await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_in_countdown.mp3'));
+          }
         }
       }
     } on Exception catch (e) {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:breathpacer/bloc/dna/dna_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
@@ -141,12 +142,12 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
           }
 
           // Stop the animation if the breath count reaches 0
-          if (breathCount == -1) {
-            _controller.stop();
+          // if (breathCount == -1) {
+          //   _controller.stop();
 
-            storeScreenTime();
-            navigate(context.read<DnaCubit>());
-          }
+          //   storeScreenTime();
+          //   navigate(context.read<DnaCubit>());
+          // }
         }
       }
 
@@ -218,6 +219,14 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
             }
           });
           hasIncreased = true;
+
+          // Stop the animation if the breath count reaches 0
+          if (breathCount == 0) {
+            _controller.stop();
+
+            storeScreenTime();
+            navigate(context.read<DnaCubit>());
+          }
         }
       }
 
@@ -256,7 +265,11 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
 
 
   void stopTimer() {
-    _timer.cancel();
+    try {
+      _timer.cancel();
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   void resumeTimer() {
@@ -339,15 +352,15 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
           ),
           child: GestureDetector(
             onTap: () {
-              if(!isAlreadyTapped){
-                isAlreadyTapped = true;
-                storeScreenTime();
-                if(context.read<DnaCubit>().isTimeBreathingApproch){
-                  countdownController.pause();
-                }
+              // if(!isAlreadyTapped){
+              //   isAlreadyTapped = true;
+              //   storeScreenTime();
+              //   if(context.read<DnaCubit>().isTimeBreathingApproch){
+              //     countdownController.pause();
+              //   }
 
-                navigate(context.read<DnaCubit>());
-              }
+              //   navigate(context.read<DnaCubit>());
+              // }
             },
             child: Column(
               children: [
@@ -358,7 +371,16 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
-                      togglePauseResume();
+                      // togglePauseResume();
+                      if(context.read<DnaCubit>().isTimeBreathingApproch){
+                        countdownController.pause();
+                        _controller.stop();
+                      }
+                      else{
+                        _controller.stop();
+                      }
+                      stopTimer();
+
                       context.read<DnaCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);
@@ -484,43 +506,35 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
 
 
                       if(context.read<DnaCubit>().isTimeBreathingApproch)
-                        AnimatedBuilder(
-                          animation: _controller,
-                          builder: (context, child) {
-                            return Transform.scale(
-                              scale: _animation.value,
-                              child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: size * 0.12),
-                                height: size - 2 * (size * 0.12),
-                                alignment: Alignment.center,
-                                child: ClipPath(
-                                  clipper: OctagonalClipper(),
-                                  child: Container(
-                                    height: size - 2 * (size * 0.12),
-                                    color: AppTheme.colors.blueNotChosen.withOpacity(.3),
-                                    child: Center(
-                                      child: Countdown(
-                                      controller: countdownController,
-                                      seconds: context.read<DnaCubit>().durationOfSet,
-                                      build: (BuildContext context, double time) => Text(
-                                        formatTimer(time),
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: size*0.2
-                                        ),
-                                      ),
-                                      interval: const Duration(seconds: 1),
-                                      onFinished: (){
-                                        // storeScreenTime();
-                                        // navigate(context.read<DnaCubit>());
-                                      },
-                                    ),
-                                    ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: size * 0.12),
+                          height: size - 2 * (size * 0.12),
+                          alignment: Alignment.center,
+                          child: ClipPath(
+                            clipper: OctagonalClipper(),
+                            child: Container(
+                              height: size - 2 * (size * 0.12),
+                              color: AppTheme.colors.blueNotChosen.withOpacity(.3),
+                              child: Center(
+                                child: Countdown(
+                                controller: countdownController,
+                                seconds: context.read<DnaCubit>().durationOfSet,
+                                build: (BuildContext context, double time) => Text(
+                                  formatTimer(time),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: size*0.2
                                   ),
                                 ),
-                              )
-                            );
-                          }
+                                interval: const Duration(seconds: 1),
+                                onFinished: (){
+                                  // storeScreenTime();
+                                  // navigate(context.read<DnaCubit>());
+                                },
+                              ),
+                              ),
+                            ),
+                          ),
                         ),
                         // Container(
                         //   margin: EdgeInsets.symmetric(horizontal: size*0.12),
@@ -557,21 +571,39 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
             
                       SizedBox(height: height*0.04,),
                       const Spacer(),
-                      Container(
-                        alignment: Alignment.center,
-                        color: Colors.transparent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              generateTapText(context.read<DnaCubit>()),
-                              style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                            ),
-                            const SizedBox(width: 10),
-                            const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                          ],
+
+                      GestureDetector(
+                        onTap: () {
+                          if(!isAlreadyTapped){
+                            isAlreadyTapped = true;
+                            storeScreenTime();
+
+                            if(context.read<DnaCubit>().isTimeBreathingApproch){
+                              countdownController.pause();
+                            }else{
+                              _controller.stop();
+                            }
+
+                            navigate(context.read<DnaCubit>());
+                          }
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          color: Colors.transparent,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                generateTapText(context.read<DnaCubit>()),
+                                style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                              ),
+                              const SizedBox(width: 10),
+                              const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                            ],
+                          ),
                         ),
                       ),
+
                       SizedBox(height: height*0.08,),
                     ],
                   ) 

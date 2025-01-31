@@ -258,6 +258,24 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen>
                               },
                             ),
                           ),
+
+                          SizedBox(height: size * 0.05,),
+                          SizedBox(
+                            width: size,
+                            child: BlocBuilder<PyramidCubit, PyramidState>(
+                              buildWhen: (previous, current) =>
+                                  current is PyramidInitial ||
+                                  current is PyramidToggleIntro,
+                              builder: (context, state) => SettingsToggleButton(
+                                  onToggle: () {
+                                    context.read<PyramidCubit>().toggleSkipIntro();
+                                  },
+                                  title: "Skip intro",
+                                  isOn: context.read<PyramidCubit>().skipIntro),
+                            ),
+                          ),
+                          
+
                           Container(
                             margin: EdgeInsets.only(
                                 top: size * 0.09,
@@ -301,16 +319,16 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen>
                             },
                             builder: (context, state) {
                               return CustomButton(
-                                  title: "Start",
-                                  textsize: size * 0.043,
-                                  height: height * 0.062,
-                                  spacing: .7,
-                                  radius: 0,
-                                  onPress: () {
-                                    context.read<PyramidCubit>().playMusic();
-                                    context.read<PyramidCubit>().playCloseEyes();
-                                  }
-                              );
+                                title: "Start",
+                                textsize: size * 0.043,
+                                height: height * 0.062,
+                                spacing: .7,
+                                radius: 0,
+                                onPress: () {
+                                  context.read<PyramidCubit>().playMusic();
+                                  context.read<PyramidCubit>().playCloseEyes();
+                                }
+                            );
                             },
                           )
                       ),

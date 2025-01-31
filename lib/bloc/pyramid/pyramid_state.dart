@@ -9,6 +9,7 @@ final class NavigateToWaitingScreen extends PyramidState {}
 final class PyramidToggleJerryVoice extends PyramidState {}
 final class PyramidToggleMusic extends PyramidState {}
 final class PyramidToggleChimes extends PyramidState {}
+final class PyramidToggleIntro extends PyramidState {}
 final class PyramidToggleBreathHold extends PyramidState {}
 
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:breathpacer/bloc/dna/dna_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/config/theme.dart';
@@ -43,7 +44,11 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
   }
 
   void stopTimer() {
-    _timer.cancel();
+    try {
+      _timer.cancel();
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   void resumeTimer() {
@@ -113,16 +118,16 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
           ),
           child: GestureDetector(
             onTap: () {
-              if(!isAlreadyTapped){
-                isAlreadyTapped = true;
+              // if(!isAlreadyTapped){
+              //   isAlreadyTapped = true;
               
-                storeScreenTime();
+              //   storeScreenTime();
 
-                if(context.read<DnaCubit>().holdDuration != -1){
-                  countdownController.pause();
-                }
-                navigate(context.read<DnaCubit>());
-              }
+              //   if(context.read<DnaCubit>().holdDuration != -1){
+              //     countdownController.pause();
+              //   }
+              //   navigate(context.read<DnaCubit>());
+              // }
             },
             child: Column(
               children: [
@@ -133,7 +138,10 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
-                      togglePauseResume();
+                      // togglePauseResume();
+                      countdownController.pause();
+                      stopTimer();
+
                       context.read<DnaCubit>().resetSettings();
 
                       context.goNamed(RoutesName.homeScreen,);
@@ -242,21 +250,37 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
      
 
                       const Spacer(),
-                      Container(
-                        alignment: Alignment.center,
-                        color: Colors.transparent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              generateTapText(context.read<DnaCubit>()),
-                              style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                            ),
-                            const SizedBox(width: 10),
-                            const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                          ],
+
+                      GestureDetector(
+                        onTap: () {
+                          if(!isAlreadyTapped){
+                            isAlreadyTapped = true;
+                          
+                            storeScreenTime();
+
+                            if(context.read<DnaCubit>().holdDuration != -1){
+                              countdownController.pause();
+                            }
+                            navigate(context.read<DnaCubit>());
+                          }
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          color: Colors.transparent,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                generateTapText(context.read<DnaCubit>()),
+                                style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                              ),
+                              const SizedBox(width: 10),
+                              const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                            ],
+                          ),
                         ),
                       ),
+
                       SizedBox(height: height*0.08,),
                     ],
                   ) 
@@ -295,7 +319,7 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
     if(secondsStr == "06" && context.read<DnaCubit>().holdDuration != 10){
       context.read<DnaCubit>().playHoldCountdown();
     }
-    if(secondsStr == "03" && context.read<DnaCubit>().holdDuration == 10){
+    if(secondsStr == "06" && context.read<DnaCubit>().holdDuration == 10){
       context.read<DnaCubit>().playHoldCountdown();
     }
     
@@ -338,6 +362,8 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
         },);
       }else{
         if(cubit.noOfSets == cubit.currentSet ){
+          context.read<DnaCubit>().stopMusic();
+          context.read<DnaCubit>().playChime();
           context.read<DnaCubit>().playRelax();
           context.goNamed(RoutesName.dnaSuccessScreen);
         }else{

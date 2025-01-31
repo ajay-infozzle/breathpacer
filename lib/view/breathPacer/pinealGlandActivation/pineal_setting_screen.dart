@@ -257,6 +257,24 @@ class PinealSettingScreen extends StatelessWidget {
                               },
                             ),
                           ),
+
+                          SizedBox(height: size * 0.05,),
+                          SizedBox(
+                            width: size,
+                            child: BlocBuilder<PinealCubit, PinealState>(
+                              buildWhen: (previous, current) =>
+                                  current is PinealInitial ||
+                                  current is PinealToggleSkipIntro,
+                              builder: (context, state) {
+                                return SettingsToggleButton(
+                                    onToggle: () {
+                                      context.read<PinealCubit>().toggleSkipIntro();
+                                    },
+                                    title: "Skip intro",
+                                    isOn: context.read<PinealCubit>().skipIntro);
+                              },
+                            ),
+                          ),
                         ],
                       ),
                     ),

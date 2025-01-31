@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:breathpacer/bloc/pyramid/pyramid_cubit.dart';
 import 'package:breathpacer/config/router/routes_name.dart';
@@ -106,8 +107,8 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
             //   context.read<PyramidCubit>().playBreathing("audio/single_breath_out_standard.mp3");
             // }
             
-            breathOption = 'Breathe In';
             if(breathCount != 0 && breathCount != -1){
+              breathOption = 'Breathe In';
               context.read<PyramidCubit>().playBreathing("audio/single_breath_in_standard.mp3");
             }
           });
@@ -115,7 +116,7 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
         }
 
         // Stop the animation if the breath count reaches 0
-        if (breathCount == -1) {
+        if (breathCount == 0) {
           _controller.stop();
 
           storeScreenTime();
@@ -159,8 +160,32 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
     });
   }
 
+  void onOneTap() async{
+    isAlreadyTapped = true;
+    _controller.stop();
+    storeScreenTime();
+  
+    if(context.read<PyramidCubit>().choiceOfBreathHold == "Both"){
+      context.read<PyramidCubit>().breathHoldIndex = 0;
+    } 
+
+    context.read<PyramidCubit>().stopJerry();
+
+    context.read<PyramidCubit>().playTimeToHold();
+    if(context.mounted){
+      await Future.delayed(const Duration(seconds: 2), () {
+        context.read<PyramidCubit>().playHold();
+        context.goNamed(RoutesName.pyramidBreathHoldScreen);
+      },);
+    }
+  }
+
   void stopTimer() {
-    _timer.cancel();
+    try {
+       _timer.cancel();
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   void resumeTimer() {
@@ -228,22 +253,25 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
           ),
           child: GestureDetector(
             onTap: () async{
-              if(!isAlreadyTapped){
-                isAlreadyTapped = true;
-                storeScreenTime();
+              // if(!isAlreadyTapped){
+              //   isAlreadyTapped = true;
+              //   _controller.stop();
+              //   storeScreenTime();
               
-                if(context.read<PyramidCubit>().choiceOfBreathHold == "Both"){
-                  context.read<PyramidCubit>().breathHoldIndex = 0;
-                } 
+              //   if(context.read<PyramidCubit>().choiceOfBreathHold == "Both"){
+              //     context.read<PyramidCubit>().breathHoldIndex = 0;
+              //   } 
 
-                context.read<PyramidCubit>().stopJerry();
+              //   context.read<PyramidCubit>().stopJerry();
 
-                context.read<PyramidCubit>().playTimeToHold();
-                await Future.delayed(const Duration(seconds: 2), () {
-                  context.read<PyramidCubit>().playHold();
-                  context.goNamed(RoutesName.pyramidBreathHoldScreen);
-                },);
-              }
+              //   context.read<PyramidCubit>().playTimeToHold();
+              //   if(context.mounted){
+              //     await Future.delayed(const Duration(seconds: 2), () {
+              //       context.read<PyramidCubit>().playHold();
+              //       context.goNamed(RoutesName.pyramidBreathHoldScreen);
+              //     },);
+              //   }
+              // }
             },
             child: Column(
               children: [
@@ -254,7 +282,11 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
                   automaticallyImplyLeading: false,
                   leading: GestureDetector(
                     onTap: (){
-                      togglePauseResume();
+                      // togglePauseResume();
+
+                      _controller.stop(); 
+                      stopTimer();
+                      
                       context.read<PyramidCubit>().resetSettings(
                         context.read<PyramidCubit>().step ?? '', 
                         context.read<PyramidCubit>().speed ?? ''
@@ -379,19 +411,28 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
             
                       SizedBox(height: height*0.04,),
                       const Spacer(),
-                      Container(
-                        alignment: Alignment.center,
-                        color: Colors.transparent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Tap to hold ${context.read<PyramidCubit>().breathHoldList[context.read<PyramidCubit>().breathHoldIndex]}",
-                              style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                            ),
-                            const SizedBox(width: 10),
-                            const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                          ],
+
+                      GestureDetector(
+                        onTap: () async{
+                          if(!isAlreadyTapped){
+                            onOneTap();
+                          }
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          color: Colors.transparent,
+                          width: size,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Tap to hold ${context.read<PyramidCubit>().breathHoldList[context.read<PyramidCubit>().breathHoldIndex]}",
+                                style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                              ),
+                              const SizedBox(width: 10),
+                              const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(height: height*0.08,),

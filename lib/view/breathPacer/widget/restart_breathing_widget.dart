@@ -41,14 +41,14 @@ class RestartBreathingWidget extends StatelessWidget {
                   ),
       
                   Text(
-                    'Start over and get better results',
+                    'Start again and get better results',
                     style: TextStyle(
                       fontSize: size*0.04, color: Colors.white
                     ),
                   ),
       
                   Text(
-                    'Start over',
+                    'Start again',
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: size*0.046,
