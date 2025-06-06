@@ -27,7 +27,7 @@ class PyramidBreathWorkPreferenceWidget extends StatelessWidget {
           showContent: true,
           containerColor: Colors.white,
           textColor: Colors.black.withOpacity(.7),
-          iconColor: const Color(0xffFE60D4),
+          // iconColor: const Color(0xffFE60D4),
         ),
         divider(),
 
@@ -40,7 +40,7 @@ class PyramidBreathWorkPreferenceWidget extends StatelessWidget {
           showContent: true,
           containerColor: Colors.white,
           textColor: Colors.black.withOpacity(.7),
-          iconColor: const Color(0xffFE60D4),
+          // iconColor: const Color(0xffFE60D4),
         ),
         divider(),
 
@@ -54,7 +54,7 @@ class PyramidBreathWorkPreferenceWidget extends StatelessWidget {
           showContent: true,
           containerColor: Colors.white,
           textColor: Colors.black.withOpacity(.7),
-          iconColor: const Color(0xffFE60D4),
+          // iconColor: const Color(0xffFE60D4),
         ),
         divider(),
 
@@ -68,7 +68,7 @@ class PyramidBreathWorkPreferenceWidget extends StatelessWidget {
           showContent: true,
           containerColor: Colors.white,
           textColor: Colors.black.withOpacity(.7),
-          iconColor: const Color(0xffFE60D4),
+          // iconColor: const Color(0xffFE60D4),
         ),
         divider(),
 
@@ -76,13 +76,13 @@ class PyramidBreathWorkPreferenceWidget extends StatelessWidget {
         ResultContainerSectionWidget(
           title: "Choice of breath hold:",
           content: context.read<PyramidCubit>().choiceOfBreathHold,
-          iconPath: context.read<PyramidCubit>().breathHoldIndex == 0 ? "assets/images/breath_hold.png" : "assets/images/breath_hold.png",
+          iconPath: context.read<PyramidCubit>().breathHoldIndex == 0 ? "assets/images/hold.png" : "assets/images/hold.png",
           iconSize: 25.0,
           showIcon: true,
           showContent: true,
           containerColor: Colors.white,
           textColor: Colors.black.withOpacity(.7),
-          iconColor: const Color(0xffFE60D4),
+          // iconColor: const Color(0xffFE60D4),
         ),
         divider(),
       ],

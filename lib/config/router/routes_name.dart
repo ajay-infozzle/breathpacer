@@ -2,6 +2,7 @@ class RoutesName {
   static const String splashScreen = "splash";
   static const String homeScreen = "home";
   static const String interactiveBreathingScreen = "interactive-breathing";
+  static const String disclamerScreen = "disclamer";
 
   //~ pyramid
   static const String breathingStepGuideScreen = "breathing-step-guide";
@@ -10,6 +11,7 @@ class RoutesName {
   static const String pyramidWaitingScreen = "pyramid-waiting";
   static const String pyramidBreathingScreen = "pyramid-breathing";
   static const String pyramidBreathHoldScreen = "pyramid-breath-hold";
+  static const String waitingAfterHoldScreen = "waiting-after-hold";
   static const String pyramidSuccessScreen = "pyramid-success";
 
   //~ firebreathing

@@ -37,14 +37,22 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
     startTimer();
     setUpAnimation();
 
-    if(context.read<PyramidCubit>().choiceOfBreathHold == "Both" && context.read<PyramidCubit>().breathHoldIndex == 2){
+    if(context.read<PyramidCubit>().choiceOfBreathHold == "Both" && (context.read<PyramidCubit>().breathHoldIndex == 2 || context.read<PyramidCubit>().breathHoldIndex == 1) ){
       context.read<PyramidCubit>().breathHoldIndex = 0;
-    } 
+    }
   }
 
 
   void setUpAnimation() {
     final cubit = context.read<PyramidCubit>();
+
+    navigateToHoldScreen() async{
+      await Future.delayed(Duration(seconds: context.read<PyramidCubit>().breathHoldIndex == 1 ? 1 :1), () {
+        // context.read<PyramidCubit>().playHold();
+        log("Navigating to pyramidBreathHoldScreen");
+        context.goNamed(RoutesName.pyramidBreathHoldScreen);
+      },);
+    }
 
     Duration duration;
     switch (cubit.speed) {
@@ -52,7 +60,7 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
         duration = const Duration(seconds: 1);
         break;
       case 'Slow':
-        duration = const Duration(seconds: 3);
+        duration = const Duration(seconds: 2, milliseconds: 450);
         break;
       case 'Standard':
       default:
@@ -84,6 +92,30 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
           // }
 
           breathCount--;
+          
+          if(breathCount == (cubit.speed == 'Fast' ? 2 : 1) && cubit.breathHoldIndex == 0){
+            cubit.controlVolume(volume: .4);
+            log("control Volume when breathcount count $breathCount -> 0.2");
+            cubit.extraPlay("audio/get_ready_to_hold.mp3");
+          }
+          //~⬇️ only when hold is breath-in
+          if(breathCount == 0 && cubit.breathHoldIndex == 0 ){
+            log("breathcount count -> $breathCount");
+            _controller.stop();
+
+            storeScreenTime();
+            cubit.stopJerry();
+
+            // if(context.read<PyramidCubit>().choiceOfBreathHold == "Both"){
+            //   context.read<PyramidCubit>().breathHoldIndex = 0;
+            // }
+
+            // context.read<PyramidCubit>().playTimeToHold(isForBreathOut: true);//~...
+            navigateToHoldScreen();
+
+            return ;
+          }
+          //~⬆️ only when hold is breath-in
           if(breathCount != -1){
             breathOption = 'Breathe Out' ;
             context.read<PyramidCubit>().playBreathing("audio/single_breath_out_standard.mp3");
@@ -116,6 +148,11 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
         }
 
         // Stop the animation if the breath count reaches 0
+        if(breathCount == (cubit.speed == 'Fast' ? 2 : 1) && cubit.breathHoldIndex == 1){
+          cubit.controlVolume(volume: .4);
+          log("control Volume when breathcount count $breathCount -> 0.2");
+          cubit.extraPlay("audio/get_ready_to_hold.mp3");
+        }
         if (breathCount == 0) {
           _controller.stop();
 
@@ -126,9 +163,10 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
             context.read<PyramidCubit>().breathHoldIndex = 0;
           }
 
-          context.read<PyramidCubit>().playTimeToHold();
-          await Future.delayed(const Duration(seconds: 2), () {
-            context.read<PyramidCubit>().playHold();
+          // context.read<PyramidCubit>().playTimeToHold(isForBreathOut: context.read<PyramidCubit>().breathHoldIndex == 1 ? true : false); //~...
+          await Future.delayed(Duration(seconds: context.read<PyramidCubit>().breathHoldIndex == 1 ? 1 :1), () {
+            // context.read<PyramidCubit>().playHold();
+            log("Navigating to pyramidBreathHoldScreen");
             context.goNamed(RoutesName.pyramidBreathHoldScreen);
           },);
         }
@@ -173,8 +211,9 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
 
     context.read<PyramidCubit>().playTimeToHold();
     if(context.mounted){
-      await Future.delayed(const Duration(seconds: 2), () {
-        context.read<PyramidCubit>().playHold();
+      await Future.delayed(Duration(seconds: context.read<PyramidCubit>().breathHoldIndex == 1 ? 0 :3), () {
+        // context.read<PyramidCubit>().playHold();
+        log("Navigating to pyramidBreathHoldScreen");
         context.goNamed(RoutesName.pyramidBreathHoldScreen);
       },);
     }
@@ -412,29 +451,30 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
                       SizedBox(height: height*0.04,),
                       const Spacer(),
 
-                      GestureDetector(
-                        onTap: () async{
-                          if(!isAlreadyTapped){
-                            onOneTap();
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          color: Colors.transparent,
-                          width: size,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Tap to hold ${context.read<PyramidCubit>().breathHoldList[context.read<PyramidCubit>().breathHoldIndex]}",
-                                style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                              ),
-                              const SizedBox(width: 10),
-                              const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                            ],
-                          ),
-                        ),
-                      ),
+                      //~
+                      // GestureDetector(
+                      //   onTap: () async{
+                      //     if(!isAlreadyTapped){
+                      //       onOneTap();
+                      //     }
+                      //   },
+                      //   child: Container(
+                      //     alignment: Alignment.center,
+                      //     color: Colors.transparent,
+                      //     width: size,
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         Text(
+                      //           "Tap to hold ${context.read<PyramidCubit>().breathHoldList[context.read<PyramidCubit>().breathHoldIndex]}",
+                      //           style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                      //         ),
+                      //         const SizedBox(width: 10),
+                      //         const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(height: height*0.08,),
                     ],
                   ) 

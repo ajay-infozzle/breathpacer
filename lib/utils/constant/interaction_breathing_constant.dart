@@ -42,6 +42,31 @@ String fireBeforeYourSessionText = "Start slow and work your way to a faster pac
 
 String dnaBeforeYourSessionText = "Ensure you are in a safe and quite space.  Start in an upright seated position or lying down on the floor with your back straight. Keep a steady continuous pace. Allow your belly to inflate as you inhale.  If your body gets cold, or your muscles contract or hurt, it is okay, keep breathing through it.  With long sessions, it is possible to go on a journey and get a feeling you are no longer breathing.  It is okay. You are in the frequency. Challenge yourself to go a bit further and hold a bit longer each time.  Consult a healthcare professional if you have any medical conditions, experience extreme discomfort or are pregnant.  Regular practice can lead to noticeable results. Don’t push yourself if you’re feeling unwell. The most important this is to enjoy your practice and pay attention to how your body feels.";
 
+
+String noteFromJerry = "I just want to remind you before you get into this breathing that You’re a Spiritual Gangsta, you’re a Jedi from the Stars, and you came to planet Earth to play at a level beyond phenomenal. Every time you do one of these breathwork routines, you are elevating, you’re expanding, and activating to your super human potential.\n\nEvery time you don’t, you’re sliding backwards. It's inevitable, it happens to me, happens to everyone. Plant this seed in your mind, and just know that this isn’t an option.\n\nIf you are a Jedi, which I know you are, then this Breathwork is a must.\n\nSome days you may have less time - do 3 minutes, if you have more, do 30 minutes. Before you get into this, it's really important that you remember Star Magic is a lifestyle. And that lifestyle comes at a price of discipline, commitment, and focus.";
+
+String doYouReallyWantToActivateYourSuperhumanPotential = "If No, Then this isn’t the place for you.\n\nIf Yes, Then its time to dig deep and take some massive action!\n\nRemember when you finish this breathwork routine today, make sure you’ve got no regrets.\n\nOne Love, One Heart, One Human Family\nJERRY SARGEANT";
+
+const faq = [
+  {
+    "ques" : "Why Are We Doing Breathwork ?",
+    "ans" : "We are bringing a lot of light and oxygen into our bodies. So that we can drive the ancient old belief systems and traumas & toxicities up to the surface. So you’re going through your breathwork, then you listen to a meditation. So you’ve primed yourself through healing through the breathwork. So the meditation and the breathwork go hand in hand. You’re going to recalibrate your nervous system, activate your lymphatic system, you’re going to turbo charge your pineal gland."
+  },
+  {
+    "ques" : "When Should You Do These Different Kinds of Breath ?",
+    "ans" : "DNA Breathing: Before Bed\nFire Breathing: Before Gym or business meeting or after you get home after a day at work to go and see your family\nPineal Gland: Do it whenever! Whenever you feel you want to activate your pineal gland.\nPyramid Breathing: For relaxation, bringing balance and grounding."
+  },
+  {
+    "ques" : "Why Does Jerry Always Say No Regrets ?",
+    "ans" : "To not leave anything behind. To give it your all, really commit and be disciplined with your lifestyle and have no regrets about the effort you gave. To Truly Give It EVERYTHING, so that you can transform and expand to your highest potential."
+  },
+  {
+    "ques" : "Why is Discipline & Commitment Important ?",
+    "ans" : "Discipline is the highest form of self-love. You gotta be committed to the process, because life is full of distractions. And when you start committing to the lifestyle of infinity - your friends, your family, your kids they’re all going to try to get you to do other stuff to pull you out of your process, but you gotta commit to being a Spiritual Gangsta and stick to it."
+  },
+];
+
+
 List<String> musicList = ['None','Music 1', 'Music 2'] ;
 
 String getTotalTimeString(List<int> timeList) {

@@ -41,7 +41,7 @@ class ResultContainerSectionWidget extends StatelessWidget {
                 iconPath!,
                 width: iconSize,
                 height: iconSize,
-                color: iconColor,
+                // color: iconColor,
               ),
             ),
           

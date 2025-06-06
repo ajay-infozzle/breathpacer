@@ -241,18 +241,13 @@ class _PyramidSettingScreenState extends State<PyramidSettingScreen>
                                   current is PyramidToggleBreathHold,
                               builder: (context, state) {
                                 return BreathingChoices(
-                                  chosenItem:
-                                      context.read<PyramidCubit>().breathHoldIndex,
-                                  choicesList:
-                                      context.read<PyramidCubit>().breathHoldList,
+                                  chosenItem:context.read<PyramidCubit>().breathHoldIndex,
+                                  choicesList:context.read<PyramidCubit>().breathHoldList,
                                   onUpdateChoiceIndex: (int index) {
                                     context.read<PyramidCubit>().toggleBreathHold(index);
                                   },
                                   onUpdateVoiceOver: (JerryVoiceEnum audio) {
-                                    context
-                                        .read<PyramidCubit>()
-                                        .changeJerryVoiceAudio(
-                                            jerryVoiceOver(audio));
+                                    context.read<PyramidCubit>().changeJerryVoiceAudio(jerryVoiceOver(audio));
                                   },
                                 );
                               },

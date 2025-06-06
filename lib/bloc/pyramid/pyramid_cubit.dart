@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:breathpacer/config/model/pyramid_breathwork_model.dart';
@@ -91,6 +93,7 @@ class PyramidCubit extends Cubit<PyramidState> {
   void toggleBreathHold(int index){
     choiceOfBreathHold =  breathHoldList[index];
     breathHoldIndex = index;
+    log("breathHoldIndex set-> $breathHoldIndex", name: "toggleBreathHold");
     emit(PyramidToggleBreathHold());
   }
 
@@ -115,6 +118,7 @@ class PyramidCubit extends Cubit<PyramidState> {
   AudioPlayer jerryVoicePlayer = AudioPlayer();
   AudioPlayer breathHoldPlayer = AudioPlayer();
   AudioPlayer relaxPlayer = AudioPlayer();
+  AudioPlayer extraPlayer = AudioPlayer();
 
 
   void resetSettings(String stepp, String speedd){
@@ -159,6 +163,10 @@ class PyramidCubit extends Cubit<PyramidState> {
 
       if (relaxPlayer.state == PlayerState.playing || relaxPlayer.state == PlayerState.paused) {
         relaxPlayer.stop();
+      }
+
+      if (extraPlayer.state == PlayerState.playing || extraPlayer.state == PlayerState.paused) {
+        extraPlayer.stop();
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -337,6 +345,45 @@ class PyramidCubit extends Cubit<PyramidState> {
     }
   }
 
+  void controlVolume({double volume = 1}) async{
+    try {
+      if(jerryVoice){
+        await jerryVoicePlayer.setVolume(volume);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("controlVolume>> ${e.toString()}");
+      }
+    }
+  }
+
+  void extraPlay(String voice) async{
+    try {
+      if(jerryVoice){
+        if(extraPlayer.state != PlayerState.playing){
+          await extraPlayer.stop();
+          await extraPlayer.play(AssetSource(voice));
+
+
+          extraPlayer.onPlayerComplete.listen((event) async{
+            controlVolume(volume: 1);
+            if(speed == 'Slow'){
+              await Future.delayed(const Duration(milliseconds: 850), () {
+                playTimeToHold(isForBreathOut: true);
+              },);
+            }else{
+              playTimeToHold(isForBreathOut: true);
+            }
+          },);
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("extraPlay>> ${e.toString()}");
+      }
+    }
+  }
+
   void stopJerry() async {
     try {
       if(jerryVoice){
@@ -404,23 +451,35 @@ class PyramidCubit extends Cubit<PyramidState> {
     }
   }
 
-  void playHoldCountdown() async {
+  void playHoldCountdown({bool isBoth = false, required bool isLastRound}) async {
     try {
       if(jerryVoice){
         breathHoldPlayer.stop();
         if(holdDuration == 10){
           // await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
           if(breathHoldIndex == 0){
-            await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3'));
+            isBoth 
+            ? await breathHoldPlayer.play(AssetSource('audio/countdown_for_breathe_out_and_hold.mp3'))
+            : isLastRound 
+              ? await breathHoldPlayer.play(AssetSource('audio/ready_to_breath_out_countdown_at_end.mp3')) 
+              : await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3'));
           }else{
-            await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_in_countdown.mp3'));
+            isLastRound 
+              ? await breathHoldPlayer.play(AssetSource('audio/ready_to_breath_in_countdown_at_end.mp3'))
+              : await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_in_countdown.mp3'));
           }
         }else{
           // await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
           if(breathHoldIndex == 0){
-            await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3'));
+            isBoth 
+            ? await breathHoldPlayer.play(AssetSource('audio/countdown_for_breathe_out_and_hold.mp3'))
+            : isLastRound 
+              ? await breathHoldPlayer.play(AssetSource('audio/ready_to_breath_out_countdown_at_end.mp3')) 
+              : await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3'));
           }else{
-            await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_in_countdown.mp3'));
+            isLastRound 
+              ? await breathHoldPlayer.play(AssetSource('audio/ready_to_breath_in_countdown_at_end.mp3'))
+              : await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_in_countdown.mp3'));
           }
         }
       }
@@ -431,11 +490,30 @@ class PyramidCubit extends Cubit<PyramidState> {
     }
   }
 
-  void playTimeToHold() async {
+  void playTimeToHold({bool isForBreathOut = false}) async {
     try {
       if(jerryVoice){
         breathHoldPlayer.stop();
-        await breathHoldPlayer.play(AssetSource('audio/time_to_hold.mp3'));
+        // await breathHoldPlayer.play(AssetSource('audio/time_to_hold.mp3'));
+        isForBreathOut 
+        ? await breathHoldPlayer.play(AssetSource('audio/now_hold.mp3'))
+        : await breathHoldPlayer.play(AssetSource('audio/breathe_in_and_hold.mp3'));
+      }
+      else{
+        playChime();
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("playTimeToHold>> ${e.toString()}");
+      }
+    }
+  }
+
+  void playTimeToHoldOutBreath() async {
+    try {
+      if(jerryVoice){
+        breathHoldPlayer.stop();
+        await breathHoldPlayer.play(AssetSource('audio/now_hold.mp3'));
       }
       else{
         playChime();
@@ -453,7 +531,7 @@ class PyramidCubit extends Cubit<PyramidState> {
         if(jerryVoicePlayer.state != PlayerState.playing) jerryVoicePlayer.stop();
 
         breathHoldPlayer.stop();
-        await breathHoldPlayer.play(AssetSource('audio/motivation.mp3'));
+        await breathHoldPlayer.play(AssetSource('audio/motivation_2.mp3'));
       }
     } on Exception catch (e) {
       if (kDebugMode) {

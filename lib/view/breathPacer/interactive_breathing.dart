@@ -8,6 +8,7 @@ import 'package:breathpacer/utils/constant/interaction_breathing_constant.dart';
 import 'package:breathpacer/view/breathPacer/widget/interactive_container_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easy_faq/flutter_easy_faq.dart';
 import 'package:go_router/go_router.dart';
 
 class InteractiveBreathingScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _InteractiveBreathingScreenState extends State<InteractiveBreathingScreen>
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
-        
+        context.goNamed(RoutesName.disclamerScreen);
       },
       child: Scaffold(
         // appBar: AppBar(
@@ -64,6 +65,12 @@ class _InteractiveBreathingScreenState extends State<InteractiveBreathingScreen>
                   "Interactive Breathing",
                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
+                leading: GestureDetector(
+                  onTap: (){ 
+                    context.goNamed(RoutesName.disclamerScreen);
+                  },
+                  child: const Icon(Icons.arrow_back_ios_rounded,color: Colors.white,),
+                ),
               ),
               SizedBox(height: size*0.02,),
               Container(
@@ -74,37 +81,95 @@ class _InteractiveBreathingScreenState extends State<InteractiveBreathingScreen>
       
               //~
               Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(right: size*0.05, left: size*0.05),
-                  child: ListView.builder(
-                    padding: const EdgeInsetsDirectional.all(0),
-                    itemCount: interactionOptions.length+1,
-                    itemBuilder: (context, index) {
-                      if(index == interactionOptions.length){
-                        return SizedBox(height: size*0.06,);
-                      }
-                      return InteractiveContainerWidget(
-                        index: index,
-                        title: interactionOptions[index]["title"]!, 
-                        image: interactionOptions[index]["image"]!, 
-                        description: interactionOptions[index]["description"]!,
-                        onTap: (){
-                          if(index == 0){
-                            context.pushNamed(RoutesName.breathingStepGuideScreen);
+                child: ListView(
+                  padding: const EdgeInsets.all(0),
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(right: size*0.05, left: size*0.05),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsetsDirectional.all(0),
+                        itemCount: interactionOptions.length+1,
+                        itemBuilder: (context, index) {
+                          if(index == interactionOptions.length){
+                            return SizedBox(height: size*0.06,);
                           }
-                          if(index == 1){
-                            context.pushNamed(RoutesName.fireInstructionScreen);
-                          }
-                          if(index == 2){
-                            context.pushNamed(RoutesName.dnaInstructionScreen);
-                          }
-                          if(index == 3){
-                            context.pushNamed(RoutesName.pinealInstructionScreen);
-                          }
-                        }, 
-                      );
-                    },
-                  ),
+                          return InteractiveContainerWidget(
+                            index: index,
+                            title: interactionOptions[index]["title"]!, 
+                            image: interactionOptions[index]["image"]!, 
+                            description: interactionOptions[index]["description"]!,
+                            onTap: (){
+                              if(index == 0){
+                                context.pushNamed(RoutesName.breathingStepGuideScreen);
+                              }
+                              if(index == 1){
+                                context.pushNamed(RoutesName.fireInstructionScreen);
+                              }
+                              if(index == 2){
+                                context.pushNamed(RoutesName.dnaInstructionScreen);
+                              }
+                              if(index == 3){
+                                context.pushNamed(RoutesName.pinealInstructionScreen);
+                              }
+                            }, 
+                          );
+                        },
+                      ),
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.only(right: size*0.05, left: size*0.05, top: size*0.03),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: size,
+                            child: Text(
+                              "Frequently Asked Questions",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: size*0.05
+                              ),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+
+                          SizedBox(height: size*0.03,),
+                          ListView.builder(
+                            padding: const EdgeInsets.all(0),
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: faq.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.only(bottom: size*0.03),
+                                child: EasyFaq(
+                                  backgroundColor: Colors.white,
+                                  collapsedIcon: const Icon(Icons.arrow_drop_down_rounded),
+                                  expandedIcon: const Icon(Icons.arrow_drop_up_rounded),
+                                  questionTextStyle: TextStyle(
+                                    color: Colors.black.withOpacity(.7),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: size*0.042
+                                  ),
+                                  anserTextStyle: TextStyle(
+                                    color: Colors.black.withOpacity(.5),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: size*0.038
+                                  ),
+                                  question: faq[index]["ques"]!, 
+                                  answer: faq[index]["ans"]!
+                                ),
+                              );
+                            }, 
+                          ),
+                          SizedBox(height: size*0.03,),
+                        ],
+                      ),
+                    ),
+                  ],
                 ), 
               ),
             ],

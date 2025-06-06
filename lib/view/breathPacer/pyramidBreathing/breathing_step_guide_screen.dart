@@ -65,20 +65,33 @@ class BreathingStepGuideScreen extends StatelessWidget {
                       description: breathingStepGuide[index]["description"]!,
                       onTap: (){
                         if(index == 0){
-                          context.pushNamed(
-                            RoutesName.pyramidInstructionScreen,
-                            queryParameters: {
-                              "desc" : breathingStepGuide[index]["instruction"]!,
-                              "subTitle" : breathingStepGuide[index]["title"]!
+                          // context.pushNamed(
+                          //   RoutesName.pyramidInstructionScreen,
+                          //   queryParameters: {
+                          //     "desc" : breathingStepGuide[index]["instruction"]!,
+                          //     "subTitle" : breathingStepGuide[index]["title"]!
+                          //   }
+                          // );
+                          context.pushReplacementNamed(
+                            RoutesName.pyramidSettingScreen,
+                            extra:{
+                              "step" : "4"
                             }
                           );
                         }
                         if(index == 1){
-                          context.pushNamed(
-                            RoutesName.pyramidInstructionScreen,
-                            queryParameters: {
-                              "desc" : breathingStepGuide[index]["instruction"]!,
-                              "subTitle" : breathingStepGuide[index]["title"]!
+                          // context.pushNamed(
+                          //   RoutesName.pyramidInstructionScreen,
+                          //   queryParameters: {
+                          //     "desc" : breathingStepGuide[index]["instruction"]!,
+                          //     "subTitle" : breathingStepGuide[index]["title"]!
+                          //   }
+                          // );
+
+                          context.pushReplacementNamed(
+                            RoutesName.pyramidSettingScreen,
+                            extra:{
+                              "step" : "2"
                             }
                           );
                         }

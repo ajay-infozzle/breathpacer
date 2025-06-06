@@ -74,7 +74,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void navigateToHome(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 1),() {
-      context.goNamed(RoutesName.homeScreen);
+      // context.goNamed(RoutesName.homeScreen);
+      context.goNamed(RoutesName.disclamerScreen);
     },);
   }
 }

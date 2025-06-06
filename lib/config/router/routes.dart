@@ -1,4 +1,5 @@
 import 'package:breathpacer/config/router/routes_name.dart';
+import 'package:breathpacer/view/breathPacer/disclamer_widget.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_breathing_screen.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_hold_screen.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_instruction_screen.dart';
@@ -27,6 +28,7 @@ import 'package:breathpacer/view/breathPacer/pyramidBreathing/pyramid_instructio
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/pyramid_setting_screen.dart';
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/pyramid_success_screen.dart';
 import 'package:breathpacer/view/breathPacer/pyramidBreathing/pyramid_waiting_screen.dart';
+import 'package:breathpacer/view/breathPacer/pyramidBreathing/waiting_after_hold_screen.dart';
 import 'package:breathpacer/view/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -48,6 +50,18 @@ class AppRoutes {
               return customPageRouteBuilder(
                 // const HomeScreen(),  //~ bypass to InteractiveBreathingScreen for testing
                 const InteractiveBreathingScreen(),  
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.disclamerScreen,
+            name: RoutesName.disclamerScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const DisclamerScreen(), 
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );
@@ -139,6 +153,18 @@ class AppRoutes {
             pageBuilder: (context, state) {
               return customPageRouteBuilder(
                 const PyramidBreathHoldScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.waitingAfterHoldScreen,
+            name: RoutesName.waitingAfterHoldScreen,
+            pageBuilder: (context, state) {
+              return customPageRouteBuilder(
+                const WaitingAfterHoldScreen(),
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );
