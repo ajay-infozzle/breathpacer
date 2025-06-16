@@ -45,7 +45,7 @@ class SettingsToggleButton extends StatelessWidget {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: size*0.03),
                 child: InfoPopupWidget(
-                  contentTitle: 'This is the squeeze and hold of your buttocks and genitals, tip of the tongue on the roof of the mouth',
+                  contentTitle: 'Put the tip of the tongue on the roof of the mouth, squeeze your buttocks, perineum & genitals. pull your abdominals back towards your spinal column.',
                   contentTheme: InfoPopupContentTheme(
                     infoContainerBackgroundColor: Colors.white,
                     infoTextStyle: TextStyle(color: AppTheme.colors.blueSlider, fontWeight: FontWeight.bold),

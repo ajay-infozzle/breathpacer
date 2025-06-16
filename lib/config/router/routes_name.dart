@@ -19,6 +19,7 @@ class RoutesName {
   static const String fireSettingScreen = "fire-setting";
   static const String fireBreathingWaitingScreen = "fire-waiting";
   static const String fireBreathingScreen = "fire-breathing";
+  static const String fireBreathingCountdownScreen = "fire-breathing-countdown";
   static const String fireBreathingHoldScreen = "fire-hold";
   static const String fireBreathingRecoveryScreen = "fire-recovery";
   static const String fireBreathingSuccessScreen = "fire-success";

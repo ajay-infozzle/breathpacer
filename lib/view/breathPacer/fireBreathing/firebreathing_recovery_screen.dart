@@ -218,32 +218,32 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
 
                       const Spacer(),
 
-                      GestureDetector(
-                        onTap: () {
-                          if(!isAlreadyTapped) {
-                            isAlreadyTapped = true;
-                            countdownController.pause();
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     if(!isAlreadyTapped) {
+                      //       isAlreadyTapped = true;
+                      //       countdownController.pause();
                             
-                            storeScreenTime();
-                            navigate(context.read<FirebreathingCubit>());
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          color: Colors.transparent,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                generateTapText(context.read<FirebreathingCubit>()),
-                                style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                              ),
-                              const SizedBox(width: 10),
-                              const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                            ],
-                          ),
-                        ),
-                      ),
+                      //       storeScreenTime();
+                      //       navigate(context.read<FirebreathingCubit>());
+                      //     }
+                      //   },
+                      //   child: Container(
+                      //     alignment: Alignment.center,
+                      //     color: Colors.transparent,
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         Text(
+                      //           generateTapText(context.read<FirebreathingCubit>()),
+                      //           style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                      //         ),
+                      //         const SizedBox(width: 10),
+                      //         const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
 
                       SizedBox(height: height*0.08,),
                     ],

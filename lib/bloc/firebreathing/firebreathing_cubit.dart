@@ -439,35 +439,54 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
   }
 
 
-  void playHoldCountdown() async {
+  void playHoldCountdown({required bool isLastRound}) async {
     try {
       if(jerryVoice){
         breathHoldPlayer.stop();
-        if(holdDuration == 10){
-          // await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
-          
-          if(breathHoldIndex == 0){
-            recoveryBreath 
-            ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
-            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_out_countdown.mp3'));
-          }else{
-            recoveryBreath 
-            ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
-            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_in_countdown.mp3'));
+        if(breathHoldIndex == 0){
+          if(isLastRound && recoveryBreath == false){
+            await breathHoldPlayer.play(AssetSource('audio/ready_to_breath_out_countdown_at_end.mp3'));
+            return ;
           }
+
+          recoveryBreath 
+          ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
+          :await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3'));
         }else{
-          // await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
-          
-          if(breathHoldIndex == 0){
-            recoveryBreath 
-            ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
-            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_out_countdown.mp3'));
-          }else{
-            recoveryBreath 
-            ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
-            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_in_countdown.mp3'));
+          if(isLastRound && recoveryBreath == false){
+            await breathHoldPlayer.play(AssetSource('audio/ready_to_breath_in_countdown_at_end.mp3'));
+            return ;
           }
+
+          recoveryBreath 
+          ?await breathHoldPlayer.play(AssetSource('audio/ready_to_breath_in_countdown_at_end.mp3'))
+          :await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_in_countdown.mp3'));
         }
+        // if(holdDuration == 10){
+        //   // await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
+          
+        //   if(breathHoldIndex == 0){
+        //     recoveryBreath 
+        //     ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
+        //     :await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3'));
+        //   }else{
+        //     recoveryBreath 
+        //     ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
+        //     :await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_in_countdown.mp3'));
+        //   }
+        // }else{
+        //   // await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
+          
+        //   if(breathHoldIndex == 0){
+        //     recoveryBreath 
+        //     ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
+        //     :await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3'));
+        //   }else{
+        //     recoveryBreath 
+        //     ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
+        //     :await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_in_countdown.mp3'));
+        //   }
+        // }
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -480,7 +499,9 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     try {
       if(jerryVoice){
         breathHoldPlayer.stop();
-        await breathHoldPlayer.play(AssetSource('audio/time_to_hold.mp3'));
+        breathHoldIndex  == 0 
+        ? await breathHoldPlayer.play(AssetSource('audio/countdown_for_breathe_in_and_hold.mp3'))
+        : await breathHoldPlayer.play(AssetSource('audio/countdown_for_breathe_out_and_hold.mp3'));
       }
       else{
         playChime();

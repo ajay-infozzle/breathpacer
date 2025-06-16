@@ -105,7 +105,12 @@ class _InteractiveBreathingScreenState extends State<InteractiveBreathingScreen>
                                 context.pushNamed(RoutesName.breathingStepGuideScreen);
                               }
                               if(index == 1){
-                                context.pushNamed(RoutesName.fireInstructionScreen);
+                                context.pushReplacementNamed(
+                                  RoutesName.fireSettingScreen,
+                                  extra:{
+                                    "subTitle" : "TYPE 2: Fire breathing"
+                                  }
+                                );
                               }
                               if(index == 2){
                                 context.pushNamed(RoutesName.dnaInstructionScreen);

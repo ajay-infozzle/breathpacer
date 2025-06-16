@@ -306,34 +306,34 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
                       SizedBox(height: height*0.04,),
                       const Spacer(),
 
-                      GestureDetector(
-                        onTap: () {
-                          if(!isAlreadyTapped){
-                            isAlreadyTapped = true;
-                            countdownController.pause();
-                            context.read<FirebreathingCubit>().stopJerry();
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     if(!isAlreadyTapped){
+                      //       isAlreadyTapped = true;
+                      //       countdownController.pause();
+                      //       context.read<FirebreathingCubit>().stopJerry();
 
-                            storeScreenTime();
+                      //       storeScreenTime();
 
-                            navigate(context.read<FirebreathingCubit>());
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          color: Colors.transparent,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                generateTapText(context.read<FirebreathingCubit>()),
-                                style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                              ),
-                              const SizedBox(width: 10),
-                              const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                            ],
-                          ),
-                        ),
-                      ),
+                      //       navigate(context.read<FirebreathingCubit>());
+                      //     }
+                      //   },
+                      //   child: Container(
+                      //     alignment: Alignment.center,
+                      //     color: Colors.transparent,
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         Text(
+                      //           generateTapText(context.read<FirebreathingCubit>()),
+                      //           style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                      //         ),
+                      //         const SizedBox(width: 10),
+                      //         const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
 
                       SizedBox(height: height*0.08,),
                     ],
@@ -353,6 +353,10 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
     
     String minutesStr = minutes.toString().padLeft(2, '0'); 
     String secondsStr = seconds.toString().padLeft(2, '0'); 
+
+    if(seconds == 3 && (context.read<FirebreathingCubit>().holdingPeriod || context.read<FirebreathingCubit>().recoveryBreath)){
+      context.read<FirebreathingCubit>().playTimeToHold();
+    }
     
     return "$minutesStr:$secondsStr";
   }
@@ -380,20 +384,22 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
   void navigate(FirebreathingCubit cubit) async{
     if (cubit.currentSet == cubit.noOfSets) {
       if(cubit.holdingPeriod){        
-        context.read<FirebreathingCubit>().playTimeToHold();
+        // context.read<FirebreathingCubit>().playTimeToHold();
 
-        await Future.delayed(const Duration(seconds: 2), () {
-          context.read<FirebreathingCubit>().playHold();
-          context.goNamed(RoutesName.fireBreathingHoldScreen);
-        },);
+        // await Future.delayed(const Duration(seconds: 2), () {
+        //   // context.read<FirebreathingCubit>().playHold();
+        //   context.goNamed(RoutesName.fireBreathingCountdownScreen);
+        // },);
+        context.goNamed(RoutesName.fireBreathingCountdownScreen, extra: {'hold' : true});
       }
       else if (cubit.recoveryBreath){
-        context.read<FirebreathingCubit>().playTimeToRecover();
+        // context.read<FirebreathingCubit>().playTimeToRecover();
         
-        await Future.delayed(const Duration(seconds: 2), () {
-          context.read<FirebreathingCubit>().playRecovery();
-          context.goNamed(RoutesName.fireBreathingRecoveryScreen);
-        },);
+        // await Future.delayed(const Duration(seconds: 2), () {
+        //   context.read<FirebreathingCubit>().playRecovery();
+        //   context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+        // },);
+        context.goNamed(RoutesName.fireBreathingCountdownScreen, extra: {'recover' : true});
       }
       else{        
         await Future.delayed(const Duration(seconds: 2), () {
@@ -404,19 +410,21 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
         },);
       }
     } else if (cubit.holdingPeriod) {
-      context.read<FirebreathingCubit>().playTimeToHold();
+      // context.read<FirebreathingCubit>().playTimeToHold();
         
-      await Future.delayed(const Duration(seconds: 2), () {
-        context.read<FirebreathingCubit>().playHold();
-        context.goNamed(RoutesName.fireBreathingHoldScreen);
-      },);
+      // await Future.delayed(const Duration(seconds: 2), () {
+      //   // context.read<FirebreathingCubit>().playHold();
+      //   context.goNamed(RoutesName.fireBreathingCountdownScreen);
+      // },);
+      context.goNamed(RoutesName.fireBreathingCountdownScreen, extra: {'hold' : true});
     } else if (cubit.recoveryBreath) {
-      context.read<FirebreathingCubit>().playTimeToRecover();
+      // context.read<FirebreathingCubit>().playTimeToRecover();
         
-      await Future.delayed(const Duration(seconds: 2), () {
-        context.read<FirebreathingCubit>().playRecovery();
-        context.goNamed(RoutesName.fireBreathingRecoveryScreen);
-      },);
+      // await Future.delayed(const Duration(seconds: 2), () {
+      //   context.read<FirebreathingCubit>().playRecovery();
+      //   context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+      // },);
+      context.goNamed(RoutesName.fireBreathingCountdownScreen, extra: {'recover' : true});
     } else {
       context.read<FirebreathingCubit>().playTimeToNextSet();
 

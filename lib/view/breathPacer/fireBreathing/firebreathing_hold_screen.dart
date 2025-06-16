@@ -246,34 +246,34 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
 
                       const Spacer(),
 
-                      GestureDetector(
-                        onTap: () {
-                          if(!isAlreadyTapped) {
-                            isAlreadyTapped = true;
-                            if(context.read<FirebreathingCubit>().holdDuration != -1){
-                              countdownController.pause();
-                            }
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     if(!isAlreadyTapped) {
+                      //       isAlreadyTapped = true;
+                      //       if(context.read<FirebreathingCubit>().holdDuration != -1){
+                      //         countdownController.pause();
+                      //       }
                             
-                            storeScreenTime();
-                            navigate(context.read<FirebreathingCubit>());
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          color: Colors.transparent,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                generateTapText(context.read<FirebreathingCubit>()),
-                                style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                              ),
-                              const SizedBox(width: 10),
-                              const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                            ],
-                          ),
-                        ),
-                      ),
+                      //       storeScreenTime();
+                      //       navigate(context.read<FirebreathingCubit>());
+                      //     }
+                      //   },
+                      //   child: Container(
+                      //     alignment: Alignment.center,
+                      //     color: Colors.transparent,
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         Text(
+                      //           generateTapText(context.read<FirebreathingCubit>()),
+                      //           style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                      //         ),
+                      //         const SizedBox(width: 10),
+                      //         const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
 
                       SizedBox(height: height*0.08,),
                     ],
@@ -313,39 +313,43 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
   void navigate(FirebreathingCubit cubit) async{
     if (cubit.currentSet == cubit.noOfSets) {
       if (cubit.recoveryBreath){
-        context.read<FirebreathingCubit>().stopJerry();
-        context.read<FirebreathingCubit>().stopHold();
+        // context.read<FirebreathingCubit>().stopJerry();
+        // context.read<FirebreathingCubit>().stopHold();
         
-        await Future.delayed(const Duration(seconds: 2), () {
-          context.read<FirebreathingCubit>().playRecovery();
-          context.goNamed(RoutesName.fireBreathingRecoveryScreen);
-        },);
+        // await Future.delayed(const Duration(seconds: 2), () {
+        //   context.read<FirebreathingCubit>().playRecovery();
+        //   context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+        // },);
+        context.goNamed(RoutesName.fireBreathingCountdownScreen, extra: {'recover' : true});
       }
       else{
-        context.read<FirebreathingCubit>().stopJerry();
-        context.read<FirebreathingCubit>().stopHold();
-        context.read<FirebreathingCubit>().stopMusic();
-        context.read<FirebreathingCubit>().playChime();
-        context.read<FirebreathingCubit>().playRelax();
-        context.goNamed(RoutesName.fireBreathingSuccessScreen);
+        // context.read<FirebreathingCubit>().stopJerry();
+        // context.read<FirebreathingCubit>().stopHold();
+        // context.read<FirebreathingCubit>().stopMusic();
+        // context.read<FirebreathingCubit>().playChime();
+        // context.read<FirebreathingCubit>().playRelax();
+        // context.goNamed(RoutesName.fireBreathingSuccessScreen);
+        context.goNamed(RoutesName.fireBreathingCountdownScreen, extra: {'success' : true});
       }
     }else if (cubit.recoveryBreath) {
-      context.read<FirebreathingCubit>().stopHold();
-      context.read<FirebreathingCubit>().playTimeToRecover();
+      // context.read<FirebreathingCubit>().stopHold();
+      // context.read<FirebreathingCubit>().playTimeToRecover();
 
-      await Future.delayed(const Duration(seconds: 2), () {
-        context.read<FirebreathingCubit>().playRecovery();
-        context.goNamed(RoutesName.fireBreathingRecoveryScreen);
-      },);
+      // await Future.delayed(const Duration(seconds: 2), () {
+      //   context.read<FirebreathingCubit>().playRecovery();
+      //   context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+      // },);
+      context.goNamed(RoutesName.fireBreathingCountdownScreen, extra: {'recover' : true});
     } else {
-      context.read<FirebreathingCubit>().stopHold();
-      context.read<FirebreathingCubit>().playTimeToNextSet();
+      // context.read<FirebreathingCubit>().stopHold();
+      // context.read<FirebreathingCubit>().playTimeToNextSet();
 
-      await Future.delayed(const Duration(seconds: 2), () {
-        context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
-        cubit.currentSet = cubit.currentSet+1;
-        context.goNamed(RoutesName.fireBreathingScreen);
-      },);
+      // await Future.delayed(const Duration(seconds: 2), () {
+      //   context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
+      //   cubit.currentSet = cubit.currentSet+1;
+      //   context.goNamed(RoutesName.fireBreathingScreen);
+      // },);
+      context.goNamed(RoutesName.fireBreathingCountdownScreen, extra: {});
     }
   }
   
@@ -364,13 +368,27 @@ class _FirebreathingHoldScreenState extends State<FirebreathingHoldScreen> {
     }
 
     //~ to start 3_2_1 voice
-    if(secondsStr == "06" && context.read<FirebreathingCubit>().holdDuration != 10){
-      context.read<FirebreathingCubit>().playHoldCountdown();
+    bool isLastRound = false;
+    if(context.read<FirebreathingCubit>().currentSet == context.read<FirebreathingCubit>().noOfSets){
+      isLastRound = true;
     }
-    if(secondsStr == "06" && context.read<FirebreathingCubit>().holdDuration == 10){
-      context.read<FirebreathingCubit>().playHoldCountdown();
+
+    if(isLastRound){
+      if(secondsStr == "02"){
+        context.read<FirebreathingCubit>().playHoldCountdown(isLastRound: isLastRound);
+      }
+    }else{
+      if(secondsStr == "03"){
+        context.read<FirebreathingCubit>().playHoldCountdown(isLastRound: isLastRound);
+      }
+      // if(secondsStr == "03" && context.read<FirebreathingCubit>().holdDuration != 10){
+      //   context.read<FirebreathingCubit>().playHoldCountdown();
+      // }
+      // if(secondsStr == "03" && context.read<FirebreathingCubit>().holdDuration == 10){
+      //   context.read<FirebreathingCubit>().playHoldCountdown();
+      // }
     }
-    
+
     return "$minutesStr:$secondsStr";
   }
 
