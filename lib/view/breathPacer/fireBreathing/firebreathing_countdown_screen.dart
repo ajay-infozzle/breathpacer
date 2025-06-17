@@ -122,8 +122,10 @@ class _FirebreathingCountdownScreenState extends State<FirebreathingCountdownScr
       // context.read<FirebreathingCubit>().playHold();
       context.goNamed(RoutesName.fireBreathingHoldScreen); 
     } else if (cubit.recoveryBreath && widget.gotoRecover){
-      context.read<FirebreathingCubit>().playRecovery();
-      context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+      await Future.delayed(const Duration(seconds: 1), () {
+        context.read<FirebreathingCubit>().playRecovery();
+        context.goNamed(RoutesName.fireBreathingRecoveryScreen);
+      },);
     } else if (widget.gotoSuccess){
       context.read<FirebreathingCubit>().stopJerry();
       context.read<FirebreathingCubit>().stopHold();

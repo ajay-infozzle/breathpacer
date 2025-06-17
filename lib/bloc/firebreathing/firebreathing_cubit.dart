@@ -345,7 +345,9 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
       if(jerryVoice){
         //~ for pineal purpose if selected
         // jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.pineal) : jerryVoiceOver(JerryVoiceEnum.fireBreathing) ;
+
         jerryVoiceAssetFile = pineal ? 'audio/firebreathing_pineal.mp3' : 'audio/firebreathing.mp3' ;
+        // jerryVoiceAssetFile = 'audio/firebreathing_sound.mp3' ;
       
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
 
@@ -459,7 +461,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
           }
 
           recoveryBreath 
-          ?await breathHoldPlayer.play(AssetSource('audio/ready_to_breath_in_countdown_at_end.mp3'))
+          ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
           :await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_in_countdown.mp3'));
         }
         // if(holdDuration == 10){
@@ -499,9 +501,14 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     try {
       if(jerryVoice){
         breathHoldPlayer.stop();
-        breathHoldIndex  == 0 
-        ? await breathHoldPlayer.play(AssetSource('audio/countdown_for_breathe_in_and_hold.mp3'))
-        : await breathHoldPlayer.play(AssetSource('audio/countdown_for_breathe_out_and_hold.mp3'));
+        
+        if(holdingPeriod){
+          breathHoldIndex  == 0 
+          ? await breathHoldPlayer.play(AssetSource('audio/countdown_for_breathe_in_and_hold.mp3'))
+          : await breathHoldPlayer.play(AssetSource('audio/countdown_for_breathe_out_and_hold.mp3'));
+        }else if(recoveryBreath){
+         await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'));
+        }
       }
       else{
         playChime();
@@ -545,7 +552,8 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
     try {
       if(jerryVoice){
         recoveryPlayer.stop();
-        await recoveryPlayer.play(AssetSource('audio/time_to_recover.mp3'));
+        // await recoveryPlayer.play(AssetSource('audio/time_to_recover.mp3'));
+        await recoveryPlayer.play(AssetSource('audio/recover_short.mp3'));
       }
       else{
         playChime();

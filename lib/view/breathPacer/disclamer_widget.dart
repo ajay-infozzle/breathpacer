@@ -3,9 +3,30 @@ import 'package:breathpacer/config/theme.dart';
 import 'package:breathpacer/utils/constant/interaction_breathing_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-class DisclamerScreen extends StatelessWidget {
+class DisclamerScreen extends StatefulWidget {
   const DisclamerScreen({super.key});
+
+  @override
+  State<DisclamerScreen> createState() => _DisclamerScreenState();
+}
+
+class _DisclamerScreenState extends State<DisclamerScreen> {
+  String appVersion = '';
+
+  @override
+  void initState() {
+    loadVersion() ;
+    super.initState();
+  }
+  
+  Future<void> loadVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      appVersion = '${info.version}+${info.buildNumber}'; // Example: 1.0.0+1
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +133,31 @@ class DisclamerScreen extends StatelessWidget {
                       ),
       
                       SizedBox(height: size*0.04,),
+
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: size*0.03,vertical: size*0.04),
+                        margin: EdgeInsets.only(top: size*0.06),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12)
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              "App Version - $appVersion",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.colors.pinkButton,
+                                // color: Colors.black.withValues(alpha:.7),
+                                fontSize: size*0.05
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        )
+                      ),
+
+                      SizedBox(height: size*0.04,),
                     ],
                   ),
                 ) 
@@ -143,7 +189,6 @@ class DisclamerScreen extends StatelessWidget {
       ),
     );
   }
-
 
   descriptionSection(double size, String desc) {
     return Text(
