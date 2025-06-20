@@ -201,7 +201,7 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
                         child: Center(
                           child: Countdown(
                             controller: countdownController,
-                            seconds: context.read<DnaCubit>().holdDuration,
+                            seconds: context.read<DnaCubit>().recoveryBreathDuration,
                             build: (BuildContext context, double time) => Text(
                               formatTimer(time),
                               style: TextStyle(
@@ -223,33 +223,33 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
 
                       const Spacer(),
 
-                      GestureDetector(
-                        onTap: () {
-                          if(!isAlreadyTapped){
-                            isAlreadyTapped = true;
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     if(!isAlreadyTapped){
+                      //       isAlreadyTapped = true;
                           
-                            storeScreenTime();
+                      //       storeScreenTime();
                             
-                            countdownController.pause();
-                            navigate(context.read<DnaCubit>());
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          color: Colors.transparent,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                generateTapText(context.read<DnaCubit>()),
-                                style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                              ),
-                              const SizedBox(width: 10),
-                              const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                            ],
-                          ),
-                        ),
-                      ),
+                      //       countdownController.pause();
+                      //       navigate(context.read<DnaCubit>());
+                      //     }
+                      //   },
+                      //   child: Container(
+                      //     alignment: Alignment.center,
+                      //     color: Colors.transparent,
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         Text(
+                      //           generateTapText(context.read<DnaCubit>()),
+                      //           style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                      //         ),
+                      //         const SizedBox(width: 10),
+                      //         const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
 
                       SizedBox(height: height*0.08,),
                     ],
@@ -283,25 +283,45 @@ class _DnaRecoveryScreenState extends State<DnaRecoveryScreen> {
   }
 
   void navigate(DnaCubit cubit) async{
-    context.read<DnaCubit>().stopRecovery();
-    
     if (cubit.currentSet == cubit.noOfSets) {
-      context.read<DnaCubit>().stopJerry();
-      context.read<DnaCubit>().stopMusic();
-      context.read<DnaCubit>().playChime();
-      context.read<DnaCubit>().playRelax();
-
+      cubit.stopJerry();
+      cubit.stopRecovery();
+      cubit.stopMusic();
+      cubit.playChime();
+      cubit.playRelax();
       context.goNamed(RoutesName.dnaSuccessScreen);
     }else {
-      context.read<DnaCubit>().playTimeToNextSet();
-      
-      await Future.delayed(const Duration(seconds: 2),() {
+      cubit.stopJerry();
+      cubit.stopRecovery();
+      cubit.playTimeToNextSet();
+
+      await Future.delayed(const Duration(seconds: 2), () {
+        cubit.resetJerryVoiceAndPLayAgain();
         cubit.currentSet = cubit.currentSet+1;
-        // if(context.read<DnaCubit>().isTimeBreathingApproch){
-        //   context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
-        // }
         context.goNamed(RoutesName.dnaBreathingScreen);
       },);
     }
+
+  //   context.read<DnaCubit>().stopRecovery();
+    
+  //   if (cubit.currentSet == cubit.noOfSets) {
+  //     context.read<DnaCubit>().stopJerry();
+  //     context.read<DnaCubit>().stopMusic();
+  //     context.read<DnaCubit>().playChime();
+  //     context.read<DnaCubit>().playRelax();
+
+  //     context.goNamed(RoutesName.dnaSuccessScreen);
+  //   }else {
+  //     context.read<DnaCubit>().playTimeToNextSet();
+      
+  //     await Future.delayed(const Duration(seconds: 2),() {
+  //       cubit.currentSet = cubit.currentSet+1;
+  //       // if(context.read<DnaCubit>().isTimeBreathingApproch){
+  //       //   context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
+  //       // }
+  //       context.goNamed(RoutesName.dnaBreathingScreen);
+  //     },);
+  //   }
   }
+
 }

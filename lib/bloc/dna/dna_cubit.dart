@@ -15,7 +15,7 @@ class DnaCubit extends Cubit<DnaState> {
   DnaCubit() : super(DnaInitial());
 
   String speed = "Standard"; //Standard, Fast, Slow
-  int noOfSets = 1;
+  int noOfSets = 3;
   int currentSet = 0;
 
   bool isTimeBreathingApproch = false;
@@ -50,7 +50,7 @@ class DnaCubit extends Cubit<DnaState> {
 
 
   void initialSettings(){
-    noOfSets = 1;
+    noOfSets = 3;
     currentSet = 0;
     breathHoldIndex = 0;
     durationOfSet = 30;
@@ -179,6 +179,7 @@ class DnaCubit extends Cubit<DnaState> {
   AudioPlayer breathHoldPlayer = AudioPlayer();
   AudioPlayer recoveryPlayer = AudioPlayer();
   AudioPlayer relaxPlayer = AudioPlayer();
+  AudioPlayer extraPlayer = AudioPlayer();
 
 
   void resetSettings(){
@@ -191,7 +192,7 @@ class DnaCubit extends Cubit<DnaState> {
     holdingPeriod = false;
     recoveryBreath = false;
     noOfBreath = 10;
-    noOfSets = 1;
+    noOfSets = 3;
 
 
     currentSet = 0;
@@ -395,6 +396,45 @@ class DnaCubit extends Cubit<DnaState> {
     }
   }
 
+  void controlVolume({double volume = 1}) async{
+    try {
+      if(jerryVoice){
+        await jerryVoicePlayer.setVolume(volume);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("controlVolume>> ${e.toString()}");
+      }
+    }
+  }
+
+  void extraPlay(String voice) async{
+    try {
+      if(jerryVoice){
+        if(extraPlayer.state != PlayerState.playing){
+          await extraPlayer.stop();
+          await extraPlayer.play(AssetSource(voice));
+
+
+          extraPlayer.onPlayerComplete.listen((event) async{
+            controlVolume(volume: 1);
+            if(speed == 'Slow'){
+              await Future.delayed(const Duration(milliseconds: 850), () {
+                playTimeToHold(isForBreathOut: true);
+              },);
+            }else{
+              playTimeToHold(isForBreathOut: true);
+            }
+          },);
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("extraPlay>> ${e.toString()}");
+      }
+    }
+  }
+
   void stopJerry() async {
     try {
       if(jerryVoice){
@@ -461,38 +501,68 @@ class DnaCubit extends Cubit<DnaState> {
     }
   }
 
-  void playHoldCountdown() async {
+  void playHoldCountdown({bool isBoth = false, required bool isLastRound}) async {
     try {
       if(jerryVoice){
         breathHoldPlayer.stop();
         if(holdDuration == 10){
           // await breathHoldPlayer.play(AssetSource('audio/single_3_2_1.mp3'));
           
-          if(breathHoldIndex == 0){
-            if(choiceOfBreathHold == 'Both'){
-              await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3'));
-              return ;
-            }
+          // if(breathHoldIndex == 0){
+          //   if(choiceOfBreathHold == 'Both'){
+          //     await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3'));
+          //     return ;
+          //   }
 
-            recoveryBreath 
-            ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
-            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_out_countdown.mp3'));
-          }else{
-            recoveryBreath 
-            ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
-            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_in_countdown.mp3'));
-          }
+          //   recoveryBreath 
+          //   ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
+          //   :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_out_countdown.mp3'));
+          // }else{
+          //   recoveryBreath 
+          //   ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
+          //   :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_in_countdown.mp3'));
+          // }
+          if(breathHoldIndex == 0){
+            isBoth 
+              ? await breathHoldPlayer.play(AssetSource('audio/countdown_for_breathe_out_and_hold.mp3'))
+              : recoveryBreath 
+                ? await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
+                : isLastRound 
+                  ? await breathHoldPlayer.play(AssetSource('audio/ready_to_breath_out_countdown_at_end.mp3'))
+                  : await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3')) ;
+            }else{
+                recoveryBreath 
+                ? await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
+                : isLastRound 
+                  ? await breathHoldPlayer.play(AssetSource('audio/ready_to_breath_in_countdown_at_end.mp3'))
+                  : await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_in_countdown.mp3')) ;
+            }
         }else{
           // await breathHoldPlayer.play(AssetSource('audio/3_2_1.mp3'));
           
+          // if(breathHoldIndex == 0){
+          //   recoveryBreath 
+          //   ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
+          //   :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_out_countdown.mp3'));
+          // }else{
+          //   recoveryBreath 
+          //   ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
+          //   :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_in_countdown.mp3'));
+          // }
           if(breathHoldIndex == 0){
-            recoveryBreath 
-            ?await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
-            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_out_countdown.mp3'));
+            isBoth 
+            ? await breathHoldPlayer.play(AssetSource('audio/countdown_for_breathe_out_and_hold.mp3'))
+            : recoveryBreath 
+              ? await breathHoldPlayer.play(AssetSource('audio/breathing_out_recovery_countdown.mp3'))
+              : isLastRound 
+                ? await breathHoldPlayer.play(AssetSource('audio/ready_to_breath_out_countdown_at_end.mp3'))
+                : await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_out_countdown.mp3')) ;
           }else{
-            recoveryBreath 
-            ?await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
-            :await breathHoldPlayer.play(AssetSource('audio/breathing_breath_in_countdown.mp3'));
+              recoveryBreath 
+              ? await breathHoldPlayer.play(AssetSource('audio/breathing_in_recovery_countdown.mp3'))
+              : isLastRound 
+                ? await breathHoldPlayer.play(AssetSource('audio/ready_to_breath_in_countdown_at_end.mp3'))
+                : await breathHoldPlayer.play(AssetSource('audio/pyramid_breath_in_countdown.mp3')) ;
           }
         }
       }
@@ -503,11 +573,14 @@ class DnaCubit extends Cubit<DnaState> {
     }
   }
 
-  void playTimeToHold() async {
+  void playTimeToHold({bool isForBreathOut = false}) async {
     try {
       if(jerryVoice){
         breathHoldPlayer.stop();
-        await breathHoldPlayer.play(AssetSource('audio/time_to_hold.mp3'));
+        // await breathHoldPlayer.play(AssetSource('audio/time_to_hold.mp3'));
+        isForBreathOut 
+        ? await breathHoldPlayer.play(AssetSource('audio/now_hold.mp3'))
+        : await breathHoldPlayer.play(AssetSource('audio/breathe_in_and_hold.mp3'));
       }
       else{
         playChime();
@@ -533,7 +606,7 @@ class DnaCubit extends Cubit<DnaState> {
 
         jerryVoicePlayer.stop();//
         breathHoldPlayer.stop();
-        await breathHoldPlayer.play(AssetSource('audio/motivation.mp3'));
+        await breathHoldPlayer.play(AssetSource('audio/motivation_2.mp3'));
 
         breathHoldPlayer.onPlayerComplete.listen((event) {
           if(isTimeBreathingApproch){
@@ -576,7 +649,8 @@ class DnaCubit extends Cubit<DnaState> {
     try {
       if(jerryVoice){
         recoveryPlayer.stop();
-        await recoveryPlayer.play(AssetSource('audio/time_to_recover.mp3'));
+        // await recoveryPlayer.play(AssetSource('audio/time_to_recover.mp3'));
+        await recoveryPlayer.play(AssetSource('audio/recover_short.mp3'));
       }
       else{
         playChime();

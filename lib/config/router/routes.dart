@@ -1,6 +1,7 @@
 import 'package:breathpacer/config/router/routes_name.dart';
 import 'package:breathpacer/view/breathPacer/disclamer_widget.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_breathing_screen.dart';
+import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_countdown_screen.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_hold_screen.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_instruction_screen.dart';
 import 'package:breathpacer/view/breathPacer/dnaBreathing/dna_recovery_screen.dart';
@@ -373,6 +374,23 @@ class AppRoutes {
             pageBuilder: (context, state) {
               return customPageRouteBuilder(
                 const DnaSuccessScreen(),
+                state.pageKey, 
+                transitionDuration: const Duration(milliseconds: 500)
+              );
+            },
+          ),
+
+          GoRoute(
+            path: RoutesName.dnaBreathingCountdownScreen,
+            name: RoutesName.dnaBreathingCountdownScreen,
+            pageBuilder: (context, state) {
+              dynamic params = state.extra ;
+              return customPageRouteBuilder(
+                DnaCountdownScreen(
+                  gotoHold: params['hold'] ?? false,
+                  gotoRecover: params['recover'] ?? false,
+                  gotoSuccess: params['success'] ?? false,
+                ),
                 state.pageKey, 
                 transitionDuration: const Duration(milliseconds: 500)
               );

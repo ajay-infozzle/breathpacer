@@ -113,10 +113,20 @@ class _InteractiveBreathingScreenState extends State<InteractiveBreathingScreen>
                                 );
                               }
                               if(index == 2){
-                                context.pushNamed(RoutesName.dnaInstructionScreen);
+                                context.pushNamed(
+                                  RoutesName.dnaSettingScreen,
+                                  extra:{
+                                    "subTitle" : "DNA breathing"
+                                  }
+                                );
                               }
                               if(index == 3){
-                                context.pushNamed(RoutesName.pinealInstructionScreen);
+                                context.pushNamed(
+                                  RoutesName.pinealSettingScreen,
+                                  extra:{
+                                    "subTitle" : "Pineal Gland Activation"
+                                  }
+                                );
                               }
                             }, 
                           );

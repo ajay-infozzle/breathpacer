@@ -7,7 +7,6 @@ import 'package:breathpacer/utils/toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:meta/meta.dart';
 
 part 'firebreathing_state.dart';
 
@@ -351,9 +350,9 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
       
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
 
-        // jerryVoicePlayer.onPlayerComplete.listen((event) {
-        //   jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
-        // });
+        // await jerryVoicePlayer.setSource(AssetSource(jerryVoiceAssetFile));
+        // await jerryVoicePlayer.setReleaseMode(ReleaseMode.loop);
+        // await jerryVoicePlayer.resume();
       }
     } on Exception catch (e) {
       if (kDebugMode) {

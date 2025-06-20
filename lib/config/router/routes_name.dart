@@ -29,6 +29,7 @@ class RoutesName {
   static const String dnaSettingScreen = "dna-setting";
   static const String dnaWaitingScreen = "dna-waiting";
   static const String dnaBreathingScreen = "dna-breathing";
+  static const String dnaBreathingCountdownScreen = "dna-breathing-countdown";
   static const String dnaHoldScreen = "dna-hold";
   static const String dnaRecoveryScreen = "dna-recovery";
   static const String dnaSuccessScreen = "dna-success";

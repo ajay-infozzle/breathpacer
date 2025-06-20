@@ -121,7 +121,7 @@ class _PyramidBreathingScreenState extends State<PyramidBreathingScreen> with Si
             context.read<PyramidCubit>().playBreathing("audio/single_breath_out_standard.mp3");
           }
         });
-        hasDecreased = true;
+        hasDecreased = true;  
       }
 
       // Check if the animation is shrinking and has passed a threshold (close to the minimum)

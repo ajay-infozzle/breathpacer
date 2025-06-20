@@ -267,19 +267,19 @@ class _FirebreathingRecoveryScreenState extends State<FirebreathingRecoveryScree
 
   void navigate(FirebreathingCubit cubit) async{
     if (cubit.currentSet == cubit.noOfSets) {
-      context.read<FirebreathingCubit>().stopJerry();
-      context.read<FirebreathingCubit>().stopRecovery();
-      context.read<FirebreathingCubit>().stopMusic();
-      context.read<FirebreathingCubit>().playChime();
-      context.read<FirebreathingCubit>().playRelax();
+      cubit.stopJerry();
+      cubit.stopRecovery();
+      cubit.stopMusic();
+      cubit.playChime();
+      cubit.playRelax();
       context.goNamed(RoutesName.fireBreathingSuccessScreen);
     }else {
-      context.read<FirebreathingCubit>().stopJerry();
-      context.read<FirebreathingCubit>().stopRecovery();
-      context.read<FirebreathingCubit>().playTimeToNextSet();
+      cubit.stopJerry();
+      cubit.stopRecovery();
+      cubit.playTimeToNextSet();
 
       await Future.delayed(const Duration(seconds: 2), () {
-        context.read<FirebreathingCubit>().resetJerryVoiceAndPLayAgain();
+        cubit.resetJerryVoiceAndPLayAgain();
         cubit.currentSet = cubit.currentSet+1;
         context.goNamed(RoutesName.fireBreathingScreen);
       },);

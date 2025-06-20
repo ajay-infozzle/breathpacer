@@ -25,11 +25,11 @@ class DnaWaitingScreen extends StatelessWidget {
         context.pushReplacementNamed(RoutesName.dnaBreathingScreen);
       },
       onSkip: (){
-        context.read<DnaCubit>().currentSet = 1 ;
-        context.read<DnaCubit>().stopCloseEyes();
-        context.read<DnaCubit>().playChime();
+        // context.read<DnaCubit>().currentSet = 1 ;
+        // context.read<DnaCubit>().stopCloseEyes();
+        // context.read<DnaCubit>().playChime();
  
-        context.pushReplacementNamed(RoutesName.dnaBreathingScreen);
+        // context.pushReplacementNamed(RoutesName.dnaBreathingScreen);
       },
     );
   }

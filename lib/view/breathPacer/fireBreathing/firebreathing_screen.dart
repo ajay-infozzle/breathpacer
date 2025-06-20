@@ -354,7 +354,7 @@ class _FirebreathingScreenState extends State<FirebreathingScreen> with SingleTi
     String minutesStr = minutes.toString().padLeft(2, '0'); 
     String secondsStr = seconds.toString().padLeft(2, '0'); 
 
-    if(seconds == 3 && context.read<FirebreathingCubit>().holdingPeriod == true){
+    if(seconds == 3 && context.read<FirebreathingCubit>().holdingPeriod){
       context.read<FirebreathingCubit>().playTimeToHold();
     }
 

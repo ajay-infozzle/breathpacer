@@ -181,7 +181,7 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
                         margin: EdgeInsets.symmetric(horizontal: size*0.05),
                         alignment: Alignment.center,
                         child: Text(
-                          "${context.read<DnaCubit>().pineal?"Squeeze & ":""}Hold on ${checkBreathChoice(context)}",
+                          checkBreathChoice(context) == "in-breath" ? "Hold At Top of Inhale" : "Hold at Bottom of Exhale",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: size*0.05,
@@ -197,9 +197,10 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
                         child: CircleAvatar(
                           radius: size*0.3,
                           child: Image.asset(
-                            checkBreathChoice(context) == 'in-breath' 
-                            ?"assets/images/breath_in.png"
-                            :"assets/images/breath_out.png",
+                            // checkBreathChoice(context) == 'in-breath' 
+                            // ?"assets/images/breath_in.png"
+                            // :"assets/images/breath_out.png",
+                            "assets/images/hold.png",
                           ),
                         ),
                       ),
@@ -240,7 +241,7 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
                             interval: const Duration(seconds: 1),
                             onFinished: (){
                               storeScreenTime();
-                              context.read<DnaCubit>().stopJerry();
+                              // context.read<DnaCubit>().stopJerry();
 
                               navigate(context.read<DnaCubit>());
                             },
@@ -251,35 +252,35 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
 
                       const Spacer(),
 
-                      GestureDetector(
-                        onTap: () {
-                          if(!isAlreadyTapped){
-                            isAlreadyTapped = true;
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     if(!isAlreadyTapped){
+                      //       isAlreadyTapped = true;
                           
-                            storeScreenTime();
+                      //       storeScreenTime();
 
-                            if(context.read<DnaCubit>().holdDuration != -1){
-                              countdownController.pause();
-                            }
-                            navigate(context.read<DnaCubit>());
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          color: Colors.transparent,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                generateTapText(context.read<DnaCubit>()),
-                                style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                              ),
-                              const SizedBox(width: 10),
-                              const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                            ],
-                          ),
-                        ),
-                      ),
+                      //       if(context.read<DnaCubit>().holdDuration != -1){
+                      //         countdownController.pause();
+                      //       }
+                      //       navigate(context.read<DnaCubit>());
+                      //     }
+                      //   },
+                      //   child: Container(
+                      //     alignment: Alignment.center,
+                      //     color: Colors.transparent,
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         Text(
+                      //           generateTapText(context.read<DnaCubit>()),
+                      //           style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                      //         ),
+                      //         const SizedBox(width: 10),
+                      //         const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
 
                       SizedBox(height: height*0.08,),
                     ],
@@ -309,19 +310,32 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
     String secondsStr = seconds.toString().padLeft(2, '0'); 
 
     //~ to start motivation
-    if(context.read<DnaCubit>().holdDuration >= 30){
-      if(time % 15 == 0 && time.toDouble() != context.read<DnaCubit>().holdDuration && (context.read<DnaCubit>().holdDuration - time) > 10 && int.parse(secondsStr) > 6){
+    if(context.read<DnaCubit>().holdDuration >= 20){
+      if(time % 11 == 0 && time.toDouble() != context.read<DnaCubit>().holdDuration && (context.read<DnaCubit>().holdDuration - time) > 7 && int.parse(secondsStr) > 6){
         context.read<DnaCubit>().playHoldMotivation();
       }
     }
 
     //~ to start 3_2_1 voice
-    if(secondsStr == "06" && context.read<DnaCubit>().holdDuration != 10){
-      context.read<DnaCubit>().playHoldCountdown();
+    bool isLastRound = false;
+    if(context.read<DnaCubit>().noOfSets == context.read<DnaCubit>().currentSet){
+      isLastRound = true;
     }
-    if(secondsStr == "06" && context.read<DnaCubit>().holdDuration == 10){
-      context.read<DnaCubit>().playHoldCountdown();
+    if(secondsStr == "02"  && context.read<DnaCubit>().choiceOfBreathHold != "Both"){
+      context.read<DnaCubit>().playHoldCountdown(isLastRound: isLastRound);
     }
+    else if(secondsStr == "02" && context.read<DnaCubit>().choiceOfBreathHold == "Both" && context.read<DnaCubit>().breathHoldIndex == 0){
+      context.read<DnaCubit>().playHoldCountdown(isBoth: true, isLastRound: isLastRound);
+    }
+    else if(secondsStr == "02" && context.read<DnaCubit>().choiceOfBreathHold == "Both" && context.read<DnaCubit>().breathHoldIndex != 0){
+      context.read<DnaCubit>().playHoldCountdown(isBoth: true, isLastRound: isLastRound);
+    }
+    // if(secondsStr == "06" && context.read<DnaCubit>().holdDuration != 10){
+    //   context.read<DnaCubit>().playHoldCountdown();
+    // }
+    // if(secondsStr == "06" && context.read<DnaCubit>().holdDuration == 10){
+    //   context.read<DnaCubit>().playHoldCountdown();
+    // }
     
     return "$minutesStr:$secondsStr";
   }
@@ -345,39 +359,57 @@ class _DnaHoldScreenState extends State<DnaHoldScreen> {
 
   void navigate(DnaCubit cubit) async{
     if(cubit.choiceOfBreathHold == "Both" && cubit.breathHoldIndex == 0){
-      cubit.breathHoldIndex = 1;
-      context.read<DnaCubit>().stopHold();
-      context.read<DnaCubit>().playHold();
-      
-      context.pushReplacementNamed(RoutesName.dnaHoldScreen);
+      cubit.breathHoldIndex = 1; 
+      context.goNamed(RoutesName.dnaBreathingCountdownScreen, extra: {'hold' : true});
     } 
-    else{
-      context.read<DnaCubit>().stopHold();
-      if(cubit.recoveryBreath){
-        context.read<DnaCubit>().playTimeToRecover();
-      
-        await Future.delayed(const Duration(seconds: 2),() {
-          context.read<DnaCubit>().playRecovery();
-          context.goNamed(RoutesName.dnaRecoveryScreen);
-        },);
-      }else{
-        if(cubit.noOfSets == cubit.currentSet ){
-          context.read<DnaCubit>().stopMusic();
-          context.read<DnaCubit>().playChime();
-          context.read<DnaCubit>().playRelax();
-          context.goNamed(RoutesName.dnaSuccessScreen);
-        }else{
-          context.read<DnaCubit>().playTimeToNextSet();
-      
-          await Future.delayed(const Duration(seconds: 2),() {
-            cubit.currentSet = cubit.currentSet+1;
-            // if(context.read<DnaCubit>().isTimeBreathingApproch){
-            //   context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
-            // }
-            context.goNamed(RoutesName.dnaBreathingScreen);
-          },);
-        }
+    else if (cubit.currentSet == cubit.noOfSets) {
+      if (cubit.recoveryBreath){
+        context.goNamed(RoutesName.dnaBreathingCountdownScreen, extra: {'recover' : true});
       }
+      else{
+        context.goNamed(RoutesName.dnaBreathingCountdownScreen, extra: {'success' : true});
+      }
+    }else if (cubit.recoveryBreath) {
+      context.goNamed(RoutesName.dnaBreathingCountdownScreen, extra: {'recover' : true});
+    } else {
+      context.goNamed(RoutesName.dnaBreathingCountdownScreen, extra: {});
     }
+    //~
+    // if(cubit.choiceOfBreathHold == "Both" && cubit.breathHoldIndex == 0){
+    //   cubit.breathHoldIndex = 1;
+    //   context.read<DnaCubit>().stopHold();
+    //   context.read<DnaCubit>().playHold();
+      
+    //   context.pushReplacementNamed(RoutesName.dnaHoldScreen);
+    // } 
+    // else{
+    //   context.read<DnaCubit>().stopHold();
+    //   if(cubit.recoveryBreath){
+    //     context.read<DnaCubit>().playTimeToRecover();
+      
+    //     await Future.delayed(const Duration(seconds: 2),() {
+    //       context.read<DnaCubit>().playRecovery();
+    //       context.goNamed(RoutesName.dnaRecoveryScreen);
+    //     },);
+    //   }else{
+    //     if(cubit.noOfSets == cubit.currentSet ){
+    //       context.read<DnaCubit>().stopMusic();
+    //       context.read<DnaCubit>().playChime();
+    //       context.read<DnaCubit>().playRelax();
+    //       context.goNamed(RoutesName.dnaSuccessScreen);
+    //     }else{
+    //       context.read<DnaCubit>().playTimeToNextSet();
+      
+    //       await Future.delayed(const Duration(seconds: 2),() {
+    //         cubit.currentSet = cubit.currentSet+1;
+    //         // if(context.read<DnaCubit>().isTimeBreathingApproch){
+    //         //   context.read<DnaCubit>().resetJerryVoiceAndPLayAgain();
+    //         // }
+    //         context.goNamed(RoutesName.dnaBreathingScreen);
+    //       },);
+    //     }
+    //   }
+    // }
+
   }
 }
