@@ -161,11 +161,12 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
   
             breathCount--;
             
-            if(breathCount == (cubit.speed == 'Fast' ? 2 : 1) && cubit.breathHoldIndex == 0){
+            if(breathCount == (cubit.speed == 'Fast' ? 2 : 1) && cubit.breathHoldIndex == 0 && cubit.holdingPeriod){
               cubit.controlVolume(volume: .4);
               log("control Volume when breathcount count $breathCount");
               cubit.extraPlay("audio/get_ready_to_hold.mp3");
             }
+            
             //~⬇️ only when hold is breath-in
             if(breathCount == 0 && cubit.breathHoldIndex == 0 ){
               log("breathcount count -> $breathCount");
@@ -287,7 +288,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
           }
 
           // Stop the animation if the breath count reaches 0
-          if(breathCount == (cubit.speed == 'Fast' ? 2 : 1) && cubit.breathHoldIndex == 1){
+          if(breathCount == (cubit.speed == 'Fast' ? 2 : 1) && cubit.breathHoldIndex == 1 && cubit.holdingPeriod){
             cubit.controlVolume(volume: .4);
             log("control Volume when breathcount count $breathCount ->");
             cubit.extraPlay("audio/get_ready_to_hold.mp3");
@@ -763,7 +764,7 @@ class _DnaBreathingScreenState extends State<DnaBreathingScreen> with SingleTick
       }
     } 
     else if(cubit.recoveryBreath){
-      context.read<DnaCubit>().playTimeToRecover();
+      context.read<DnaCubit>().playTimeToRecover(isOnlyRecover: true);
       
       await Future.delayed(const Duration(seconds: 2),() {
         context.read<DnaCubit>().playRecovery();

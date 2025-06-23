@@ -367,37 +367,37 @@ class _PinealScreenState extends State<PinealScreen> {
                       ),
      
 
-                      if(context.read<PinealCubit>().holdDuration == -1)
-                      GestureDetector(
-                        onTap: () {
-                          if(!isAlreadyTapped){
-                            isAlreadyTapped = true;
+                      // if(context.read<PinealCubit>().holdDuration == -1)
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     if(!isAlreadyTapped){
+                      //       isAlreadyTapped = true;
 
-                            if(context.read<PinealCubit>().holdDuration == -1){
-                              storeScreenTime();
-                              if(!remainingCountdownController.isCompleted!){
-                                remainingCountdownController.pause();
-                              }
-                              navigate(context.read<PinealCubit>());
-                            }
-                          } 
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          color: Colors.transparent,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Tap to go to recovery",
-                                style: TextStyle(color: Colors.white, fontSize: size*0.045),
-                              ),
-                              const SizedBox(width: 10),
-                              const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
-                            ],
-                          ),
-                        ),
-                      ),
+                      //       if(context.read<PinealCubit>().holdDuration == -1){
+                      //         storeScreenTime();
+                      //         if(!remainingCountdownController.isCompleted!){
+                      //           remainingCountdownController.pause();
+                      //         }
+                      //         navigate(context.read<PinealCubit>());
+                      //       }
+                      //     } 
+                      //   },
+                      //   child: Container(
+                      //     alignment: Alignment.center,
+                      //     color: Colors.transparent,
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children: [
+                      //         Text(
+                      //           "Tap to go to recovery",
+                      //           style: TextStyle(color: Colors.white, fontSize: size*0.045),
+                      //         ),
+                      //         const SizedBox(width: 10),
+                      //         const Icon(Icons.touch_app_outlined, size: 25, color: Colors.white),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
 
                       SizedBox(height: height*0.08,),
                     ],
@@ -433,12 +433,12 @@ class _PinealScreenState extends State<PinealScreen> {
       }
 
       //~ to start 3_2_1 voice
-      if(secondsStr == "06" && context.read<PinealCubit>().holdDuration != 10){
-        context.read<PinealCubit>().playHoldCountdown();
-      }
-      if(secondsStr == "03" && context.read<PinealCubit>().holdDuration == 10){
-        context.read<PinealCubit>().playHoldCountdown(isVeryShort: true);
-      }
+      // if(secondsStr == "06" && context.read<PinealCubit>().holdDuration != 10){
+      //   context.read<PinealCubit>().playHoldCountdown();
+      // }
+      // if(secondsStr == "03" && context.read<PinealCubit>().holdDuration == 10){
+      //   context.read<PinealCubit>().playHoldCountdown(isVeryShort: true);
+      // }
     }
     
     return "$minutesStr:$secondsStr";

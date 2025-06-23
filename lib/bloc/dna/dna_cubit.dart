@@ -645,12 +645,14 @@ class DnaCubit extends Cubit<DnaState> {
     }
   }
 
-  void playTimeToRecover() async {
+  void playTimeToRecover({bool isOnlyRecover = false}) async {
     try {
       if(jerryVoice){
         recoveryPlayer.stop();
-        // await recoveryPlayer.play(AssetSource('audio/time_to_recover.mp3'));
-        await recoveryPlayer.play(AssetSource('audio/recover_short.mp3'));
+
+        isOnlyRecover 
+        ? await recoveryPlayer.play(AssetSource('audio/time_to_recover.mp3'))
+        : await recoveryPlayer.play(AssetSource('audio/recover_short.mp3'));
       }
       else{
         playChime();
