@@ -313,20 +313,20 @@ class _PinealScreenState extends State<PinealScreen> {
                       ),
 
 
-                      Container(
-                        margin: EdgeInsets.only(top: context.read<PinealCubit>().holdDuration == -1?height*0.04:height*0.01,),
-                        width: size,
-                        alignment: Alignment.center,
-                        child: Center(
-                          child: Text(
-                            "Breathwork time remaining:",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: size*0.045
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Container(
+                      //   margin: EdgeInsets.only(top: context.read<PinealCubit>().holdDuration == -1?height*0.04:height*0.01,),
+                      //   width: size,
+                      //   alignment: Alignment.center,
+                      //   child: Center(
+                      //     child: Text(
+                      //       "Breathwork time remaining:",
+                      //       style: TextStyle(
+                      //         color: Colors.white,
+                      //         fontSize: size*0.045
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
 
                       Container(
                         margin: EdgeInsets.only(top: height*0.001,bottom: height*0.04),
@@ -347,20 +347,20 @@ class _PinealScreenState extends State<PinealScreen> {
                             },
                             interval: const Duration(seconds: 1),
                             onFinished: (){
-                              storeScreenTime();
-                              context.read<PinealCubit>().stopJerry();
+                              // storeScreenTime();
+                              // context.read<PinealCubit>().stopJerry();
 
-                              if(context.read<PinealCubit>().holdDuration != -1){
-                                try {
-                                  if(!holdCountdownController.isCompleted!){
-                                    holdCountdownController.pause();
-                                  }
-                                } catch (e) {
-                                  log(e.toString());
-                                }
-                              }
+                              // if(context.read<PinealCubit>().holdDuration != -1){
+                              //   try {
+                              //     if(!holdCountdownController.isCompleted!){
+                              //       holdCountdownController.pause();
+                              //     }
+                              //   } catch (e) {
+                              //     log(e.toString());
+                              //   }
+                              // }
 
-                              navigate(context.read<PinealCubit>());
+                              // navigate(context.read<PinealCubit>());
                             },
                           ),
                         ),
@@ -439,9 +439,12 @@ class _PinealScreenState extends State<PinealScreen> {
       // if(secondsStr == "03" && context.read<PinealCubit>().holdDuration == 10){
       //   context.read<PinealCubit>().playHoldCountdown(isVeryShort: true);
       // }
+
+      return "$minutesStr:$secondsStr";
     }
     
-    return "$minutesStr:$secondsStr";
+
+    return "";
   }
   
   

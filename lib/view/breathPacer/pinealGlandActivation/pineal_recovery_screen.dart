@@ -216,7 +216,7 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
                               // }
                               
                               return Text(
-                                formatTimer(time),
+                                formatTimer(time, isForRecover: true),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: size*0.2
@@ -236,20 +236,20 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
                       ),
 
 
-                      Container(
-                        margin: EdgeInsets.only(top: context.read<PinealCubit>().holdDuration == -1?height*0.04:height*0.01,),
-                        width: size,
-                        alignment: Alignment.center,
-                        child: Center(
-                          child: Text(
-                            "Breathwork time remaining:",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: size*0.045
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Container(
+                      //   margin: EdgeInsets.only(top: context.read<PinealCubit>().holdDuration == -1?height*0.04:height*0.01,),
+                      //   width: size,
+                      //   alignment: Alignment.center,
+                      //   child: Center(
+                      //     child: Text(
+                      //       "Breathwork time remaining:",
+                      //       style: TextStyle(
+                      //         color: Colors.white,
+                      //         fontSize: size*0.045
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
 
                       Container(
                         margin: EdgeInsets.only(top: height*0.001,bottom: height*0.04),
@@ -295,14 +295,14 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
     );
   }
 
-  String formatTimer(double time) {
+  String formatTimer(double time, {bool isForRecover = false}) {
     int minutes = (time / 60).floor(); 
     int seconds = (time % 60).floor(); 
     
     String minutesStr = minutes.toString().padLeft(2, '0'); 
     String secondsStr = seconds.toString().padLeft(2, '0'); 
     
-    return "$minutesStr:$secondsStr";
+    return isForRecover ?  "$minutesStr:$secondsStr" : "";
   }
   
 
@@ -316,7 +316,8 @@ class _PinealRecoveryScreenState extends State<PinealRecoveryScreen> {
   
   void navigate(PinealCubit cubit) async{
     context.read<PinealCubit>().stopRecovery();
-    if(cubit.remainingBreathTime > 0){
+    // if(cubit.remainingBreathTime > 0){
+    if(cubit.remainingBreathTime >= cubit.holdDuration){
       context.read<PinealCubit>().playTimeToNextSet();
 
       if(context.mounted){
