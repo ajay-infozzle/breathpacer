@@ -395,6 +395,7 @@ class FirebreathingCubit extends Cubit<FirebreathingState> {
         //~ for pineal purpose if enable
         // jerryVoiceAssetFile = pineal ? jerryVoiceOver(JerryVoiceEnum.pineal) : jerryVoiceOver(JerryVoiceEnum.fireBreathing)  ;
         jerryVoiceAssetFile = pineal ? 'audio/firebreathing_pineal.mp3' : 'audio/firebreathing.mp3' ;
+        // jerryVoiceAssetFile = 'audio/firebreathing_sound.mp3' ;
   
         jerryVoicePlayer.stop();
         await jerryVoicePlayer.play(AssetSource(jerryVoiceAssetFile));
